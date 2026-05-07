@@ -1,23 +1,23 @@
 [
-  {
-    "id": "u001",
-    "name": "Jane Thompson",
-    "email": "jane@email.com",
-    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-    "role": "customer"
-  },
-  {
-    "id": "u002",
-    "name": "Mike Tane",
-    "email": "staff@grandauckland.co.nz",
-    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-    "role": "staff"
-  },
-  {
-    "id": "u003",
-    "name": "Sarah Kim",
-    "email": "manager@grandauckland.co.nz",
-    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-    "role": "manager"
-  }
+	{
+		"id": "u001",
+		"name": "Jane Thompson",
+		"email": "jane@email.com",
+		"password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+		"role": "customer"
+	},
+	{
+		"id": "u002",
+		"name": "Mike Tane",
+		"email": "staff@grandauckland.co.nz",
+		"password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+		"role": "staff"
+	},
+	{
+		"id": "u003",
+		"name": "Sarah Kim",
+		"email": "manager@grandauckland.co.nz",
+		"password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+		"role": "manager"
+	}
 ]

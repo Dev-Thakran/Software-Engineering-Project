@@ -1,8 +1,8 @@
-const express = require('express')
-const { processPayment } = require('../controllers/payment.controller')
-const { authenticate } = require('../middleware/auth.middleware')
-const router = express.Router()
+const express = require("express");
+const { processPayment } = require("../controllers/payment.controller");
+const { authenticate } = require("../middleware/auth.middleware");
+const router = express.Router();
 
-router.post('/process', authenticate, processPayment)
+router.post("/process", authenticate, processPayment);
 
-module.exports = router
+module.exports = router;
