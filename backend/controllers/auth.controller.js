@@ -9,7 +9,7 @@ async function register(req, res) {
 	if (!name || !email || !password)
 		return res.status(400).json({ error: "All fields required" });
 	if (userRepo.findByEmail(email))
-		return res.status(409).json({ error: "Email already registered" }); 
+		return res.status(409).json({ error: "Email already registered" });
 	const hashed = await bcrypt.hash(password, 10);
 	const user = {
 		id: "u" + Date.now(),
