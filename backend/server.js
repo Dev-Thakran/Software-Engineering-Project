@@ -12,6 +12,8 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const shiftRoutes = require("./routes/shift.routes");
 const checkinRoutes = require('./routes/checkin.routes')
+const managerRoutes = require('./routes/manager.routes')
+app.use('/manager', managerRoutes)
 app.use('/checkins', checkinRoutes)
 app.use("/shifts", shiftRoutes);
 // Parse incoming JSON request bodies
