@@ -26,5 +26,12 @@
     "email": "devthakran27@gmail.com",
     "password": "$2b$10$dD.qmc6yqJWl6ra4fy84xOQivW/AEviwZGEqN0rbcitJ0eYPMQjuS",
     "role": "customer"
+  },
+  {
+    "id": "u1779003455079",
+    "name": "Devvrat Thakran",
+    "email": "devthakran217@gmail.com",
+    "password": "$2b$10$XaLy5AlzCHb3Vo.YTSHgtOPbJ/xErTFleVkNRj9ahMF0M/dXi5x6u",
+    "role": "customer"
   }
 ]

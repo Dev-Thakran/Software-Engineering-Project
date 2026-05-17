@@ -5,6 +5,10 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Create Account – La Extravaganza</title>
 		<script src="https://cdn.tailwindcss.com"></script>
+		<script src="../js/header.js"></script>
+		<script src="../js/footer.js"></script>
+		<script src="../js/register.js"></script>
+
 		<link
 			href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap"
 			rel="stylesheet" />
@@ -17,37 +21,6 @@
 			}
 			.serif {
 				font-family: "Cormorant Garamond", serif;
-			}
-
-			/* NAV */
-			nav {
-				background: #f5f0e8;
-				border-bottom: 1px solid #e5e0d8;
-			}
-			nav a {
-				font-size: 11px;
-				letter-spacing: 0.1em;
-				text-transform: uppercase;
-				color: #777;
-				text-decoration: none;
-				transition: color 0.2s;
-			}
-			nav a:hover {
-				color: #111;
-			}
-			.btn-reserve {
-				background: #1c1c1c;
-				color: #fff;
-				font-size: 10px;
-				font-weight: 600;
-				letter-spacing: 0.12em;
-				text-transform: uppercase;
-				padding: 9px 18px;
-				transition: opacity 0.2s;
-				text-decoration: none;
-			}
-			.btn-reserve:hover {
-				opacity: 0.8;
 			}
 
 			/* CARD */
@@ -117,69 +90,11 @@
 				display: none;
 				margin-bottom: 12px;
 			}
-
-			/* FOOTER */
-			footer {
-				background: #1c1c1c;
-				color: #888;
-			}
-			footer h4 {
-				font-size: 10px;
-				letter-spacing: 0.14em;
-				text-transform: uppercase;
-				color: #fff;
-				margin-bottom: 14px;
-				font-weight: 500;
-			}
-			footer p,
-			footer a {
-				font-size: 12px;
-				line-height: 1.9;
-				color: #888;
-				display: block;
-				text-decoration: none;
-				transition: color 0.2s;
-			}
-			footer a:hover {
-				color: #fff;
-			}
 		</style>
 	</head>
 	<body>
-		<!-- NAV -->
-		<nav>
-			<div
-				class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-				<a
-					href="index.html"
-					class="serif font-semibold text-[#1c1c1c]"
-					style="font-size: 22px; letter-spacing: 0; text-transform: none">
-					La
-					<em>Extravaganza</em>
-				</a>
-				<div class="hidden md:flex items-center gap-8">
-					<a href="index.html">Home</a>
-					<a href="rooms.html">Rooms</a>
-					<a href="floormap.html">Floor Map</a>
-					<a href="#">About</a>
-					<a href="#">Contact</a>
-				</div>
-				<div class="flex items-center gap-5">
-					<a
-						href="./Login.html"
-						style="
-							font-size: 11px;
-							letter-spacing: 0.08em;
-							text-transform: uppercase;
-							color: #555;
-							text-decoration: none;
-						">
-						Sign In
-					</a>
-					<a href="rooms.html" class="btn-reserve">Reserve</a>
-				</div>
-			</div>
-		</nav>
+		
+		<header id="header"></header>
 
 		<!-- MAIN -->
 		<main class="px-6 py-16">
@@ -258,103 +173,7 @@
 		</main>
 
 		<!-- FOOTER -->
-		<footer class="px-6 py-14">
-			<div class="max-w-5xl mx-auto grid grid-cols-1 sm:grid-cols-4 gap-10">
-				<div>
-					<p class="serif text-white text-xl font-semibold mb-3">
-						La
-						<em>Extravaganza</em>
-					</p>
-					<p>
-						An address unlike any other. Eight floors of curated sanctuary in
-						the heart of the city.
-					</p>
-				</div>
-				<div>
-					<h4>Explore</h4>
-					<a href="rooms.html">Rooms & Suites</a>
-					<a href="floormap.html">Floor Map</a>
-					<a href="#">Our Story</a>
-					<a href="#">Contact</a>
-				</div>
-				<div>
-					<h4>Contact</h4>
-					<p>42 Harbour Avenue</p>
-					<p>Auckland Central, 1010</p>
-					<p>+64 9 123 4567</p>
-					<p>reservations@laextravaganza.co.nz</p>
-				</div>
-				<div>
-					<h4>Hours</h4>
-					<p>Reception — 24 hours</p>
-					<p>Check-in — 15:00</p>
-					<p>Check-out — 11:00</p>
-					<p>Concierge — 06:00 – 23:00</p>
-				</div>
-			</div>
+		<footer id="footer">
 		</footer>
-
-		<script>
-			async function handleRegister() {
-				const fullName = document.getElementById("fullName").value.trim();
-				const email = document.getElementById("email").value.trim();
-				const password = document.getElementById("password").value;
-				const confirm = document.getElementById("confirmPassword").value;
-				const errEl = document.getElementById("errorMsg");
-				const sucEl = document.getElementById("successMsg");
-
-				errEl.style.display = "none";
-				sucEl.style.display = "none";
-
-				// Client-side validation
-				if (!fullName) {
-					showError("Please enter your full name.");
-					return;
-				}
-				if (!email) {
-					showError("Please enter your email.");
-					return;
-				}
-				if (!email.includes("@")) {
-					showError("Please enter a valid email.");
-					return;
-				}
-				if (password.length < 6) {
-					showError("Password must be at least 6 characters.");
-					return;
-				}
-				if (password !== confirm) {
-					showError("Passwords do not match.");
-					return;
-				}
-
-				try {
-					const res = await fetch("/auth/register", {
-						method: "POST",
-						headers: { "Content-Type": "application/json" },
-						body: JSON.stringify({ name: fullName, email, password }),
-					});
-					const data = await res.json();
-
-					if (!res.ok) {
-						showError(data.error || "Registration failed.");
-						return;
-					}
-
-					// Show success then redirect to login
-					sucEl.textContent = `Welcome, ${fullName.split(" ")[0]}! Redirecting to sign in...`;
-					sucEl.style.display = "block";
-					setTimeout(() => (window.location.href = "Login.html"), 1500);
-				} catch {
-					showError("Network error. Is the server running?");
-				}
-			}
-			function showError(msg) {
-				const el = document.getElementById("errorMsg");
-				el.textContent = msg;
-				el.style.display = "block";
-				setTimeout(() => (el.style.display = "none"), 4000);
-			}
-		</script>
 	</body>
 </html>
