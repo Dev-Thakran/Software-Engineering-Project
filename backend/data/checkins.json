@@ -1,0 +1,50 @@
+[
+    {
+        "id": "ci001",
+        "bookingId": "b005",
+        "userId": "u001",
+        "guestName": "Jane Thompson",
+        "guestEmail": "jane@email.com",
+        "roomId": "103",
+        "roomType": "Standard Single",
+        "floor": 1,
+        "checkInTime": "2026-05-18T09:00:00.000Z",
+        "checkOutDate": "2026-05-20",
+        "total": 198,
+        "status": "checked-in",
+        "attendingStaff": "Mike Tane",
+        "handledBy": "u002"
+    },
+    {
+        "id": "ci002",
+        "bookingId": "b006",
+        "userId": "u001",
+        "guestName": "Jane Thompson",
+        "guestEmail": "jane@email.com",
+        "roomId": "202",
+        "roomType": "Deluxe Double",
+        "floor": 2,
+        "checkInTime": "2026-05-18T10:30:00.000Z",
+        "checkOutDate": "2026-05-21",
+        "total": 567,
+        "status": "checked-in",
+        "attendingStaff": "Mike Tane",
+        "handledBy": "u002"
+    },
+    {
+        "id": "ci003",
+        "bookingId": "b007",
+        "userId": "u001",
+        "guestName": "Jane Thompson",
+        "guestEmail": "jane@email.com",
+        "roomId": "401",
+        "roomType": "Penthouse Suite",
+        "floor": 4,
+        "checkInTime": "2026-05-17T11:00:00.000Z",
+        "checkOutDate": "2026-05-22",
+        "total": 1520,
+        "status": "checked-in",
+        "attendingStaff": "Mike Tane",
+        "handledBy": "u002"
+    }
+]

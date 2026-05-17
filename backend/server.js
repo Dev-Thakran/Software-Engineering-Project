@@ -10,7 +10,10 @@ const paymentRoutes = require("./routes/payment.routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
+const shiftRoutes = require("./routes/shift.routes");
+const checkinRoutes = require('./routes/checkin.routes')
+app.use('/checkins', checkinRoutes)
+app.use("/shifts", shiftRoutes);
 // Parse incoming JSON request bodies
 app.use(express.json());
 

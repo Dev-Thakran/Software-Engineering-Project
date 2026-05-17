@@ -33,5 +33,12 @@
     "email": "devthakran217@gmail.com",
     "password": "$2b$10$XaLy5AlzCHb3Vo.YTSHgtOPbJ/xErTFleVkNRj9ahMF0M/dXi5x6u",
     "role": "customer"
+  },
+  {
+    "id": "u1779020905926",
+    "name": "Dustin Diaz",
+    "email": "dustin@gmail.com",
+    "password": "$2b$10$.zV9IW.zrLn/NVEkNTDNQ.LfXOYRWQWaUeOSj4ZPYHuelxz4Vyb/y",
+    "role": "customer"
   }
 ]
