@@ -1,3 +1,25 @@
+document.addEventListener("DOMContentLoaded", function () {
+    const token = localStorage.getItem("token");
+    if (token) {
+        // Verify token is still valid before redirecting
+        fetch("/auth/verify", {
+            headers: { "Authorization": "Bearer " + token }
+        })
+        .then(res => {
+            if (res.ok) {
+                const role = localStorage.getItem("role");
+                if (role === "manager")    window.location.href = "/pages/manager.html";
+                else if (role === "staff") window.location.href = "/pages/staff.html";
+                else                       window.location.href = "/pages/rooms.html";
+            } else {
+                // Token is invalid or expired, clear it
+                localStorage.clear();
+            }
+        })
+        .catch(() => localStorage.clear());
+    }
+});
+
 async function handleRegister() {
 	const fullName = document.getElementById("fullName").value.trim();
 	const email = document.getElementById("email").value.trim();
