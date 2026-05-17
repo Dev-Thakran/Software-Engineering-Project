@@ -9,88 +9,79 @@
 		<script src="../js/footer.js"></script>
 		<script src="../js/register.js"></script>
 
-		<link
-			href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap"
-			rel="stylesheet" />
-		<style>
-			body {
-				font-family: "DM Sans", sans-serif;
-				background: #f5f0e8;
-				color: #1a1a1a;
-				margin: 0;
-			}
-			.serif {
-				font-family: "Cormorant Garamond", serif;
-			}
+		<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+    body {
+        font-family: 'Outfit', system-ui, sans-serif;
+        background: #FAF7F2;
+        color: #6B5743;
+        margin: 0;
+    }
+    .serif { font-family: 'Cormorant Garamond', serif; }
 
-			/* CARD */
-			.card {
-				background: white;
-				max-width: 440px;
-				margin: 0 auto;
-				padding: 44px 48px;
-				box-shadow: 0 4px 32px rgba(0, 0, 0, 0.08);
-			}
+    .card {
+        background: #FFFFFF;
+        max-width: 440px;
+        margin: 0 auto;
+        padding: 44px 48px;
+        border: 1px solid #E6DFD7;
+        box-shadow: none;
+    }
 
-			/* INPUTS */
-			.input-line {
-				width: 100%;
-				border: none;
-				border-bottom: 1px solid #ccc;
-				background: transparent;
-				padding: 10px 0;
-				font-size: 13px;
-				font-family: "DM Sans", sans-serif;
-				outline: none;
-				color: #111;
-				transition: border-color 0.2s;
-				box-sizing: border-box;
-			}
-			.input-line:focus {
-				border-bottom-color: #1c1c1c;
-			}
-			.input-line::placeholder {
-				color: #bbb;
-			}
+    .input-line {
+        width: 100%;
+        border: none;
+        border-bottom: 1px solid #D4C4B0;
+        background: transparent;
+        padding: 12px 0;
+        font-size: 16px;
+        font-family: 'Outfit', system-ui, sans-serif;
+        outline: none;
+        color: #2C241B;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+    .input-line:focus { border-bottom-color: #4A3B32; }
+    .input-line::placeholder { color: #B89F89; }
 
-			/* BUTTON */
-			.btn-create {
-				width: 100%;
-				background: #1c1c1c;
-				color: #fff;
-				padding: 15px;
-				font-size: 11px;
-				font-weight: 600;
-				letter-spacing: 0.15em;
-				text-transform: uppercase;
-				border: none;
-				cursor: pointer;
-				transition: opacity 0.2s;
-			}
-			.btn-create:hover {
-				opacity: 0.85;
-			}
+    .btn-create {
+        width: 100%;
+        background: #4A3B32;
+        color: #FAF7F2;
+        padding: 16px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        border: none;
+        cursor: pointer;
+        transition: background 0.3s;
+        font-family: 'Outfit', system-ui, sans-serif;
+        border-radius: 0;
+    }
+    .btn-create:hover { background: #2C241B; }
 
-			/* ERROR / SUCCESS */
-			.error-msg {
-				background: #fee2e2;
-				color: #991b1b;
-				padding: 10px 14px;
-				font-size: 12px;
-				border-radius: 2px;
-				display: none;
-				margin-bottom: 12px;
-			}
-			.success-msg {
-				background: #dcfce7;
-				color: #166534;
-				padding: 10px 14px;
-				font-size: 12px;
-				border-radius: 2px;
-				display: none;
-				margin-bottom: 12px;
-			}
-		</style>
+    .error-msg {
+        background: #fef2f2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+        padding: 10px 14px;
+        font-size: 12px;
+        border-radius: 0;
+        display: none;
+        margin-bottom: 12px;
+    }
+    .success-msg {
+        background: #f0fdf4;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+        padding: 10px 14px;
+        font-size: 12px;
+        border-radius: 0;
+        display: none;
+        margin-bottom: 12px;
+    }
+</style>
 	</head>
 	<body>
 		
@@ -99,14 +90,12 @@
 		<!-- MAIN -->
 		<main class="px-6 py-16">
 			<div class="card">
-				<p class="text-xs uppercase tracking-widest text-gray-400 mb-2">
-					Create Account
-				</p>
-				<h1
-					class="serif text-4xl font-semibold text-[#1c1c1c] mb-8"
-					style="line-height: 1.15">
-					Begin your stay.
-				</h1>
+				<p class="text-xs uppercase tracking-widest mb-2" style="color:#8B7355; letter-spacing:0.22em;">
+    Create Account
+</p>
+<h1 class="serif text-4xl font-semibold mb-8" style="line-height:1.15; color:#2C241B;">
+    Begin your stay.
+</h1>
 
 				<!-- Messages -->
 				<div class="error-msg" id="errorMsg"></div>
@@ -115,7 +104,7 @@
 				<!-- Full Name -->
 				<div class="mb-7">
 					<label
-						class="block text-xs uppercase tracking-widest text-gray-400 mb-2">
+						class="block text-xs uppercase tracking-widest mb-2" style="color:#8B7355; letter-spacing:0.22em;">
 						Full Name
 					</label>
 					<input type="text" id="fullName" class="input-line" placeholder="" />
@@ -124,7 +113,7 @@
 				<!-- Email -->
 				<div class="mb-7">
 					<label
-						class="block text-xs uppercase tracking-widest text-gray-400 mb-2">
+						class="block text-xs uppercase tracking-widest mb-2" style="color:#8B7355; letter-spacing:0.22em;">
 						Email
 					</label>
 					<input type="email" id="email" class="input-line" placeholder="" />
@@ -133,7 +122,7 @@
 				<!-- Password -->
 				<div class="mb-7">
 					<label
-						class="block text-xs uppercase tracking-widest text-gray-400 mb-2">
+						class="block text-xs uppercase tracking-widest mb-2" style="color:#8B7355; letter-spacing:0.22em;">
 						Password
 					</label>
 					<input
@@ -146,7 +135,7 @@
 				<!-- Confirm Password -->
 				<div class="mb-10">
 					<label
-						class="block text-xs uppercase tracking-widest text-gray-400 mb-2">
+						class="block text-xs uppercase tracking-widest mb-2" style="color:#8B7355; letter-spacing:0.22em;">
 						Confirm Password
 					</label>
 					<input
@@ -161,14 +150,12 @@
 					Create Account
 				</button>
 
-				<p class="text-xs text-gray-400 text-center">
-					Already a member?
-					<a
-						href="./Login.html"
-						class="text-[#1c1c1c] underline underline-offset-2">
-						Sign in
-					</a>
-				</p>
+				<p class="text-xs text-center" style="color:#8B7355;">
+    Already a member?
+    <a href="./Login.html" style="color:#4A3B32; text-decoration:underline; text-underline-offset:2px;">
+        Sign in
+    </a>
+</p>
 			</div>
 		</main>
 
