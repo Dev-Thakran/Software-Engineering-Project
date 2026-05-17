@@ -22,13 +22,4 @@ window.addEventListener("load", function () {
 			navLinkEl.classList.add("active");
 		}
 	});
-
-	const dropdownLink = header.querySelector(".nav-item.dropdown .nav-link");
-	if (dropdownLink) {
-		if (windowPathname.endsWith("shop.html")) {
-			dropdownLink.style.color = "orange"; // highlight only on shop page
-		} else {
-			dropdownLink.style.color = "white"; // default color on other pages
-		}
-	}
 });
