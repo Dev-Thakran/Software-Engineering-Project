@@ -13,6 +13,7 @@
 		<script src="../js/header.js"></script>
 		<script src="../js/staff.js"></script>
 		<style>
+			/* Guest row grid — used for the awaiting check-in list */
 			.guest-row {
 				border: 1px solid var(--lux-brown-100);
 				padding: 20px 24px;
@@ -26,6 +27,8 @@
 			.guest-row:hover {
 				background: var(--lux-cream);
 			}
+
+			/* Residence row grid — used for the currently in residence list */
 			.residence-row {
 				border: 1px solid var(--lux-brown-100);
 				padding: 20px 24px;
@@ -42,24 +45,33 @@
 		</style>
 	</head>
 	<body>
+		<!-- header.js loads header.html into this element -->
 		<header id="header"></header>
 
 		<section class="mx-auto py-12 max-w-6xl px-6">
-			<!-- Header row -->
 			<p class="kicker">Staff Console</p>
+
 			<div class="grid grid-cols-2 py-2 mb-6">
 				<div>
 					<h1 class="font-serif text-5xl" style="color: var(--lux-brown-800)">
 						Good
+						<!-- JS: staff.js sets this to "morning", "afternoon", or "evening"
+                         based on the current hour using new Date().getHours() -->
 						<span id="greeting-time">morning</span>
 						,
+						<!-- JS: staff.js sets this to the staff member's first name
+                         read from localStorage.getItem("name") after login -->
 						<span id="staff-name"></span>
 						.
 					</h1>
 				</div>
 				<div class="text-right">
+					<!-- JS: staff.js sets this to the current date
+                     formatted as "Saturday, 18 May" using Intl.DateTimeFormat -->
 					<span id="date-display" class="kicker"></span>
 					<br />
+					<!-- JS: staff.js updates this every second using setInterval
+                     to show the live time in "11:46 am" format -->
 					<span
 						id="time-display"
 						class="font-serif text-2xl"
@@ -69,16 +81,23 @@
 
 			<!-- Stat cards -->
 			<div class="grid grid-cols-3 mb-12">
-				<!-- Shift -->
+				<!-- Shift card -->
 				<div class="stat-card">
 					<p class="kicker mb-2">
 						<i class="fa fa-clock-o"></i>
 						Shift
 					</p>
 					<p class="text-sm mb-3" style="color: var(--lux-brown-500)">
+						<!-- JS: staff.js sets this to the shift type e.g. "Morning"
+                         fetched from GET /shifts/mine filtered by today's date -->
 						<span id="shift-type"></span>
+						<!-- JS: staff.js sets this to the shift hours e.g. "(07:00 — 15:00)"
+                         from the active shift in shifts.json -->
 						<span id="shift-hours"></span>
 					</p>
+					<!-- JS: staff.js updates this every second with time remaining
+                     in HH:MM:SS format calculated from shift end time minus now
+                     turns gold when less than 30 minutes remain -->
 					<p
 						id="shift-countdown"
 						class="font-serif text-4xl"
@@ -86,15 +105,22 @@
 						--:--:--
 					</p>
 					<p class="kicker mt-2">Remaining</p>
-					<p id="shift-status" class="text-xs mt-1" style="color: var(--lux-brown-500)"></p>
+					<!-- JS: staff.js sets this to "Shift ending soon" or "Shift complete"
+                     based on how much time is left on the shift -->
+					<p
+						id="shift-status"
+						class="text-xs mt-1"
+						style="color: var(--lux-brown-500)"></p>
 				</div>
 
-				<!-- Check-ins -->
+				<!-- Check-ins card -->
 				<div class="stat-card" style="border-left: none">
 					<p class="kicker mb-2">
 						<i class="fa fa-users"></i>
 						Check-ins Today
 					</p>
+					<!-- JS: staff.js sets this to the count of today's check-ins
+                     fetched from GET /checkins/today filtered by today's date -->
 					<p
 						id="checkins-today"
 						class="font-serif text-5xl mb-2"
@@ -104,12 +130,14 @@
 					<p class="kicker">Completed by you</p>
 				</div>
 
-				<!-- Queue -->
+				<!-- Queue card -->
 				<div class="stat-card" style="border-left: none">
 					<p class="kicker mb-2">
 						<i class="fa fa-list"></i>
 						Queue
 					</p>
+					<!-- JS: staff.js sets this to the count of pending bookings
+                     with today's check-in date fetched from GET /checkins/queue -->
 					<p
 						id="queue-count"
 						class="font-serif text-5xl mb-2"
@@ -120,23 +148,30 @@
 				</div>
 			</div>
 
-			<!-- Guests awaiting check-in -->
+			<!-- Guests awaiting check-in section -->
 			<h2 class="font-serif text-3xl mb-6" style="color: var(--lux-brown-800)">
 				Guests awaiting check-in
 			</h2>
+			<!-- JS: staff.js replaces this div's innerHTML with a guest-row for each
+             pending booking fetched from GET /checkins/queue
+             each row includes a Check In button that calls checkIn(bookingId) -->
 			<div id="queue-list" class="mb-12">
 				<p class="text-sm" style="color: var(--lux-brown-500)">Loading...</p>
 			</div>
 
-			<!-- Currently in residence -->
+			<!-- Currently in residence section -->
 			<h2 class="font-serif text-3xl mb-6" style="color: var(--lux-brown-800)">
 				Currently in residence
 			</h2>
+			<!-- JS: staff.js replaces this div's innerHTML with a residence-row for each
+             checked-in guest fetched from GET /checkins/residence
+             each row includes a Check Out button that calls checkOut(checkinId) -->
 			<div id="residence-list">
 				<p class="text-sm" style="color: var(--lux-brown-500)">Loading...</p>
 			</div>
 		</section>
 
+		<!-- footer.js loads footer.html into this element -->
 		<footer id="footer"></footer>
 	</body>
 </html>
