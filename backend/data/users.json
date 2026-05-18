@@ -40,5 +40,12 @@
     "email": "dustin@gmail.com",
     "password": "$2b$10$.zV9IW.zrLn/NVEkNTDNQ.LfXOYRWQWaUeOSj4ZPYHuelxz4Vyb/y",
     "role": "customer"
+  },
+  {
+    "id": "u1779061416594",
+    "name": "Nihal Panithy",
+    "email": "panithynihal@gmail.com",
+    "password": "$2b$10$lxwkBIc2EyxIsUQ4YEsCeekkDFhHvmQPstI2tEVLZf0wW1HDh1ojq",
+    "role": "customer"
   }
 ]
