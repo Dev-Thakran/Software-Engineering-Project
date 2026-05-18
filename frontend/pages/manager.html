@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Manager Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../css/main.css" />
+    <script src="../js/footer.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/manager.js"></script>
+    <style>
+        .staff-row { display: grid; grid-template-columns: 220px 200px 1fr 100px 100px; align-items: center; gap: 16px; padding: 20px 24px; border-bottom: 1px solid var(--lux-brown-100); }
+        .staff-row:last-child { border-bottom: none; }
+        .staff-row:hover { background: var(--lux-cream); }
+        .stars { color: #C9A961; }
+    </style>
+</head>
+<body>
+    <header id="header"></header>
+
+    <section class="mx-auto py-12 max-w-6xl px-6">
+
+        <!-- Page header -->
+        <p class="kicker">Executive Overview</p>
+        <div class="grid grid-cols-2 py-2 mb-8">
+            <div>
+                <h1 class="font-serif text-5xl" style="color:var(--lux-brown-800);">Operations at a glance</h1>
+            </div>
+            <div class="text-right">
+                <span id="date-display" class="font-serif text-xl" style="color:var(--lux-brown-800);"></span>
+            </div>
+        </div>
+
+        <!-- KPI stat cards -->
+        <div class="grid grid-cols-4 mb-8">
+            <div class="stat-card">
+                <p class="kicker mb-2"><i class="fa fa-line-chart"></i> Total Revenue</p>
+                <p id="stat-revenue" class="font-serif text-4xl mb-1" style="color:var(--lux-brown-800);">—</p>
+                <p class="meta-label">All bookings</p>
+            </div>
+            <div class="stat-card" style="border-left:none;">
+                <p class="kicker mb-2"><i class="fa fa-building"></i> Occupancy Now</p>
+                <p id="stat-occupancy" class="font-serif text-4xl mb-1" style="color:var(--lux-brown-800);">—</p>
+                <p id="stat-rooms" class="meta-label">Of — rooms</p>
+            </div>
+            <div class="stat-card" style="border-left:none;">
+                <p class="kicker mb-2"><i class="fa fa-star"></i> Avg. Rating</p>
+                <p id="stat-rating" class="font-serif text-4xl mb-1" style="color:var(--lux-brown-800);">—</p>
+                <p id="stat-reviews" class="meta-label">— reviews</p>
+            </div>
+            <div class="stat-card" style="border-left:none;">
+                <p class="kicker mb-2"><i class="fa fa-calendar"></i> Total Bookings</p>
+                <p id="stat-bookings" class="font-serif text-4xl mb-1" style="color:var(--lux-brown-800);">—</p>
+                <p class="meta-label">Lifetime</p>
+            </div>
+        </div>
+
+        <!-- Charts row 1 -->
+        <div class="grid grid-cols-3 gap-0 mb-8">
+            <div class="chart-card col-span-2" style="border-right:none;">
+                <p class="kicker mb-1">Top-selling rooms</p>
+                <h2 class="font-serif text-3xl mb-4" style="color:var(--lux-brown-800);">Guest favourites</h2>
+                <canvas id="chart-top-rooms" height="120"></canvas>
+            </div>
+            <div class="chart-card">
+                <p class="kicker mb-1">By tier</p>
+                <h2 class="font-serif text-3xl mb-4" style="color:var(--lux-brown-800);">Booking mix</h2>
+                <canvas id="chart-mix" height="180"></canvas>
+                <div id="mix-legend" class="mt-4 flex flex-wrap gap-2"></div>
+            </div>
+        </div>
+
+        <!-- Charts row 2 -->
+        <div class="grid grid-cols-2 gap-0 mb-12">
+            <div class="chart-card" style="border-right:none;">
+                <p class="kicker mb-1">Last 14 days</p>
+                <h2 class="font-serif text-3xl mb-4" style="color:var(--lux-brown-800);">Booking trend</h2>
+                <canvas id="chart-trend" height="120"></canvas>
+            </div>
+            <div class="chart-card">
+                <p class="kicker mb-1">Revenue</p>
+                <h2 class="font-serif text-3xl mb-4" style="color:var(--lux-brown-800);">By floor</h2>
+                <canvas id="chart-floor" height="120"></canvas>
+            </div>
+        </div>
+
+        <!-- Staff assignments -->
+        <h2 class="font-serif text-3xl mb-6" style="color:var(--lux-brown-800);">Staff assignments</h2>
+        <div class="mb-12" style="border: 1px solid var(--lux-brown-100); background:#fff;">
+            <div class="staff-row" style="background:var(--lux-cream-dark);">
+                <p class="meta-label">Staff</p>
+                <p class="meta-label">Shift</p>
+                <p class="meta-label">Currently attending</p>
+                <p class="meta-label">Completed</p>
+                <p class="meta-label">Total handled</p>
+            </div>
+            <div id="staff-list"></div>
+        </div>
+
+        <!-- Recent reviews -->
+        <h2 class="font-serif text-3xl mb-6" style="color:var(--lux-brown-800);">Recent reviews</h2>
+        <div id="reviews-list" class="grid grid-cols-3 gap-4 mb-12"></div>
+
+    </section>
+
+    <footer id="footer"></footer>
+</body>
+</html>

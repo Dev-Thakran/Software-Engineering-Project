@@ -1,0 +1,62 @@
+[
+    {
+        "id": "r001",
+        "guestName": "Jane Thompson",
+        "roomId": "103",
+        "roomType": "Standard Single",
+        "rating": 5,
+        "title": "Extraordinary service",
+        "comment": "Every detail was considered. The staff anticipated our every need.",
+        "date": "2026-05-10"
+    },
+    {
+        "id": "r002",
+        "guestName": "Jane Thompson",
+        "roomId": "401",
+        "roomType": "Penthouse Suite",
+        "rating": 5,
+        "title": "Penthouse perfection",
+        "comment": "The terrace at sunset was unforgettable. Butler was impeccable.",
+        "date": "2026-05-12"
+    },
+    {
+        "id": "r003",
+        "guestName": "Jane Thompson",
+        "roomId": "202",
+        "roomType": "Deluxe Double",
+        "rating": 4,
+        "title": "Lovely deluxe room",
+        "comment": "Beautifully appointed. Would return.",
+        "date": "2026-05-14"
+    },
+    {
+        "id": "r004",
+        "guestName": "Jane Thompson",
+        "roomId": "301",
+        "roomType": "Executive Double",
+        "rating": 5,
+        "title": "Grand suite, grand stay",
+        "comment": "Exceeded every expectation. The city view is breathtaking.",
+        "date": "2026-05-15"
+    },
+    {
+        "id": "r005",
+        "guestName": "Jane Thompson",
+        "roomId": "104",
+        "roomType": "Standard Single",
+        "rating": 4,
+        "title": "Charming room",
+        "comment": "Quiet, peaceful, and beautifully designed. Great value.",
+        "date": "2026-05-16"
+    },
+    {
+        "id": "r006",
+        "guestName": "Jane Thompson",
+        "roomId": "204",
+        "roomType": "Deluxe Double",
+        "rating": 5,
+        "title": "Worth every cent",
+        "comment": "The butler service elevated the entire stay.",
+        "date": "2026-05-17"
+    }
+]

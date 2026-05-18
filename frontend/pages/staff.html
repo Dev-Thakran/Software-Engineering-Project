@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Staff Dashboard</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="../css/main.css" />
+		<script src="../js/footer.js"></script>
+		<script src="../js/header.js"></script>
+		<script src="../js/staff.js"></script>
+		<style>
+			.guest-row {
+				border: 1px solid var(--lux-brown-100);
+				padding: 20px 24px;
+				margin-bottom: -1px;
+				background: #fff;
+				display: grid;
+				grid-template-columns: 1fr 180px 200px auto;
+				align-items: center;
+				gap: 16px;
+			}
+			.guest-row:hover {
+				background: var(--lux-cream);
+			}
+			.residence-row {
+				border: 1px solid var(--lux-brown-100);
+				padding: 20px 24px;
+				margin-bottom: -1px;
+				background: #fff;
+				display: grid;
+				grid-template-columns: 200px 1fr auto;
+				align-items: center;
+				gap: 16px;
+			}
+			.residence-row:hover {
+				background: var(--lux-cream);
+			}
+		</style>
+	</head>
+	<body>
+		<header id="header"></header>
+
+		<section class="mx-auto py-12 max-w-6xl px-6">
+			<!-- Header row -->
+			<p class="kicker">Staff Console</p>
+			<div class="grid grid-cols-2 py-2 mb-6">
+				<div>
+					<h1 class="font-serif text-5xl" style="color: var(--lux-brown-800)">
+						Good
+						<span id="greeting-time">morning</span>
+						,
+						<span id="staff-name"></span>
+						.
+					</h1>
+				</div>
+				<div class="text-right">
+					<span id="date-display" class="kicker"></span>
+					<br />
+					<span
+						id="time-display"
+						class="font-serif text-2xl"
+						style="color: var(--lux-brown-800)"></span>
+				</div>
+			</div>
+
+			<!-- Stat cards -->
+			<div class="grid grid-cols-3 mb-12">
+				<!-- Shift -->
+				<div class="stat-card">
+					<p class="kicker mb-2">
+						<i class="fa fa-clock-o"></i>
+						Shift
+					</p>
+					<p class="text-sm mb-3" style="color: var(--lux-brown-500)">
+						<span id="shift-type"></span>
+						<span id="shift-hours"></span>
+					</p>
+					<p
+						id="shift-countdown"
+						class="font-serif text-4xl"
+						style="color: var(--lux-brown-800); letter-spacing: 0.05em">
+						--:--:--
+					</p>
+					<p class="kicker mt-2">Remaining</p>
+					<p id="shift-status" class="text-xs mt-1" style="color: var(--lux-brown-500)"></p>
+				</div>
+
+				<!-- Check-ins -->
+				<div class="stat-card" style="border-left: none">
+					<p class="kicker mb-2">
+						<i class="fa fa-users"></i>
+						Check-ins Today
+					</p>
+					<p
+						id="checkins-today"
+						class="font-serif text-5xl mb-2"
+						style="color: var(--lux-brown-800)">
+						—
+					</p>
+					<p class="kicker">Completed by you</p>
+				</div>
+
+				<!-- Queue -->
+				<div class="stat-card" style="border-left: none">
+					<p class="kicker mb-2">
+						<i class="fa fa-list"></i>
+						Queue
+					</p>
+					<p
+						id="queue-count"
+						class="font-serif text-5xl mb-2"
+						style="color: var(--lux-brown-800)">
+						—
+					</p>
+					<p class="kicker">Awaiting check-in</p>
+				</div>
+			</div>
+
+			<!-- Guests awaiting check-in -->
+			<h2 class="font-serif text-3xl mb-6" style="color: var(--lux-brown-800)">
+				Guests awaiting check-in
+			</h2>
+			<div id="queue-list" class="mb-12">
+				<p class="text-sm" style="color: var(--lux-brown-500)">Loading...</p>
+			</div>
+
+			<!-- Currently in residence -->
+			<h2 class="font-serif text-3xl mb-6" style="color: var(--lux-brown-800)">
+				Currently in residence
+			</h2>
+			<div id="residence-list">
+				<p class="text-sm" style="color: var(--lux-brown-500)">Loading...</p>
+			</div>
+		</section>
+
+		<footer id="footer"></footer>
+	</body>
+</html>
