@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="../css/main.css" />
     <style>
       .filter-select {
-        border: 1px solid #d4c4b0;
-        background: #faf7f2;
-        color: #4a3b32;
+        border: 1px solid var(--lux-brown-100);
+        background: var(--lux-cream);
+        color: var(--lux-brown-700);
         font-family: "Outfit", sans-serif;
         font-size: 12px;
         letter-spacing: 0.06em;
@@ -21,7 +21,7 @@
         appearance: auto;
       }
       .filter-select:focus {
-        border-color: #4a3b32;
+        border-color: var(--lux-brown-700);
       }
 
       input[type="range"] {
@@ -29,7 +29,7 @@
         appearance: none;
         width: 100%;
         height: 1px;
-        background: #4a3b32;
+        background: var(--lux-brown-700);
         outline: none;
         cursor: pointer;
       }
@@ -39,7 +39,7 @@
         width: 14px;
         height: 14px;
         border-radius: 50%;
-        background: #4a3b32;
+        background: var(--lux-brown-700);
         cursor: pointer;
       }
     </style>
@@ -51,14 +51,14 @@
     <header id="header"></header>
 
     <!-- PAGE HEADER -->
-    <section style="padding: 80px 48px 40px; background: #faf7f2">
+    <section style="padding: 80px 48px 40px; background: var(--lux-cream)">
       <div class="container">
         <p class="kicker mb-3">The Collection</p>
         <h1
           class="font-serif"
           style="
             font-size: clamp(48px, 7vw, 80px);
-            color: #2c241b;
+            color: var(--lux-brown-800);
             font-weight: 400;
             line-height: 1.05;
           "
@@ -69,7 +69,7 @@
           class="font-sans mt-3"
           style="
             font-size: 14px;
-            color: #8b7355;
+            color: var(--lux-brown-500);
             max-width: 420px;
             line-height: 1.7;
           "
@@ -81,11 +81,11 @@
     </section>
 
     <!-- FILTER BAR -->
-    <div style="background: #faf7f2; padding: 24px 48px; margin: 0 auto">
+    <div style="background: var(--lux-cream); padding: 24px 48px; margin: 0 auto">
       <div class="container">
         <div
           style="
-            border: 1px solid #e6dfd7;
+            border: 1px solid var(--lux-brown-100);
             padding: 20px 24px;
             display: flex;
             flex-wrap: wrap;
@@ -128,7 +128,7 @@
                 class="input-label"
                 style="font-size: 10px; display: block; margin-bottom: 10px"
               >
-                Max Price — $<span id="priceLabel">380</span>/Night
+                Max Price — $<span id="priceLabel">400</span>/Night
               </label>
               <input
                 type="range"
@@ -184,14 +184,14 @@
           <p
             id="roomCount"
             class="kicker"
-            style="font-size: 11px; color: #8b7355"
+            style="font-size: 11px; color: var(--lux-brown-500)"
           ></p>
         </div>
       </div>
     </div>
 
     <!-- ROOMS GRID -->
-    <main style="padding: 40px 48px 96px; background: #faf7f2">
+    <main style="padding: 40px 48px 96px; background: var(--lux-cream)">
       <div class="container">
         <div
           id="roomsGrid"
@@ -199,10 +199,10 @@
           style="gap: 16px"
         ></div>
         <div id="emptyState" class="hidden text-center" style="padding: 96px 0">
-          <p class="font-serif" style="font-size: 32px; color: #b89f89">
+          <p class="font-serif" style="font-size: 32px; color: var(--lux-brown-500)">
             No rooms match your filters.
           </p>
-          <p class="font-sans mt-2" style="font-size: 13px; color: #8b7355">
+          <p class="font-sans mt-2" style="font-size: 13px; color: var(--lux-brown-500)">
             Try adjusting your selection.
           </p>
         </div>
