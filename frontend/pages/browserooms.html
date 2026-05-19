@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rooms & Suites – La Extravaganza</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/main.css" />
+    <style>
+      .filter-select {
+        border: 1px solid #d4c4b0;
+        background: #faf7f2;
+        color: #4a3b32;
+        font-family: "Outfit", sans-serif;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        padding: 8px 28px 8px 10px;
+        outline: none;
+        cursor: pointer;
+        border-radius: 0;
+        appearance: auto;
+      }
+      .filter-select:focus {
+        border-color: #4a3b32;
+      }
+
+      input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 1px;
+        background: #4a3b32;
+        outline: none;
+        cursor: pointer;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        background: #4a3b32;
+        cursor: pointer;
+      }
+    </style>
+    <script src="../js/header.js"></script>
+    <script src="../js/footer.js"></script>
+    <script src="../js/browserooms.js" defer></script>
+  </head>
+  <body>
+    <header id="header"></header>
+
+    <!-- PAGE HEADER -->
+    <section style="padding: 80px 48px 40px; background: #faf7f2">
+      <div class="container">
+        <p class="kicker mb-3">The Collection</p>
+        <h1
+          class="font-serif"
+          style="
+            font-size: clamp(48px, 7vw, 80px);
+            color: #2c241b;
+            font-weight: 400;
+            line-height: 1.05;
+          "
+        >
+          Rooms &amp; Suites
+        </h1>
+        <p
+          class="font-sans mt-3"
+          style="
+            font-size: 14px;
+            color: #8b7355;
+            max-width: 420px;
+            line-height: 1.7;
+          "
+        >
+          Twenty-four sanctuaries across four floors. Each tier a distinct
+          promise — from garden calm to penthouse grandeur.
+        </p>
+      </div>
+    </section>
+
+    <!-- FILTER BAR -->
+    <div style="background: #faf7f2; padding: 24px 48px; margin: 0 auto">
+      <div class="container">
+        <div
+          style="
+            border: 1px solid #e6dfd7;
+            padding: 20px 24px;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 32px;
+            justify-content: space-between;
+          "
+        >
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              align-items: center;
+              gap: 32px;
+            "
+          >
+            <!-- Floor -->
+            <div>
+              <label
+                class="input-label"
+                style="font-size: 10px; display: block; margin-bottom: 6px"
+                >Floor</label
+              >
+              <select
+                class="filter-select"
+                id="floorFilter"
+                onchange="applyFilters()"
+              >
+                <option value="all">All floors</option>
+                <option value="1">Floor 1 — Garden</option>
+                <option value="2">Floor 2 — Classic</option>
+                <option value="3">Floor 3 — Executive</option>
+                <option value="4">Floor 4 — Penthouse</option>
+              </select>
+            </div>
+
+            <!-- Max price slider -->
+            <div style="min-width: 220px">
+              <label
+                class="input-label"
+                style="font-size: 10px; display: block; margin-bottom: 10px"
+              >
+                Max Price — $<span id="priceLabel">380</span>/Night
+              </label>
+              <input
+                type="range"
+                id="priceFilter"
+                min="99"
+                max="400"
+                value="400"
+                step="1"
+                oninput="
+                  updatePrice(this.value);
+                  applyFilters();
+                "
+              />
+            </div>
+
+            <!-- Sort -->
+            <div>
+              <label
+                class="input-label"
+                style="font-size: 10px; display: block; margin-bottom: 6px"
+                >Sort</label
+              >
+              <select
+                class="filter-select"
+                id="sortFilter"
+                onchange="applyFilters()"
+              >
+                <option value="default">Floor — low to high</option>
+                <option value="price-asc">Price — low to high</option>
+                <option value="price-desc">Price — high to low</option>
+              </select>
+            </div>
+
+            <!-- Availability -->
+            <div>
+              <label
+                class="input-label"
+                style="font-size: 10px; display: block; margin-bottom: 6px"
+                >Availability</label
+              >
+              <select
+                class="filter-select"
+                id="statusFilter"
+                onchange="applyFilters()"
+              >
+                <option value="all">All Rooms</option>
+                <option value="available">Available Only</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Room count -->
+          <p
+            id="roomCount"
+            class="kicker"
+            style="font-size: 11px; color: #8b7355"
+          ></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ROOMS GRID -->
+    <main style="padding: 40px 48px 96px; background: #faf7f2">
+      <div class="container">
+        <div
+          id="roomsGrid"
+          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          style="gap: 16px"
+        ></div>
+        <div id="emptyState" class="hidden text-center" style="padding: 96px 0">
+          <p class="font-serif" style="font-size: 32px; color: #b89f89">
+            No rooms match your filters.
+          </p>
+          <p class="font-sans mt-2" style="font-size: 13px; color: #8b7355">
+            Try adjusting your selection.
+          </p>
+        </div>
+      </div>
+    </main>
+
+    <footer id="footer"></footer>
+  </body>
+</html>
