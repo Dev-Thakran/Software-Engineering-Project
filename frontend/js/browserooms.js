@@ -17,7 +17,7 @@ const FLOOR_NAMES = {
 let allRooms = []; // Stores all rooms fetched from the backend
 let maxPrice = 400; // Current max price filter value
 
-// ── INIT ──────────────────────────────────────────────────────
+//  INIT
 document.addEventListener("DOMContentLoaded", () => {
 	// Fetch rooms from the local Express backend
 	// Uses the same /rooms endpoint as the rest of the app
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 });
 
-// ── PRICE SLIDER ───────────────────────────────────────────────
+//  PRICE SLIDER
 function updatePrice(val) {
 	// Called every time the price slider moves
 	// Updates the displayed price label and the maxPrice variable
@@ -48,7 +48,7 @@ function updatePrice(val) {
 		parseInt(val).toLocaleString();
 }
 
-// ── FILTERS ───────────────────────────────────────────────────
+//  FILTERS
 function applyFilters() {
 	// Read current filter values from the DOM
 	const floor = document.getElementById("floorFilter").value;
@@ -76,7 +76,7 @@ function applyFilters() {
 	render(list);
 }
 
-// ── RENDER ────────────────────────────────────────────────────
+//  RENDER
 function render(list) {
 	const grid = document.getElementById("roomsGrid");
 	const empty = document.getElementById("emptyState");
@@ -118,6 +118,7 @@ function render(list) {
             <div style="background:#FFFFFF; border:1px solid #E6DFD7; cursor:pointer; transition:box-shadow 0.3s;"
                  onmouseover="this.style.boxShadow='0 4px 24px rgba(44,36,27,0.10)'"
                  onmouseout="this.style.boxShadow='none'">
+                 <a href="./booking.html?room=${room.id}">
 
                 <!-- Room image with hover zoom -->
                 <div style="position:relative; overflow:hidden; height:220px;">
@@ -169,28 +170,27 @@ function render(list) {
                         <span>⬜ ${meta.sqm}m²</span>
 
                         <!-- Show status badge if not available -->
-                        ${
-													!isAvail
-														? `
+                        ${!isAvail
+					? `
                             <span style="margin-left:auto; padding:4px 10px; font-size:10px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; ${badgeStyle}">
                                 ${room.status}
                             </span>`
-														: ""
-												}
+					: ""
+				}
 
                         <!-- Show Reserve button only if room is available -->
-                        ${
-													isAvail
-														? `
+                        ${isAvail
+					? `
                             <a href="./booking.html?room=${room.id}"
                                class="btn-primary"
                                style="margin-left:auto; padding:8px 16px; font-size:10px;">
                                 Reserve
                             </a>`
-														: ""
-												}
+					: ""
+				}
                     </div>
                 </div>
+                </a>
             </div>`;
 		})
 		.join("");
