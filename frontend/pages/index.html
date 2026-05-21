@@ -1,291 +1,355 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>LuxStay</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../css/main.css"/>
-</head>
+    <link rel="stylesheet" href="../css/main.css" />
+  </head>
 
-
-<body>
+  <body>
     <header class="navigation-bar">
-        <nav>
-            <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-                <a href="index.html" class="font-serif text-[#2C241B]"
-                    style="font-size:22px; letter-spacing:0; text-transform:none;">
-                    Lux<em class="font-display ">Stay</em>
-                </a>
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="index.html">Home</a>
-                    <a href="rooms.html">Rooms</a>
-                    <a href="floormap.html">Floor Map</a>
-                    <a href="#">About</a>
-                    <a href="#">Contact</a>
-                </div>
-                <div class="flex items-center gap-5">
-                    <div id="nav-auth" class="flex items-center gap-5">
-                        <a href="/pages/Login.html">Sign In</a>
-                        <a href="/pages/rooms.html" class="btn-reserve">Reserve</a>
-                    </div>
-                </div>
+      <nav>
+        <div
+          class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between"
+        >
+          <a
+            href="index.html"
+            class="font-serif text-[#2C241B]"
+            style="font-size: 22px; letter-spacing: 0; text-transform: none"
+          >
+            Lux<em class="font-display">Stay</em>
+          </a>
+          <div class="hidden md:flex items-center gap-8">
+            <a href="index.html">Home</a>
+            <a href="browserooms.html">Rooms</a>
+            <a href="floormap.html">Floor Map</a>
+            <a href="#">About</a>
+            <a href="#">Contact</a>
+          </div>
+          <div class="flex items-center gap-5">
+            <div id="nav-auth" class="flex items-center gap-5">
+              <a href="/pages/Login.html">Sign In</a>
+              <a href="/pages/rooms.html" class="btn-reserve">Reserve</a>
             </div>
-        </nav>
+          </div>
+        </div>
+      </nav>
     </header>
 
     <!--Hero-->
     <section class="relative h-[85vh] overflow-hidden">
-        <img src="../images/hero/home-hero.jpg" alt="LuxStay Hero Banner" class="absolute inset-0 w-full h-full object-cover">
+      <img
+        src="../images/hero/home-hero.jpg"
+        alt="LuxStay Hero Banner"
+        class="absolute inset-0 w-full h-full object-cover"
+      />
 
-        <div class="absolute inset-0 bg-black/35"></div>
-    
-        <!--Hero Text & Content-->
-        <div class="relative z-10 pl-10 h-full flex items-center">
-            <div class="max-w-5xl" mx-auto px-6 w-full text-white>
+      <div class="absolute inset-0 bg-black/35"></div>
 
-                <p class="uppercase tracking-[0.2cm] text-sm text-white/70 mb-8">
-                    An Auckland Sanctuary
-                </p>
+      <!--Hero Text & Content-->
+      <div class="relative z-10 pl-10 h-full flex items-center">
+        <div class="max-w-5xl" mx-auto px-6 w-full text-white>
+          <p class="uppercase tracking-[0.2cm] text-sm text-white/70 mb-8">
+            An Auckland Sanctuary
+          </p>
 
-                <h1 class="font-serif text-5xl md:text-6xl leading-[0.5] font-light max-w-3xl text-white mb-8">
-                    Where every floor is <span class="italic block"> a world unto itself</span>
-                </h1>
+          <h1
+            class="font-serif text-5xl md:text-6xl leading-[0.5] font-light max-w-3xl text-white mb-8"
+          >
+            Where every floor is
+            <span class="italic block"> a world unto itself</span>
+          </h1>
 
-                <p class="mt-8 text-lg max-w-xl text-white/85 leading-relaxed">
-                    Eight floors. Forty-eight rooms. One address that lingers in memory long after you depart.
-                </p>
+          <p class="mt-8 text-lg max-w-xl text-white/85 leading-relaxed">
+            Eight floors. Forty-eight rooms. One address that lingers in memory
+            long after you depart.
+          </p>
 
+          <!--Buttons-->
+          <div class="flex gap-4 mt-10">
+            <a
+              href="#"
+              class="bg-white text-black px-8 py-4 uppercase tracking-[0.2em] text-xs hover:bg-neutral-200 transition"
+            >
+              Reserve a room →
+            </a>
 
-
-                <!--Buttons-->
-                <div class="flex gap-4 mt-10">
-                    <a href="#" class="bg-white text-black px-8 py-4 uppercase tracking-[0.2em] text-xs hover:bg-neutral-200 transition">
-                        Reserve a room →
-                    </a>
-
-                    <a href="floormap.html" class="border border-white px-8 py-4 uppercase tracking-[0.2em] text-xs text-[white] hover:bg-white hover:text-black transition">
-                        View floor map
-                    </a>
-                </div> 
-            </div>
+            <a
+              href="floormap.html"
+              class="border border-white px-8 py-4 uppercase tracking-[0.2em] text-xs text-[white] hover:bg-white hover:text-black transition"
+            >
+              View floor map
+            </a>
+          </div>
         </div>
+      </div>
     </section>
-
 
     <!--Stat Banner-->
     <section class="bg-[white] py-15 h-[150px]">
-        <div class="max-w-7xl mx-auto px-5 grid grid-cols-1 md:grid-cols-4 gap-9 pt-6 items-center">
+      <div
+        class="max-w-7xl mx-auto px-5 grid grid-cols-1 md:grid-cols-4 gap-9 pt-6 items-center"
+      >
+        <div class="sectiona-left-text">
+          <p class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-4">
+            Since 2014
+          </p>
 
-            <div class="sectiona-left-text">
-                <p class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-4">
-                    Since 2014
-                </p>
-
-                <h2 class="font-serif text-3xl text-[black] leading-tight">
-                    A quiet benchmark in hospitality.
-                </h2>
-            </div>
-
-            <div class="border-1 border-[#E6DFD7] pl-7">
-                <h3 class="font-serif text-4xl text-[black]">48</h3>
-                <p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">Rooms & Suites</p>
-            </div>
-
-            <div class="border-1 border-[#E6DFD7] pl-7">
-                <h3 class="font-serif text-4xl text-[black]">8</h3>
-                <p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">Floors, Each a tier</p>
-            </div>
-
-            <div class="border-1 border-[#E6DFD7] pl-7">
-                <h3 class="font-serif text-4xl text-[black]">4.9</h3>
-                <p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">Average Review</p>
-            </div>
+          <h2 class="font-serif text-3xl text-[black] leading-tight">
+            A quiet benchmark in hospitality.
+          </h2>
         </div>
-    </section>
 
+        <div class="border-1 border-[#E6DFD7] pl-7">
+          <h3 class="font-serif text-4xl text-[black]">48</h3>
+          <p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">
+            Rooms & Suites
+          </p>
+        </div>
+
+        <div class="border-1 border-[#E6DFD7] pl-7">
+          <h3 class="font-serif text-4xl text-[black]">8</h3>
+          <p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">
+            Floors, Each a tier
+          </p>
+        </div>
+
+        <div class="border-1 border-[#E6DFD7] pl-7">
+          <h3 class="font-serif text-4xl text-[black]">4.9</h3>
+          <p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">
+            Average Review
+          </p>
+        </div>
+      </div>
+    </section>
 
     <!--Collection Banner-->
     <section class="bg-[#FAF7F2] py-16">
-        
-        <!--Top Row of Collection-->
-        <div class="max-w-7xl ml-10 pl-10 py-10 gap-9 items-center">
-            <p class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-4">
-                The collection
+      <!--Top Row of Collection-->
+      <div class="max-w-7xl ml-10 pl-10 py-10 gap-9 items-center">
+        <p class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-4">
+          The collection
+        </p>
+
+        <div class="flex items-end justify-between">
+          <p class="font-serif text-5xl text-[#2C241B] mb-4">
+            Ascend through our <span class="italic">tiers</span>
+          </p>
+
+          <a href="#" class="font-serif text-[#2C241B] mb-4 text-lg"
+            >Browse all rooms →</a
+          >
+        </div>
+      </div>
+
+      <!--Collection Column + Split Column Grid-->
+      <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="relative lg:col-span-2 h-[525px] overflow-hidden group">
+          <img
+            src="../images/featured-tier-1-bedroom.jpg"
+            class="w-full h-full object-cover group-hover:scale-105"
+            alt="Featured Bedroom Tier 1"
+          />
+
+          <div class="absolute inset-0 bg-black/25"></div>
+
+          <div class="absolute bottom-6 left-6 z-10 text-white">
+            <p class="uppercase tracking-[0.2em] text-xs text-white/70 mb-3">
+              Floor 8
             </p>
-
-            <div class="flex items-end justify-between">
-                
-                <p class="font-serif text-5xl text-[#2C241B] mb-4">
-                    Ascend through our <span class="italic">tiers</span>
-                </p>
-
-                <a href="#" class="font-serif text-[#2C241B] mb-4 text-lg">Browse all rooms →</a>
-            </div>
-
-
-
+            <h4 class="font-serif text-4xl mb-2 text-white">Penthouse</h4>
+            <p class="uppercase tracking-[0.2em] text-xs text-white/80">
+              From $1,650 / Night
+            </p>
+          </div>
         </div>
 
+        <div class="flex flex-col gap-6">
+          <div class="relative h-[250px] overflow-hidden group">
+            <img
+              src="../images/featured-tier-2-twin-suite.jpg"
+              class="w-full h-full object-cover group-hover:scale-105"
+              alt="Featured Twin Suite Tier 2"
+            />
 
-        <!--Collection Column + Split Column Grid-->
-        <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="relative lg:col-span-2 h-[525px] overflow-hidden group">
-                <img src="../images/featured-tier-1-bedroom.jpg" class="w-full h-full object-cover group-hover:scale-105" alt="Featured Bedroom Tier 1">
+            <div class="absolute inset-0 bg-black/25"></div>
 
-                <div class="absolute inset-0 bg-black/25"></div>
-
-                <div class="absolute bottom-6 left-6 z-10 text-white">
-                    <p class="uppercase tracking-[0.2em] text-xs text-white/70 mb-3">Floor 8</p>    
-                    <h4 class="font-serif text-4xl mb-2 text-white">Penthouse</h4>  
-                    <p class="uppercase tracking-[0.2em] text-xs text-white/80">From $1,650 / Night</p>         
-                </div>
+            <div class="absolute bottom-6 left-6 z-10 text-white">
+              <p class="uppercase tracking-[0.2em] text-xs text-white/70 mb-3">
+                Floor 6
+              </p>
+              <h4 class="font-serif text-4xl mb-2 text-white">Ambassador</h4>
+              <p class="uppercase tracking-[0.2em] text-xs text-white/80">
+                From $780 / Night
+              </p>
             </div>
+          </div>
 
-            <div class="flex flex-col gap-6">
-                <div class="relative h-[250px] overflow-hidden group">
-                    <img src="../images/featured-tier-2-twin-suite.jpg" class="w-full h-full object-cover group-hover:scale-105" alt="Featured Twin Suite Tier 2">
+          <div class="relative h-[250px] overflow-hidden group">
+            <img
+              src="../images/featured-tier-3-luxury-bed.jpg"
+              class="w-full h-full object-cover group-hover:scale-105"
+              alt="Featured Luxury Tier 3"
+            />
 
-                    <div class="absolute inset-0 bg-black/25"></div>
+            <div class="absolute inset-0 bg-black/25"></div>
 
-                    <div class="absolute bottom-6 left-6 z-10 text-white">
-                        <p class="uppercase tracking-[0.2em] text-xs text-white/70 mb-3">Floor 6</p>
-                        <h4 class="font-serif text-4xl mb-2 text-white">Ambassador</h4>
-                        <p class="uppercase tracking-[0.2em] text-xs text-white/80">From $780 / Night</p>
-                    </div>
-                </div>
-
-                <div class="relative h-[250px] overflow-hidden group">
-                    <img src="../images/featured-tier-3-luxury-bed.jpg" class="w-full h-full object-cover group-hover:scale-105" alt="Featured Luxury Tier 3">
-
-                    <div class="absolute inset-0 bg-black/25"></div>
-
-                    <div class="absolute bottom-6 left-6 z-10 text-white">
-                        <p class="uppercase tracking-[0.2em] text-xs text-white/70 mb-3">Foor 4</p>
-                        <h4 class="font-serif text-4xl mb-2 text-white">Premier</h4>
-                        <p class="uppercase tracking-[0.2em] text-xs text-white/80">From $420 / Night</p>
-                    </div>
-                </div>
+            <div class="absolute bottom-6 left-6 z-10 text-white">
+              <p class="uppercase tracking-[0.2em] text-xs text-white/70 mb-3">
+                Foor 4
+              </p>
+              <h4 class="font-serif text-4xl mb-2 text-white">Premier</h4>
+              <p class="uppercase tracking-[0.2em] text-xs text-white/80">
+                From $420 / Night
+              </p>
             </div>
-
-            <div class="relative lg:col-span-3 lg:w-[40%] h-[300px] overflow-hidden group">
-                <img src="../images/hero-exterior.jpg" class="w-full h-full object-cover group-hover:scale-105" alt="Featured Concierge">
-
-                <div class="absolute inset-0 bg-black/25"></div>
-
-                <div class="absolute bottom-6 left-6 z-10 text-white">
-                    <p class="uppercase tracking-[0.2em] text-xs text-white/70 mb-3">Floor 1</p>
-                    <h4 class="font-serif text-4xl mb-2 text-white">Garden</h4>
-                    <p class="uppercase tracking-[0.2em] text-xs text-white/80">From $180 / Night</p>
-                </div>
-            </div>
-
+          </div>
         </div>
+
+        <div
+          class="relative lg:col-span-3 lg:w-[40%] h-[300px] overflow-hidden group"
+        >
+          <img
+            src="../images/hero-exterior.jpg"
+            class="w-full h-full object-cover group-hover:scale-105"
+            alt="Featured Concierge"
+          />
+
+          <div class="absolute inset-0 bg-black/25"></div>
+
+          <div class="absolute bottom-6 left-6 z-10 text-white">
+            <p class="uppercase tracking-[0.2em] text-xs text-white/70 mb-3">
+              Floor 1
+            </p>
+            <h4 class="font-serif text-4xl mb-2 text-white">Garden</h4>
+            <p class="uppercase tracking-[0.2em] text-xs text-white/80">
+              From $180 / Night
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!--Experience section-->
-    <section class="w-full bg-[#F2EBE1]">    
-        <div class="max-w-7xl mx-auto w-full grid grid-cols-2 lg:grid-cols-4 gap-10 h-[800px] ">
-
-            <div class="lg:col-span-2 py-10">
-                <img src="../images/concierge-editorial.jpg" class="w-full h-full object-cover " alt="Concierge Room">         
-            </div>
-
-            <!--Experience Text-->
-            <div class="lg:col-span-2 py-16">
-                <p class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-4 pt-4 pl-9">
-                    The Experience
-                </p>
-
-                 <p class="font-serif text-6xl text-[#2C241B] mb-4 pl-9">
-                    A stay that feels <span class="italic"><em class="font-display">like a novel</em></span> — with every detail written.
-                </p>
-
-                <p class=" text-2xl text-[#928065] mb-4 pl-9">
-                    From the first greeting to the last farewell, LuxStay is
-                    orchestrated by a team whose quiet craft is to anticipate.
-                    Mornings are unhurried. Evenings unfold slowly. The city
-                    recedes.
-                </p>
-
-                <div class="max-w-7xl mx-auto w-auto grid grid-cols-2 lg:grid-cols-2 gap-4 py-10 pl-10 text-[#4A3B32]">
-                    <div>
-                        <hr class="border-t-4 border-[#D4C4B0] my-3">
-                        <p >Rainfall showers</p>
-                    </div>
-                    <div>
-                        <hr class="border-t-4 border-[#D4C4B0] my-3">
-                        <p>Nespresso in-room</p>
-                    </div>
-
-                    <div>
-                        <hr class="border-t-4 border-[#D4C4B0] my-3">
-                        <p>Robes & Slippers</p>       
-                    </div>
-                    <div>
-                        <hr class="border-t-4 border-[#D4C4B0] my-3">
-                        <p>Butler service (floor 6+)</p>
-                    </div>
-                </div>
-
-            </div>
+    <section class="w-full bg-[#F2EBE1]">
+      <div
+        class="max-w-7xl mx-auto w-full grid grid-cols-2 lg:grid-cols-4 gap-10 h-[800px]"
+      >
+        <div class="lg:col-span-2 py-10">
+          <img
+            src="../images/concierge-editorial.jpg"
+            class="w-full h-full object-cover"
+            alt="Concierge Room"
+          />
         </div>
+
+        <!--Experience Text-->
+        <div class="lg:col-span-2 py-16">
+          <p
+            class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-4 pt-4 pl-9"
+          >
+            The Experience
+          </p>
+
+          <p class="font-serif text-6xl text-[#2C241B] mb-4 pl-9">
+            A stay that feels
+            <span class="italic"
+              ><em class="font-display">like a novel</em></span
+            >
+            — with every detail written.
+          </p>
+
+          <p class="text-2xl text-[#928065] mb-4 pl-9">
+            From the first greeting to the last farewell, LuxStay is
+            orchestrated by a team whose quiet craft is to anticipate. Mornings
+            are unhurried. Evenings unfold slowly. The city recedes.
+          </p>
+
+          <div
+            class="max-w-7xl mx-auto w-auto grid grid-cols-2 lg:grid-cols-2 gap-4 py-10 pl-10 text-[#4A3B32]"
+          >
+            <div>
+              <hr class="border-t-4 border-[#D4C4B0] my-3" />
+              <p>Rainfall showers</p>
+            </div>
+            <div>
+              <hr class="border-t-4 border-[#D4C4B0] my-3" />
+              <p>Nespresso in-room</p>
+            </div>
+
+            <div>
+              <hr class="border-t-4 border-[#D4C4B0] my-3" />
+              <p>Robes & Slippers</p>
+            </div>
+            <div>
+              <hr class="border-t-4 border-[#D4C4B0] my-3" />
+              <p>Butler service (floor 6+)</p>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!--Review-->
     <section class="w-full bg-[#2C241B]">
-        <div class="py-18 h-[350px] pl-32">
-            <div class="max-w-7xl w-full grid grid-cols-2 lg:grid-cols-2 gap-5">
-                <div class="lg:col-span-2 pt-16 pb-6"><p class="text-[#C9A961] text-3xl text-center">★★★★★</p></div>
-                <div class="lg:col-span-2 text-center">
-                    <span><em class="font-display text-4xl text-[#FAF7F2]">
-                        "The penthouse terrace at dusk, a butler who knew our names by breakfast — 
-                        we will measure every stay against this one."
-                    </em></span>
-                </div>
-                
-                <div class="lg:col-span-2 text-center">
-                    <p>— Sophia R., Floor 8, January</p>
-                </div>
-                
-            </div>
-        </div>
+      <div class="py-18 h-[350px] pl-32">
+        <div class="max-w-7xl w-full grid grid-cols-2 lg:grid-cols-2 gap-5">
+          <div class="lg:col-span-2 pt-16 pb-6">
+            <p class="text-[#C9A961] text-3xl text-center">★★★★★</p>
+          </div>
+          <div class="lg:col-span-2 text-center">
+            <span
+              ><em class="font-display text-4xl text-[#FAF7F2]">
+                "The penthouse terrace at dusk, a butler who knew our names by
+                breakfast — we will measure every stay against this one."
+              </em></span
+            >
+          </div>
 
-        <div class="w-full bg-[#FAF7F2] py-18 h-[100px]"></div>
+          <div class="lg:col-span-2 text-center">
+            <p>— Sophia R., Floor 8, January</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="w-full bg-[#FAF7F2] py-18 h-[100px]"></div>
     </section>
 
-
     <footer class="px-6 py-14">
-        <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-10">
-            <div>
-                <p class="font-serif text-xl mb-3" style="color:#FAF7F2;">
-                    Lux<em class="font-display">Stay</em>
-                </p>
-                <p>An address unlike any other. Eight floors of curated sanctuary in the heart of the city.</p>
-            </div>
-            <div>
-                <h4>Explore</h4>
-                <a href="rooms.html">Rooms & Suites</a>
-                <a href="floormap.html">Floor Map</a>
-                <a href="#">Our Story</a>
-                <a href="#">Contact</a>
-            </div>
-            <div>
-                <h4>Contact</h4>
-                <p>42 Harbour Avenue</p>
-                <p>Auckland Central, 1010</p>
-                <p>+64 9 123 4567</p>
-                <p>reservations@luxstay.co.nz</p>
-            </div>
-            <div>
-                <h4>Hours</h4>
-                <p>Reception — 24 hours</p>
-                <p>Check-in — 15:00</p>
-                <p>Check-out — 11:00</p>
-                <p>Concierge — 06:00 – 23:00</p>
-            </div>
+      <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-10">
+        <div>
+          <p class="font-serif text-xl mb-3" style="color: #faf7f2">
+            Lux<em class="font-display">Stay</em>
+          </p>
+          <p>
+            An address unlike any other. Eight floors of curated sanctuary in
+            the heart of the city.
+          </p>
         </div>
+        <div>
+          <h4>Explore</h4>
+          <a href="rooms.html">Rooms & Suites</a>
+          <a href="floormap.html">Floor Map</a>
+          <a href="#">Our Story</a>
+          <a href="#">Contact</a>
+        </div>
+        <div>
+          <h4>Contact</h4>
+          <p>42 Harbour Avenue</p>
+          <p>Auckland Central, 1010</p>
+          <p>+64 9 123 4567</p>
+          <p>reservations@luxstay.co.nz</p>
+        </div>
+        <div>
+          <h4>Hours</h4>
+          <p>Reception — 24 hours</p>
+          <p>Check-in — 15:00</p>
+          <p>Check-out — 11:00</p>
+          <p>Concierge — 06:00 – 23:00</p>
+        </div>
+      </div>
     </footer>
-</body>
+  </body>
 </html>
