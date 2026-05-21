@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Booking Form</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/main.css"/>
 </head>
 
@@ -27,7 +28,7 @@
                 </div>
                 <div class="flex items-center gap-5">
                     <div id="nav-auth" class="flex items-center gap-5">
-                        <a href="/pages/booking.html">My Bookings</a>
+                        <a href="/pages/mybooking.html">My Bookings</a>
                         <a href="#">Sign out</a>
                     </div>
                 </div>
@@ -35,7 +36,92 @@
         </nav>
     </header>
 
-    
+    <section>
+        <div>
+            <p class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-4 pt-16 pl-9"> 
+                Welcome back, guest customer
+            </p>
+
+            <p class="font-serif text-6xl text-[#2C241B] mb-4 pl-9 italic">
+                Secure your stay
+            </p>
+
+            <p class="font-serif text-4xl text-[#2C241B] mb-4 pl-9 pt-12 pb-4 italic">
+                Upcoming & current
+            </p>
+
+            <div class="grid grid-cols-2 content-center gap-6 px-8 ">
+                <div class="bg-[white] py-4" id="upcomingbooking1">
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 px-4 text-[#8B7335]">
+                        
+                        <!--example on how it would look when working-->
+                        <!--change when deployed fully-->
+                        <div class="lg:col-span-2 text-[#8B7355] text-xl pt-2 ">
+                            <p>Floor 1 — Garden</p>
+                        </div>
+                        
+                        <div class="lg:col-span-1 py-2"></div>
+                        <div class="lg:col-span-1 bg-[#E6DFD7] pt-2">
+                            <p class="text-[black] text-center">Arriving</p>
+                        </div>
+                        <div class="lg:col-span-4 bg-[#] pb-2 text-[black] font-cormorant bold text-5xl pb-4">
+                            <p>Room 101</p>
+                        </div>
+
+                        <div class="lg:col-span-2"><p>Check-in:</p></div>
+                        <div class="lg:col-span-2"><p id="checkin-dis">2026-01-01</p></div>
+                        <div class="lg:col-span-2"><p>Check-out:</p></div>
+                        <div class="lg:col-span-2"><p id="checkout-dis">2026-01-04</p></div>
+                        <div class="lg:col-span-2"><p>Reference:</p></div>
+                        <div class="lg:col-span-2"><p id="reference-dis">BK1779059263693</p></div>
+                        <div class="lg:col-span-2"><p>Total:</p></div>
+                        <div class="lg:col-span-2"><p id="total-dis">$207</p></div>
+                    </div>
+                </div>
+
+                <!--default when no upcoming bookings-->
+                <div class="bg-[white] py-4" id="upcomingbooking2">
+                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 px-4 text-[#8B7335]">
+                        
+                        <!--example on how it would look when working-->
+                        <div class="lg:col-span-2 text-[#8B7355] text-xl pt-2 ">
+                            <p>-</p>
+                        </div>
+                        
+                        <div class="lg:col-span-1 py-2"></div>
+                        <div class="lg:col-span-1 bg-[#E6DFD7] pt-2">
+                            <p class="text-[black] text-center">-</p>
+                        </div>
+                        <div class="lg:col-span-4 bg-[#] pb-2 text-[black] font-cormorant bold text-5xl pb-4">
+                            <p>-</p>
+                        </div>
+
+                        <div class="lg:col-span-2"><p>Check-in:</p></div>
+                        <div class="lg:col-span-2"><p id="checkin-dis">-</p></div>
+                        <div class="lg:col-span-2"><p>Check-out:</p></div>
+                        <div class="lg:col-span-2"><p id="checkout-dis">-</p></div>
+                        <div class="lg:col-span-2"><p>Reference:</p></div>
+                        <div class="lg:col-span-2"><p id="reference-dis">-</p></div>
+                        <div class="lg:col-span-2"><p>Total:</p></div>
+                        <div class="lg:col-span-2"><p id="total-dis">$-</p></div>
+                    </div>
+                </div>
+
+                 <p class="font-serif text-4xl text-[#2C241B] pl-2 italic">
+                    Past Stays
+                </p>
+                <div class="lg:col-span-2 bg-[white] py-4">
+                    <div class="grid grid-cols-2 pl-4">
+                        <div class="italic text-lg py-2">
+                            <p>No past stay yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-16"></div>
+    </section>
 
     <footer class="px-6 py-14">
         <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-10">
@@ -68,5 +154,17 @@
             </div>
         </div>
     </footer>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        cormorant: ['"Cormorant Garamond"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
 </body>
 </html>
