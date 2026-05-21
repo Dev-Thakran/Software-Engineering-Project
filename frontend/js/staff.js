@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <div>
                             <p class="meta-label">Checked in</p>
                             <!-- Split on "T" to get just the date part from ISO timestamp -->
-                            <p class="meta-value">${c.checkInTime.split("T")[0]}</p>
+                            <p class="meta-value">${b.checkIn}</p>
                         </div>
                         <div>
                             <p class="meta-label">Depart</p>
