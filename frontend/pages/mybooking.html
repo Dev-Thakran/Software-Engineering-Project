@@ -4,37 +4,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Booking Form</title>
+    <title>My Booking - La Extravaganza</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/main.css"/>
+    <script src="../js/header.js"></script>
+    <script src="../js/footer.js"></script>
 </head>
 
 
 <body>
-    <header class="navigation-bar">
-        <nav>
-            <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
-                <a href="index.html" class="font-serif text-[#2C241B]"
-                    style="font-size:22px; letter-spacing:0; text-transform:none;">
-                    Lux<em class="font-display ">Stay</em>
-                </a>
-                <div class="hidden md:flex items-center gap-8">
-                    <a href="index.html">Home</a>
-                    <a href="browserooms.html">Rooms</a>
-                    <a href="floormap.html">Floor Map</a>
-                    <a href="#">About</a>
-                    <a href="#">Contact</a>
-                </div>
-                <div class="flex items-center gap-5">
-                    <div id="nav-auth" class="flex items-center gap-5">
-                        <a href="mybooking.html">My Bookings</a>
-                        <a href="index.html">Sign out</a>
-                    </div>
-                </div>
-            </div>
-        </nav>
-    </header>
+    <header id="header"></header>
 
     <section>
         <div>
@@ -123,37 +103,7 @@
         <div class="py-16"></div>
     </section>
 
-    <footer class="px-6 py-14">
-        <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-4 gap-10">
-            <div>
-                <p class="font-serif text-xl mb-3" style="color:#FAF7F2;">
-                    Lux<em class="font-display">Stay</em>
-                </p>
-                <p>An address unlike any other. Eight floors of curated sanctuary in the heart of the city.</p>
-            </div>
-            <div>
-                <h4>Explore</h4>
-                <a href="browserooms.html">Rooms & Suites</a>
-                <a href="floormap.html">Floor Map</a>
-                <a href="#">Our Story</a>
-                <a href="#">Contact</a>
-            </div>
-            <div>
-                <h4>Contact</h4>
-                <p>42 Harbour Avenue</p>
-                <p>Auckland Central, 1010</p>
-                <p>+64 9 123 4567</p>
-                <p>reservations@luxstay.co.nz</p>
-            </div>
-            <div>
-                <h4>Hours</h4>
-                <p>Reception — 24 hours</p>
-                <p>Check-in — 15:00</p>
-                <p>Check-out — 11:00</p>
-                <p>Concierge — 06:00 – 23:00</p>
-            </div>
-        </div>
-    </footer>
+    <footer id="footer"></footer>
 
     <script>
         tailwind.config = {
