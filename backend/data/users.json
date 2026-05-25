@@ -47,5 +47,12 @@
     "email": "panithynihal@gmail.com",
     "password": "$2b$10$lxwkBIc2EyxIsUQ4YEsCeekkDFhHvmQPstI2tEVLZf0wW1HDh1ojq",
     "role": "customer"
+  },
+  {
+    "id": "u1779401867216",
+    "name": "Bob Johns",
+    "email": "bibjohns@gmail.com",
+    "password": "$2b$10$lEaLkj8kONVxndfeNYgyH.prGEBmOfWzZP.XtRdc6uOFa16wFiJhq",
+    "role": "customer"
   }
 ]
