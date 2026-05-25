@@ -1,157 +1,194 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Floor Map – La Extravaganza</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../css/main.css" />
-    <script src="../js/footer.js"></script>
-    <script src="../js/header.js"></script>
-    <script src="../js/floormap.js"></script>
-    <style>
-        .floor-map-wrap {
-            border: 1px solid #E6DFD7;
-            background: #fff;
-            padding: 0;
-            overflow: hidden;
-        }
-        .map-top-bar {
-            background: #2C241B;
-            height: 18px;
-        }
-        .floor-row {
-            display: grid;
-            grid-template-columns: 140px 1fr;
-            border-bottom: 1px solid #E6DFD7;
-        }
-        .floor-row:last-child { border-bottom: none; }
-        .floor-label {
-            padding: 20px 16px;
-            text-align: right;
-            border-right: 1px solid #E6DFD7;
-            background: #FAF7F2;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .floor-rooms {
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-        }
-        .room-cell {
-            border-right: 1px solid #E6DFD7;
-            border-bottom: 1px solid #E6DFD7;
-            padding: 18px 8px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Outfit', sans-serif;
-            font-size: 12px;
-            letter-spacing: 0.08em;
-            color: #6B5743;
-            position: relative;
-        }
-        .room-cell:last-child { border-right: none; }
-        .room-cell.available { background: #fff; }
-        .room-cell.available:hover { background: #F2EBE1; }
-        .room-cell.occupied  { background: #D4C4B0; color: #6B5743; }
-        .room-cell.pending   { background: #E6DFD7; color: #6B5743; }
-        .room-cell.selected  { background: #4A3B32; color: #FAF7F2; }
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Floor Map – La Extravaganza</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="stylesheet" href="../css/main.css" />
+		<script src="../js/footer.js"></script>
+		<script src="../js/header.js"></script>
+		<script src="../js/floormap.js"></script>
+		<style>
+			.floor-map-wrap {
+				border: 1px solid #e6dfd7;
+				background: #fff;
+				padding: 0;
+				overflow: hidden;
+			}
+			.map-top-bar {
+				background: #2c241b;
+				height: 18px;
+			}
+			.floor-row {
+				display: grid;
+				grid-template-columns: 140px 1fr;
+				border-bottom: 1px solid #e6dfd7;
+			}
+			.floor-row:last-child {
+				border-bottom: none;
+			}
+			.floor-label {
+				padding: 20px 16px;
+				text-align: right;
+				border-right: 1px solid #e6dfd7;
+				background: #faf7f2;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+			}
+			.floor-rooms {
+				display: grid;
+				grid-template-columns: repeat(6, 1fr);
+			}
+			.room-cell {
+				border-right: 1px solid #e6dfd7;
+				border-bottom: 1px solid #e6dfd7;
+				padding: 18px 8px;
+				text-align: center;
+				cursor: pointer;
+				transition: all 0.2s;
+				font-family: "Outfit", sans-serif;
+				font-size: 12px;
+				letter-spacing: 0.08em;
+				color: #6b5743;
+				position: relative;
+			}
+			.room-cell:last-child {
+				border-right: none;
+			}
+			.room-cell.available {
+				background: #fff;
+			}
+			.room-cell.available:hover {
+				background: #f2ebe1;
+			}
+			.room-cell.occupied {
+				background: #d4c4b0;
+				color: #6b5743;
+			}
+			.room-cell.pending {
+				background: #e6dfd7;
+				color: #6b5743;
+			}
+			.room-cell.selected {
+				background: #4a3b32;
+				color: #faf7f2;
+			}
 
-        .legend-box {
-            border: 1px solid #E6DFD7;
-            background: #fff;
-            padding: 24px;
-        }
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
-            font-size: 13px;
-            color: #6B5743;
-            font-family: 'Outfit', sans-serif;
-        }
-        .legend-swatch {
-            width: 20px;
-            height: 20px;
-            border: 1px solid #E6DFD7;
-            flex-shrink: 0;
-        }
+			.legend-box {
+				border: 1px solid #e6dfd7;
+				background: #fff;
+				padding: 24px;
+			}
+			.legend-item {
+				display: flex;
+				align-items: center;
+				gap: 10px;
+				margin-bottom: 10px;
+				font-size: 13px;
+				color: #6b5743;
+				font-family: "Outfit", sans-serif;
+			}
+			.legend-swatch {
+				width: 20px;
+				height: 20px;
+				border: 1px solid #e6dfd7;
+				flex-shrink: 0;
+			}
+			.preview-card {
+				border: 1px solid #e6dfd7;
+				background: #fff;
+				padding: 24px;
+				margin-top: 16px;
+			}
+			.preview-empty {
+				font-family: "Cormorant Garamond", serif;
+				font-style: italic;
+				color: #b89f89;
+				font-size: 15px;
+			}
 
-        .preview-card {
-            border: 1px solid #E6DFD7;
-            background: #fff;
-            padding: 24px;
-            margin-top: 16px;
-        }
-        .preview-empty {
-            font-family: 'Cormorant Garamond', serif;
-            font-style: italic;
-            color: #B89F89;
-            font-size: 15px;
-        }
-    </style>
-</head>
-<body>
-    <header id="header"></header>
+			/* Mobile: shrink floor label and room cells */
+			@media (max-width: 640px) {
+				.floor-row {
+					grid-template-columns: 80px 1fr;
+				}
+				.floor-label {
+					padding: 12px 8px;
+				}
+				.room-cell {
+					padding: 12px 4px;
+					font-size: 10px;
+				}
+			}
+		</style>
+	</head>
+	<body>
+		<header id="header"></header>
 
-    <section class="mx-auto py-12 max-w-6xl px-6">
+		<section class="mx-auto py-8 md:py-12 max-w-6xl px-4 md:px-6">
+			<!-- Page header -->
+			<p class="kicker">The Building</p>
+			<h1 class="font-serif text-4xl md:text-6xl mb-3" style="color: #2c241b">
+				Floor Map
+			</h1>
+			<p class="text-base mb-8 md:mb-10" style="color: #8b7355">
+				A cross-section of our sanctuary. Ascend for more space, finer finishes,
+				wider views.
+			</p>
 
-        <!-- Page header -->
-        <p class="kicker">The Building</p>
-        <h1 class="font-serif text-6xl mb-3" style="color:#2C241B;">Floor Map</h1>
-        <p class="text-base mb-10" style="color:#8B7355;">
-            A cross-section of our sanctuary. Ascend for more space, finer finishes, wider views.
-        </p>
+			<!-- Main layout — stacks on mobile, side by side on desktop -->
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+				<!-- Floor map — full width on mobile, 2/3 on desktop -->
+				<div class="md:col-span-2">
+					<div class="floor-map-wrap">
+						<div class="map-top-bar"></div>
+						<div id="floor-map"></div>
+						<div class="map-top-bar"></div>
+					</div>
+				</div>
 
-        <div class="grid grid-cols-3 gap-6">
+				<!-- Sidebar — below map on mobile, right column on desktop -->
+				<div class="md:col-span-1">
+					<!-- Legend -->
+					<div class="legend-box">
+						<p class="kicker mb-4">Legend</p>
+						<div class="legend-item">
+							<div class="legend-swatch" style="background: #fff"></div>
+							Available — click to view
+						</div>
+						<div class="legend-item">
+							<div
+								class="legend-swatch"
+								style="background: #d4c4b0; border-color: #d4c4b0"></div>
+							Occupied today
+						</div>
+						<div class="legend-item">
+							<div
+								class="legend-swatch"
+								style="background: #e6dfd7; border-color: #e6dfd7"></div>
+							Pending
+						</div>
+						<div class="legend-item">
+							<div
+								class="legend-swatch"
+								style="background: #4a3b32; border-color: #4a3b32"></div>
+							Selected
+						</div>
+					</div>
 
-            <!-- Floor map -->
-            <div class="col-span-2">
-                <div class="floor-map-wrap">
-                    <div class="map-top-bar"></div>
-                    <div id="floor-map"></div>
-                    <div class="map-top-bar"></div>
-                </div>
-            </div>
+					<!-- Room preview -->
+					<div class="preview-card">
+						<p class="kicker mb-3">Room Preview</p>
+						<div id="preview-content">
+							<p class="preview-empty">Hover over a room to preview.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 
-            <!-- Sidebar -->
-            <div class="col-span-1">
-                <!-- Legend -->
-                <div class="legend-box">
-                    <p class="kicker mb-4">Legend</p>
-                    <div class="legend-item">
-                        <div class="legend-swatch" style="background:#fff;"></div>
-                        Available — click to view
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-swatch" style="background:#D4C4B0; border-color:#D4C4B0;"></div>
-                        Occupied today
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-swatch" style="background:#E6DFD7; border-color:#E6DFD7;"></div>
-                        Pending
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-swatch" style="background:#4A3B32; border-color:#4A3B32;"></div>
-                        Selected
-                    </div>
-                </div>
-
-                <!-- Room preview -->
-                <div class="preview-card">
-                    <p class="kicker mb-3">Room Preview</p>
-                    <div id="preview-content">
-                        <p class="preview-empty">Hover over a room to preview.</p>
-                    </div>
-                </div>
-            </div>
-
-        </div>
-    </section>
-
-    <footer id="footer"></footer>
-</body>
+		<footer id="footer"></footer>
+	</body>
 </html>

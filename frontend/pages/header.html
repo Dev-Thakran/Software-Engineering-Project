@@ -1,24 +1,132 @@
+<style>
+	.mobile-menu {
+		display: none;
+		flex-direction: column;
+		background: var(--lux-cream);
+		border-top: 1px solid var(--lux-brown-100);
+		padding: 16px 24px;
+	}
+	.mobile-menu.open {
+		display: flex;
+	}
+	.mobile-menu a {
+		padding: 12px 0;
+		border-bottom: 1px solid var(--lux-brown-100);
+		font-size: 11px;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: var(--lux-brown-500);
+		text-decoration: none;
+		font-family: "Outfit", sans-serif;
+	}
+	.mobile-menu a:last-child {
+		border-bottom: none;
+	}
+	.mobile-menu a:hover {
+		color: var(--lux-brown-800);
+	}
+	.hamburger {
+		display: none;
+		flex-direction: column;
+		justify-content: center;
+		gap: 5px;
+		cursor: pointer;
+		padding: 4px;
+		background: none;
+		border: none;
+	}
+	.hamburger span {
+		display: block;
+		width: 22px;
+		height: 1.5px;
+		background: var(--lux-brown-700);
+		transition: all 0.3s;
+	}
+	.hamburger.open span:nth-child(1) {
+		transform: translateY(6.5px) rotate(45deg);
+	}
+	.hamburger.open span:nth-child(2) {
+		opacity: 0;
+	}
+	.hamburger.open span:nth-child(3) {
+		transform: translateY(-6.5px) rotate(-45deg);
+	}
+
+	@media (max-width: 845px) {
+		/* Show hamburger */
+		.hamburger {
+			display: flex;
+		}
+		/* Hide desktop nav links */
+		.desktop-nav {
+			display: none !important;
+		}
+		/* Hide sign in from desktop auth, keep reserve/dashboard button */
+		.nav-signin {
+			display: none !important;
+		}
+	}
+</style>
+
 <nav>
 	<div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+		<!-- Logo -->
 		<a
-			href="index.html"
-			class="font-serif text-[#2C241B]"
-			style="font-size: 22px; letter-spacing: 0; text-transform: none">
+			href="/pages/index.html"
+			class="font-serif"
+			style="
+				font-size: 22px;
+				letter-spacing: 0;
+				text-transform: none;
+				color: var(--lux-brown-800);
+				text-decoration: none;
+			">
 			La
 			<em class="font-display">Extravaganza</em>
 		</a>
-		<div class="hidden md:flex items-center gap-8">
-			<a href="index.html">Home</a>
-			<a href="browserooms.html">Rooms</a>
-			<a href="floormap.html">Floor Map</a>
+
+		<!-- Desktop nav links — hidden below 845px -->
+		<div class="desktop-nav hidden md:flex items-center gap-8">
+			<a href="/pages/index.html">Home</a>
+			<a href="/pages/browserooms.html">Rooms</a>
+			<a href="/pages/floormap.html">Floor Map</a>
 			<a href="#">About</a>
 			<a href="#">Contact</a>
 		</div>
+
+		<!-- Right side — always visible -->
 		<div class="flex items-center gap-5">
+			<!-- Auth — filled by header.js -->
+			<!-- nav-signin class lets us hide just the sign in part on mobile -->
 			<div id="nav-auth" class="flex items-center gap-5">
-				<a href="/pages/Login.html">Sign In</a>
+				<a
+					href="/pages/Login.html"
+					class="nav-auth-btn nav-signin"
+					style="text-decoration: none">
+					Sign In
+				</a>
 				<a href="/pages/browserooms.html" class="btn-reserve">Reserve</a>
 			</div>
+
+			<!-- Hamburger — only visible below 845px -->
+			<button class="hamburger" id="hamburger" aria-label="Toggle menu">
+				<span></span>
+				<span></span>
+				<span></span>
+			</button>
+		</div>
+	</div>
+
+	<!-- Mobile dropdown — nav links + sign in -->
+	<div class="mobile-menu" id="mobile-menu">
+		<a href="/pages/index.html">Home</a>
+		<a href="/pages/browserooms.html">Rooms</a>
+		<a href="/pages/floormap.html">Floor Map</a>
+		<a href="#">About</a>
+		<a href="#">Contact</a>
+		<!-- Sign in / auth state shown in hamburger on mobile -->
+		<div id="mobile-auth" style="display: contents">
+			<a href="/pages/Login.html">Sign In</a>
 		</div>
 	</div>
 </nav>

@@ -42,18 +42,33 @@
 			.residence-row:hover {
 				background: var(--lux-cream);
 			}
+
+			/* Stack rows on mobile */
+			@media (max-width: 768px) {
+				.guest-row {
+					grid-template-columns: 1fr;
+					gap: 12px;
+				}
+				.residence-row {
+					grid-template-columns: 1fr;
+					gap: 12px;
+				}
+			}
 		</style>
 	</head>
 	<body>
 		<!-- header.js loads header.html into this element -->
 		<header id="header"></header>
 
-		<section class="mx-auto py-12 max-w-6xl px-6">
+		<section class="mx-auto py-8 md:py-12 max-w-6xl px-4 md:px-6">
 			<p class="kicker">Staff Console</p>
 
-			<div class="grid grid-cols-2 py-2 mb-6">
+			<!-- Header row — stacks on mobile -->
+			<div class="flex flex-col md:grid md:grid-cols-2 gap-2 py-2 mb-6">
 				<div>
-					<h1 class="font-serif text-5xl" style="color: var(--lux-brown-800)">
+					<h1
+						class="font-serif text-3xl md:text-5xl"
+						style="color: var(--lux-brown-800)">
 						Good
 						<!-- JS: staff.js sets this to "morning", "afternoon", or "evening"
                          based on the current hour using new Date().getHours() -->
@@ -65,7 +80,7 @@
 						.
 					</h1>
 				</div>
-				<div class="text-right">
+				<div class="md:text-right">
 					<!-- JS: staff.js sets this to the current date
                      formatted as "Saturday, 18 May" using Intl.DateTimeFormat -->
 					<span id="date-display" class="kicker"></span>
@@ -79,8 +94,8 @@
 				</div>
 			</div>
 
-			<!-- Stat cards -->
-			<div class="grid grid-cols-3 mb-12">
+			<!-- Stat cards — 1 col mobile, 3 col desktop -->
+			<div class="grid grid-cols-1 md:grid-cols-3 mb-12">
 				<!-- Shift card -->
 				<div class="stat-card">
 					<p class="kicker mb-2">
@@ -114,7 +129,7 @@
 				</div>
 
 				<!-- Check-ins card -->
-				<div class="stat-card" style="border-left: none">
+				<div class="stat-card md:border-l-0">
 					<p class="kicker mb-2">
 						<i class="fa fa-users"></i>
 						Check-ins Today
@@ -131,7 +146,7 @@
 				</div>
 
 				<!-- Queue card -->
-				<div class="stat-card" style="border-left: none">
+				<div class="stat-card md:border-l-0">
 					<p class="kicker mb-2">
 						<i class="fa fa-list"></i>
 						Queue
@@ -149,7 +164,9 @@
 			</div>
 
 			<!-- Guests awaiting check-in section -->
-			<h2 class="font-serif text-3xl mb-6" style="color: var(--lux-brown-800)">
+			<h2
+				class="font-serif text-2xl md:text-3xl mb-6"
+				style="color: var(--lux-brown-800)">
 				Guests awaiting check-in
 			</h2>
 			<!-- JS: staff.js replaces this div's innerHTML with a guest-row for each
@@ -160,7 +177,9 @@
 			</div>
 
 			<!-- Currently in residence section -->
-			<h2 class="font-serif text-3xl mb-6" style="color: var(--lux-brown-800)">
+			<h2
+				class="font-serif text-2xl md:text-3xl mb-6"
+				style="color: var(--lux-brown-800)">
 				Currently in residence
 			</h2>
 			<!-- JS: staff.js replaces this div's innerHTML with a residence-row for each
