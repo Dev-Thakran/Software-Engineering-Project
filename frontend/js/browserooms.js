@@ -118,7 +118,7 @@ function render(list) {
             <div style="background:#FFFFFF; border:1px solid #E6DFD7; cursor:pointer; transition:box-shadow 0.3s;"
                  onmouseover="this.style.boxShadow='0 4px 24px rgba(44,36,27,0.10)'"
                  onmouseout="this.style.boxShadow='none'">
-                 <a href="./booking.html?room=${room.id}">
+                 <a href="./room.html?room=${room.id}">
 
                 <!-- Room image with hover zoom -->
                 <div style="position:relative; overflow:hidden; height:220px;">
@@ -181,7 +181,7 @@ function render(list) {
                         <!-- Show Reserve button only if room is available -->
                         ${isAvail
 					? `
-                            <a href="./booking.html?room=${room.id}"
+                            <a href="./room.html?room=${room.id}"
                                class="btn-primary"
                                style="margin-left:auto; padding:8px 16px; font-size:10px;">
                                 Reserve
