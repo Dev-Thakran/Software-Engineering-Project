@@ -35,33 +35,48 @@
 			.stars {
 				color: #c9a961;
 			}
+
+			/* Stack staff rows on mobile */
+			@media (max-width: 768px) {
+				.staff-row {
+					grid-template-columns: 1fr 1fr;
+					gap: 12px;
+				}
+				.staff-row .meta-label:nth-child(n + 4),
+				.staff-row p:nth-child(n + 4) {
+					display: none;
+				}
+			}
 		</style>
 	</head>
 	<body>
 		<!-- header.js loads header.html into this element -->
 		<header id="header"></header>
 
-		<section class="mx-auto py-12 max-w-6xl px-6">
+		<section class="mx-auto py-8 md:py-12 max-w-6xl px-4 md:px-6">
 			<p class="kicker">Executive Overview</p>
 
-			<div class="grid grid-cols-2 py-2 mb-8">
+			<!-- Header row — stacks on mobile -->
+			<div class="flex flex-col md:grid md:grid-cols-2 gap-2 py-2 mb-8">
 				<div>
-					<h1 class="font-serif text-5xl" style="color: var(--lux-brown-800)">
+					<h1
+						class="font-serif text-3xl md:text-5xl"
+						style="color: var(--lux-brown-800)">
 						Operations at a glance
 					</h1>
 				</div>
-				<div class="text-right">
+				<div class="md:text-right">
 					<!-- JS: manager.js sets this to today's full date
                      e.g. "Friday, 15 May 2026" using toLocaleDateString("en-NZ") -->
 					<span
 						id="date-display"
-						class="font-serif text-xl"
+						class="font-serif text-lg md:text-xl"
 						style="color: var(--lux-brown-800)"></span>
 				</div>
 			</div>
 
-			<!-- KPI stat cards -->
-			<div class="grid grid-cols-4 mb-8">
+			<!-- KPI stat cards — 2 col mobile, 4 col desktop -->
+			<div class="grid grid-cols-2 md:grid-cols-4 mb-8">
 				<div class="stat-card">
 					<p class="kicker mb-2">
 						<i class="fa fa-line-chart"></i>
@@ -71,14 +86,14 @@
                      fetched from GET /manager/stats formatted as "$2,277" -->
 					<p
 						id="stat-revenue"
-						class="font-serif text-4xl mb-1"
+						class="font-serif text-3xl md:text-4xl mb-1"
 						style="color: var(--lux-brown-800)">
 						—
 					</p>
 					<p class="meta-label">All bookings</p>
 				</div>
 
-				<div class="stat-card" style="border-left: none">
+				<div class="stat-card md:border-l-0">
 					<p class="kicker mb-2">
 						<i class="fa fa-building"></i>
 						Occupancy Now
@@ -87,7 +102,7 @@
                      calculated as occupied rooms divided by total rooms -->
 					<p
 						id="stat-occupancy"
-						class="font-serif text-4xl mb-1"
+						class="font-serif text-3xl md:text-4xl mb-1"
 						style="color: var(--lux-brown-800)">
 						—
 					</p>
@@ -96,7 +111,7 @@
 					<p id="stat-rooms" class="meta-label">Of — rooms</p>
 				</div>
 
-				<div class="stat-card" style="border-left: none">
+				<div class="stat-card md:border-l-0">
 					<p class="kicker mb-2">
 						<i class="fa fa-star"></i>
 						Avg. Rating
@@ -105,7 +120,7 @@
                      calculated from all reviews in reviews.json -->
 					<p
 						id="stat-rating"
-						class="font-serif text-4xl mb-1"
+						class="font-serif text-3xl md:text-4xl mb-1"
 						style="color: var(--lux-brown-800)">
 						—
 					</p>
@@ -114,7 +129,7 @@
 					<p id="stat-reviews" class="meta-label">— reviews</p>
 				</div>
 
-				<div class="stat-card" style="border-left: none">
+				<div class="stat-card md:border-l-0">
 					<p class="kicker mb-2">
 						<i class="fa fa-calendar"></i>
 						Total Bookings
@@ -123,7 +138,7 @@
                      which is simply the length of the bookings array -->
 					<p
 						id="stat-bookings"
-						class="font-serif text-4xl mb-1"
+						class="font-serif text-3xl md:text-4xl mb-1"
 						style="color: var(--lux-brown-800)">
 						—
 					</p>
@@ -131,12 +146,12 @@
 				</div>
 			</div>
 
-			<!-- Charts row 1 -->
-			<div class="grid grid-cols-3 gap-0 mb-8">
-				<div class="chart-card col-span-2" style="border-right: none">
+			<!-- Charts row 1 — stacks on mobile -->
+			<div class="grid grid-cols-1 md:grid-cols-3 gap-0 mb-8">
+				<div class="chart-card md:col-span-2 md:border-r-0">
 					<p class="kicker mb-1">Top-selling rooms</p>
 					<h2
-						class="font-serif text-3xl mb-4"
+						class="font-serif text-2xl md:text-3xl mb-4"
 						style="color: var(--lux-brown-800)">
 						Guest favourites
 					</h2>
@@ -149,7 +164,7 @@
 				<div class="chart-card">
 					<p class="kicker mb-1">By tier</p>
 					<h2
-						class="font-serif text-3xl mb-4"
+						class="font-serif text-2xl md:text-3xl mb-4"
 						style="color: var(--lux-brown-800)">
 						Booking mix
 					</h2>
@@ -164,12 +179,12 @@
 				</div>
 			</div>
 
-			<!-- Charts row 2 -->
-			<div class="grid grid-cols-2 gap-0 mb-12">
-				<div class="chart-card" style="border-right: none">
+			<!-- Charts row 2 — stacks on mobile -->
+			<div class="grid grid-cols-1 md:grid-cols-2 gap-0 mb-12">
+				<div class="chart-card md:border-r-0">
 					<p class="kicker mb-1">Last 14 days</p>
 					<h2
-						class="font-serif text-3xl mb-4"
+						class="font-serif text-2xl md:text-3xl mb-4"
 						style="color: var(--lux-brown-800)">
 						Booking trend
 					</h2>
@@ -182,7 +197,7 @@
 				<div class="chart-card">
 					<p class="kicker mb-1">Revenue</p>
 					<h2
-						class="font-serif text-3xl mb-4"
+						class="font-serif text-2xl md:text-3xl mb-4"
 						style="color: var(--lux-brown-800)">
 						By floor
 					</h2>
@@ -194,11 +209,13 @@
 			</div>
 
 			<!-- Staff assignments -->
-			<h2 class="font-serif text-3xl mb-6" style="color: var(--lux-brown-800)">
+			<h2
+				class="font-serif text-2xl md:text-3xl mb-6"
+				style="color: var(--lux-brown-800)">
 				Staff assignments
 			</h2>
 			<div
-				class="mb-12"
+				class="mb-12 overflow-x-auto"
 				style="border: 1px solid var(--lux-brown-100); background: #fff">
 				<!-- Static header row for the table columns -->
 				<div class="staff-row" style="background: var(--lux-cream-dark)">
@@ -215,14 +232,18 @@
 				<div id="staff-list"></div>
 			</div>
 
-			<!-- Recent reviews -->
-			<h2 class="font-serif text-3xl mb-6" style="color: var(--lux-brown-800)">
+			<!-- Recent reviews — 1 col mobile, 3 col desktop -->
+			<h2
+				class="font-serif text-2xl md:text-3xl mb-6"
+				style="color: var(--lux-brown-800)">
 				Recent reviews
 			</h2>
 			<!-- JS: manager.js replaces this div's innerHTML with a review-card
              for each of the 6 most recent reviews fetched from GET /manager/reviews
              each card shows star rating, title, comment, guest name and room number -->
-			<div id="reviews-list" class="grid grid-cols-3 gap-4 mb-12"></div>
+			<div
+				id="reviews-list"
+				class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-12"></div>
 		</section>
 
 		<!-- footer.js loads footer.html into this element -->
