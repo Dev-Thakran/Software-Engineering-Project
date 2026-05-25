@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Our Story – La Extravaganza</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="../css/main.css" />
+    <style>
+      /* Hero */
+      .hero-about {
+        background: url("../images/hero/about-hero.jpg") center/cover no-repeat;
+        position: relative;
+        min-height: 480px;
+        display: flex;
+        align-items: flex-end;
+      }
+      .hero-about::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          to top,
+          rgba(0, 0, 0, 0.7) 0%,
+          rgba(0, 0, 0, 0.3) 50%,
+          rgba(0, 0, 0, 0.15) 100%
+        );
+      }
+      .hero-text {
+        position: relative;
+        z-index: 2;
+        padding: 48px;
+      }
+
+      /* Stats */
+      .stat-number {
+        font-family: "Cormorant Garamond", serif;
+        font-size: clamp(48px, 7vw, 72px);
+        color: #2c241b;
+        font-weight: 400;
+        line-height: 1;
+      }
+      .stat-label {
+        font-family: "Outfit", sans-serif;
+        font-size: 10px;
+        font-weight: 500;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #8b7355;
+        margin-top: 8px;
+      }
+    </style>
+    <script src="../js/footer.js"></script>
+    <script src="../js/header.js"></script>
+  </head>
+  <body style="background: #faf7f2">
+    <header id="header"></header>
+
+    <!-- HERO (starts from very top, nav overlays it) -->
+    <section class="hero-about">
+      <div class="hero-text">
+        <p class="kicker mb-3" style="color: rgba(255, 255, 255, 0.6)">
+          Our Story
+        </p>
+        <h1
+          class="font-serif text-white"
+          style="
+            font-size: clamp(40px, 6vw, 68px);
+            font-weight: 400;
+            line-height: 1.1;
+            max-width: 560px;
+          "
+        >
+          A quiet <em class="font-display">devotion</em><br />to hospitality.
+        </h1>
+      </div>
+    </section>
+
+    <!-- STORY SECTION -->
+    <section style="background: #faf7f2; padding: 80px 48px">
+      <div class="container">
+        <div style="max-width: 680px; margin: 0 auto">
+          <p
+            class="font-serif"
+            style="
+              font-size: clamp(20px, 2.5vw, 26px);
+              color: #2c241b;
+              line-height: 1.6;
+              margin-bottom: 40px;
+            "
+          >
+            La Extravaganza opened its doors in 2014 as a single address with a
+            single idea — that hospitality is less about grandeur and more about
+            noticing.
+          </p>
+
+          <p
+            class="font-sans"
+            style="
+              font-size: 14px;
+              color: #6b5743;
+              line-height: 1.9;
+              margin-bottom: 24px;
+            "
+          >
+            Four floors rise above the harbour. Each was imagined as a distinct
+            chapter — the Garden, the Classic, the Executive, and at the summit,
+            the Penthouse. Every floor has its own character, its own light, its
+            own pace.
+          </p>
+
+          <p
+            class="font-sans"
+            style="
+              font-size: 14px;
+              color: #6b5743;
+              line-height: 1.9;
+              margin-bottom: 24px;
+            "
+          >
+            Our team numbers fifty-two. Some have been with us since the
+            beginning. Others are newer — but all share one conviction: the
+            finest stays are made of small, well-timed gestures.
+          </p>
+
+          <p
+            class="font-sans"
+            style="font-size: 14px; color: #6b5743; line-height: 1.9"
+          >
+            We are not the largest hotel in the city. We do not intend to be. We
+            are simply a place that has been considered, from the weight of the
+            door to the warmth of the bread. We hope it shows.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STATS SECTION -->
+    <section
+      style="
+        background: #f2ebe1;
+        border-top: 1px solid #e6dfd7;
+        border-bottom: 1px solid #e6dfd7;
+        padding: 64px 48px;
+      "
+    >
+      <div class="container">
+        <div
+          class="grid grid-cols-1 sm:grid-cols-3"
+          style="max-width: 680px; margin: 0 auto; gap: 48px"
+        >
+          <div>
+            <p class="stat-number">2014</p>
+            <p class="stat-label">Doors Opened</p>
+          </div>
+          <div>
+            <p class="stat-number">52</p>
+            <p class="stat-label">Team Members</p>
+          </div>
+          <div>
+            <p class="stat-number">4.9</p>
+            <p class="stat-label">Guest Rating</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer id="footer"></footer>
+  </body>
+</html>
