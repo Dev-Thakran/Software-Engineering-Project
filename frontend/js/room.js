@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         // Reserve button
         const reserveBtn = document.getElementById("reserve-btn");
         if (room.status === "available") {
-            reserveBtn.href = `./booking.html?room=${room.id}`;
+            reserveBtn.href = `./bookingform.html?room=${room.id}`;
             reserveBtn.addEventListener("mouseover", () => {
                 reserveBtn.style.background = "var(--lux-brown-900)";
             });
