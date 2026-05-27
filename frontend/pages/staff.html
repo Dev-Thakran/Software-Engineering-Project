@@ -13,7 +13,7 @@
 		<script src="../js/header.js"></script>
 		<script src="../js/staff.js"></script>
 		<style>
-			/* Guest row grid — used for the awaiting check-in list */
+			/* Guest row grid - used for the awaiting check-in list */
 			.guest-row {
 				border: 1px solid var(--lux-brown-100);
 				padding: 20px 24px;
@@ -28,7 +28,7 @@
 				background: var(--lux-cream);
 			}
 
-			/* Residence row grid — used for the currently in residence list */
+			/* Residence row grid - used for the currently in residence list */
 			.residence-row {
 				border: 1px solid var(--lux-brown-100);
 				padding: 20px 24px;
@@ -63,7 +63,7 @@
 		<section class="mx-auto py-8 md:py-12 max-w-6xl px-4 md:px-6">
 			<p class="kicker">Staff Console</p>
 
-			<!-- Header row — stacks on mobile -->
+			<!-- Header row - stacks on mobile -->
 			<div class="flex flex-col md:grid md:grid-cols-2 gap-2 py-2 mb-6">
 				<div>
 					<h1
@@ -94,7 +94,7 @@
 				</div>
 			</div>
 
-			<!-- Stat cards — 1 col mobile, 3 col desktop -->
+			<!-- Stat cards - 1 col mobile, 3 col desktop -->
 			<div class="grid grid-cols-1 md:grid-cols-3 mb-12">
 				<!-- Shift card -->
 				<div class="stat-card">
@@ -106,7 +106,7 @@
 						<!-- JS: staff.js sets this to the shift type e.g. "Morning"
                          fetched from GET /shifts/mine filtered by today's date -->
 						<span id="shift-type"></span>
-						<!-- JS: staff.js sets this to the shift hours e.g. "(07:00 — 15:00)"
+						<!-- JS: staff.js sets this to the shift hours e.g. "(07:00 - 15:00)"
                          from the active shift in shifts.json -->
 						<span id="shift-hours"></span>
 					</p>
@@ -140,7 +140,7 @@
 						id="checkins-today"
 						class="font-serif text-5xl mb-2"
 						style="color: var(--lux-brown-800)">
-						—
+						-
 					</p>
 					<p class="kicker">Completed by you</p>
 				</div>
@@ -157,7 +157,7 @@
 						id="queue-count"
 						class="font-serif text-5xl mb-2"
 						style="color: var(--lux-brown-800)">
-						—
+						-
 					</p>
 					<p class="kicker">Awaiting check-in</p>
 				</div>

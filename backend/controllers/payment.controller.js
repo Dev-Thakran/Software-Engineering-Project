@@ -10,7 +10,7 @@ function processPayment(req, res) {
 		return res.status(400).json({ error: "Expiry must be MM/YY" });
 	if (!/^\d{3,4}$/.test(cvv))
 		return res.status(400).json({ error: "CVV must be 3 or 4 digits" });
-	// Simulate payment — always succeeds in demo mode
+	// Simulate payment - always succeeds in demo mode
 	res.json({ success: true, transactionId: "TXN" + Date.now(), amount });
 }
 

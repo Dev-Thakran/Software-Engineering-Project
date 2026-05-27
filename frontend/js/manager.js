@@ -33,14 +33,14 @@ document.addEventListener("DOMContentLoaded", function () {
 	const browns = [
 		// A progression of brown tones from the design system
 		// Used across all charts to keep a consistent visual style
-		"#4A3B32", // darkest — lux-brown-700
+		"#4A3B32", // darkest - lux-brown-700
 		"#6B5743", // lux-brown-600
 		"#8B7355", // lux-brown-500
 		"#B89F89", // lux-brown-300
 		"#D4C4B0", // lux-brown-200
 		"#9A826A", // lux-brown-400
 		"#2C241B", // lux-brown-800
-		"#E6DFD7", // lightest — lux-brown-100
+		"#E6DFD7", // lightest - lux-brown-100
 	];
 
 	// Set Chart.js global defaults so every chart uses Outfit font
@@ -90,17 +90,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// ── Top rooms bar chart ────────────────────────────────────
 	async function loadTopRooms() {
-		// Fetch the most booked rooms — backend counts bookings per roomId
+		// Fetch the most booked rooms - backend counts bookings per roomId
 		const data = await get("/manager/top-rooms");
 
 		new Chart(document.getElementById("chart-top-rooms"), {
 			type: "bar",
 			data: {
-				// X axis labels — e.g. "Room 103", "Room 202"
+				// X axis labels - e.g. "Room 103", "Room 202"
 				labels: data.map((r) => "Room " + r.roomId),
 				datasets: [
 					{
-						// Y axis values — number of bookings per room
+						// Y axis values - number of bookings per room
 						data: data.map((r) => r.count),
 						// Each bar gets a different brown shade from the palette
 						backgroundColor: browns,
@@ -110,7 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			},
 			options: {
 				plugins: {
-					legend: { display: false }, // Hide default legend — not needed for bar chart
+					legend: { display: false }, // Hide default legend - not needed for bar chart
 					tooltip: {
 						callbacks: {
 							// Custom tooltip label showing "bookings : 3" instead of just "3"

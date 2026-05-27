@@ -1,120 +1,232 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>My Stays – La Extravaganza</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="stylesheet" href="../css/main.css" />
+		<script src="../js/header.js"></script>
+		<script src="../js/footer.js"></script>
+		<style>
+			.booking-card {
+				background: #fff;
+				border: 1px solid var(--lux-brown-100);
+				padding: 24px 28px;
+			}
+			.booking-row {
+				display: flex;
+				justify-content: space-between;
+				align-items: baseline;
+				padding: 6px 0;
+				border-bottom: 1px solid var(--lux-brown-100);
+				font-family: "Outfit", sans-serif;
+				font-size: 13px;
+			}
+			.booking-row:last-child {
+				border-bottom: none;
+			}
+			.booking-row span:first-child {
+				color: var(--lux-brown-500);
+			}
+			.booking-row span:last-child {
+				color: var(--lux-brown-800);
+			}
+			.status-badge {
+				font-family: "Outfit", sans-serif;
+				font-size: 9px;
+				font-weight: 600;
+				letter-spacing: 0.18em;
+				text-transform: uppercase;
+				padding: 5px 12px;
+				background: var(--lux-brown-100);
+				color: var(--lux-brown-700);
+			}
+			.status-badge.arriving {
+				background: var(--lux-brown-100);
+				color: var(--lux-brown-700);
+			}
+			.status-badge.confirmed {
+				background: #f0fdf4;
+				color: #166534;
+				border: 1px solid #bbf7d0;
+			}
+			.status-badge.pending {
+				background: #fffbeb;
+				color: #92400e;
+				border: 1px solid #fde68a;
+			}
+			.status-badge.cancelled {
+				background: #fef2f2;
+				color: #b91c1c;
+				border: 1px solid #fecaca;
+			}
+		</style>
+	</head>
+	<body style="background: var(--lux-cream)">
+		<header id="header"></header>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>My Booking - La Extravaganza</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../css/main.css"/>
-    <script src="../js/header.js"></script>
-    <script src="../js/footer.js"></script>
-</head>
+		<main class="mx-auto px-6 md:px-12 py-16 pb-24" style="max-width: 1100px">
+			<!-- Page header -->
+			<p class="kicker mb-4" id="welcome-kicker">Welcome back</p>
+			<h1
+				class="font-serif font-normal mb-12"
+				style="font-size: 64px; color: var(--lux-brown-800); line-height: 1.05">
+				My stays
+			</h1>
 
+			<!-- Upcoming & current -->
+			<h2
+				class="font-serif font-normal mb-6"
+				style="font-size: 36px; color: var(--lux-brown-800)">
+				Upcoming &amp; current
+			</h2>
+			<div
+				id="upcoming-grid"
+				class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16">
+				<p class="text-sm" style="color: var(--lux-brown-400)">Loading...</p>
+			</div>
 
-<body>
-    <header id="header"></header>
+			<!-- Past stays -->
+			<h2
+				class="font-serif font-normal mb-6"
+				style="font-size: 36px; color: var(--lux-brown-800)">
+				Past stays
+			</h2>
+			<div id="past-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+				<p class="text-sm" style="color: var(--lux-brown-400)">Loading...</p>
+			</div>
+		</main>
 
-    <section>
-        <div>
-            <p class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-4 pt-16 pl-9"> 
-                Welcome back, guest customer
-            </p>
+		<footer id="footer"></footer>
 
-            <p class="font-serif text-6xl text-[#2C241B] mb-4 pl-9 italic">
-                Secure your stay
-            </p>
+		<script>
+			document.addEventListener("DOMContentLoaded", async function () {
+				const token = localStorage.getItem("token");
+				const name = localStorage.getItem("name");
+				const role = localStorage.getItem("role");
 
-            <p class="font-serif text-4xl text-[#2C241B] mb-4 pl-9 pt-12 pb-4 italic">
-                Upcoming & current
-            </p>
+				// Redirect if not logged in or not a customer
+				if (!token) {
+					window.location.href = "/pages/Login.html";
+					return;
+				}
+				if (role === "staff") {
+					window.location.href = "/pages/staff.html";
+					return;
+				}
+				if (role === "manager") {
+					window.location.href = "/pages/manager.html";
+					return;
+				}
 
-            <div class="grid grid-cols-2 content-center gap-6 px-8 ">
-                <div class="bg-[white] py-4" id="upcomingbooking1">
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 px-4 text-[#8B7335]">
-                        
-                        <!--example on how it would look when working-->
-                        <!--change when deployed fully-->
-                        <div class="lg:col-span-2 text-[#8B7355] text-xl pt-2 ">
-                            <p>Floor 1 — Garden</p>
-                        </div>
-                        
-                        <div class="lg:col-span-1 py-2"></div>
-                        <div class="lg:col-span-1 bg-[#E6DFD7] pt-2">
-                            <p class="text-[black] text-center">Arriving</p>
-                        </div>
-                        <div class="lg:col-span-4 bg-[#] pb-2 text-[black] font-cormorant bold text-5xl pb-4">
-                            <p>Room 101</p>
-                        </div>
+				// Update welcome kicker with customer name
+				if (name) {
+					document.getElementById("welcome-kicker").textContent =
+						`Welcome back, ${name}`;
+				}
 
-                        <div class="lg:col-span-2"><p>Check-in:</p></div>
-                        <div class="lg:col-span-2"><p id="checkin-dis">2026-01-01</p></div>
-                        <div class="lg:col-span-2"><p>Check-out:</p></div>
-                        <div class="lg:col-span-2"><p id="checkout-dis">2026-01-04</p></div>
-                        <div class="lg:col-span-2"><p>Reference:</p></div>
-                        <div class="lg:col-span-2"><p id="reference-dis">BK1779059263693</p></div>
-                        <div class="lg:col-span-2"><p>Total:</p></div>
-                        <div class="lg:col-span-2"><p id="total-dis">$207</p></div>
+				const FLOOR_NAMES = {
+					1: "Garden",
+					2: "Classic",
+					3: "Executive",
+					4: "Penthouse",
+				};
+
+				function getStatusBadge(booking) {
+					const today = new Date().toLocaleDateString("en-CA");
+					const isToday = booking.checkIn === today;
+					const isFuture = booking.checkIn > today;
+
+					if (isToday) return { label: "Arriving", cls: "arriving" };
+					if (isFuture) return { label: "Upcoming", cls: "confirmed" };
+					return { label: booking.status, cls: booking.status };
+				}
+
+				function buildCard(b) {
+					const floorName = FLOOR_NAMES[b.floor] || "Floor " + b.floor;
+					const badge = getStatusBadge(b);
+					return `
+                <div class="booking-card">
+                    <div class="flex justify-between items-start mb-1">
+                        <p class="kicker" style="font-size:10px;">
+                            Floor ${b.floor} - ${floorName}
+                        </p>
+                        <span class="status-badge ${badge.cls}">${badge.label}</span>
                     </div>
-                </div>
-
-                <!--default when no upcoming bookings-->
-                <div class="bg-[white] py-4" id="upcomingbooking2">
-                    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 px-4 text-[#8B7335]">
-                        
-                        <!--example on how it would look when working-->
-                        <div class="lg:col-span-2 text-[#8B7355] text-xl pt-2 ">
-                            <p>-</p>
-                        </div>
-                        
-                        <div class="lg:col-span-1 py-2"></div>
-                        <div class="lg:col-span-1 bg-[#E6DFD7] pt-2">
-                            <p class="text-[black] text-center">-</p>
-                        </div>
-                        <div class="lg:col-span-4 bg-[#] pb-2 text-[black] font-cormorant bold text-5xl pb-4">
-                            <p>-</p>
-                        </div>
-
-                        <div class="lg:col-span-2"><p>Check-in:</p></div>
-                        <div class="lg:col-span-2"><p id="checkin-dis">-</p></div>
-                        <div class="lg:col-span-2"><p>Check-out:</p></div>
-                        <div class="lg:col-span-2"><p id="checkout-dis">-</p></div>
-                        <div class="lg:col-span-2"><p>Reference:</p></div>
-                        <div class="lg:col-span-2"><p id="reference-dis">-</p></div>
-                        <div class="lg:col-span-2"><p>Total:</p></div>
-                        <div class="lg:col-span-2"><p id="total-dis">$-</p></div>
+                    <p class="font-serif font-normal mb-5"
+                       style="font-size:42px; color:var(--lux-brown-800); line-height:1.1;">
+                        Room ${b.roomId}
+                    </p>
+                    <div class="booking-row">
+                        <span>Check-in</span><span>${b.checkIn}</span>
                     </div>
-                </div>
-
-                 <p class="font-serif text-4xl text-[#2C241B] pl-2 italic">
-                    Past Stays
-                </p>
-                <div class="lg:col-span-2 bg-[white] py-4">
-                    <div class="grid grid-cols-2 pl-4">
-                        <div class="italic text-lg py-2">
-                            <p>No past stay yet.</p>
-                        </div>
+                    <div class="booking-row">grandauckland
+                        <span>Check-out</span><span>${b.checkOut}</span>
                     </div>
-                </div>
-            </div>
-        </div>
+                    <div class="booking-row">
+                        <span>Reference</span>
+                        <span style="font-size:11px; letter-spacing:0.05em;">${b.id}</span>
+                    </div>
+                    <div class="booking-row">
+                        <span>Total</span><span>$${b.total}</span>
+                    </div>
+                </div>`;
+				}
 
-        <div class="py-16"></div>
-    </section>
+				try {
+					const res = await fetch("/bookings", {
+						headers: { Authorization: "Bearer " + token },
+					});
+					const bookings = await res.json();
 
-    <footer id="footer"></footer>
+					const today = new Date().toLocaleDateString("en-CA");
 
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        cormorant: ['"Cormorant Garamond"', 'serif'],
-                    }
-                }
-            }
-        }
-    </script>
-</body>
+					// Split into upcoming/current and past
+					const upcoming = bookings.filter(
+						(b) =>
+							b.checkIn >= today &&
+							b.status !== "cancelled" &&
+							b.status !== "checked-out",
+					);
+					const past = bookings.filter(
+						(b) =>
+							b.checkIn < today ||
+							b.status === "checked-out" ||
+							b.status === "cancelled",
+					);
+
+					// Render upcoming
+					const upcomingGrid = document.getElementById("upcoming-grid");
+					if (upcoming.length === 0) {
+						upcomingGrid.innerHTML = `
+                    <div class="booking-card md:col-span-2">
+                        <p class="font-serif italic" style="font-size:18px; color:var(--lux-brown-400);">
+                            No upcoming stays - <a href="./rooms.html" style="color:var(--lux-brown-600); text-decoration:underline;">browse rooms</a>
+                        </p>
+                    </div>`;
+					} else {
+						upcomingGrid.innerHTML = upcoming.map(buildCard).join("");
+					}
+
+					// Render past
+					const pastGrid = document.getElementById("past-grid");
+					if (past.length === 0) {
+						pastGrid.innerHTML = `
+                    <div class="booking-card md:col-span-2">
+                        <p class="font-serif italic" style="font-size:18px; color:var(--lux-brown-400);">
+                            No past stays yet.
+                        </p>
+                    </div>`;
+					} else {
+						pastGrid.innerHTML = past.map(buildCard).join("");
+					}
+				} catch (err) {
+					console.error(err);
+					document.getElementById("upcoming-grid").innerHTML =
+						`<p class="text-sm" style="color:var(--lux-brown-400);">Could not load bookings.</p>`;
+				}
+			});
+		</script>
+	</body>
 </html>

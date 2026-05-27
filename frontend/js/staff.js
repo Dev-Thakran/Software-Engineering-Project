@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 			document.getElementById("shift-type").textContent = active.shiftType;
 			document.getElementById("shift-hours").textContent =
-				" (" + active.shiftStart + " — " + active.shiftEnd + ")";
+				" (" + active.shiftStart + " - " + active.shiftEnd + ")";
 
 			const [endHour, endMin] = active.shiftEnd.split(":").map(Number);
 			const shiftEnd = new Date();
@@ -98,11 +98,11 @@ document.addEventListener("DOMContentLoaded", function () {
 			const data = await res.json();
 			document.getElementById("checkins-today").textContent = data.count;
 		} catch {
-			document.getElementById("checkins-today").textContent = "—";
+			document.getElementById("checkins-today").textContent = "-";
 		}
 	}
 
-	// Queue — guests awaiting check-in
+	// Queue - guests awaiting check-in
 	async function loadQueue() {
 		if (!token) return;
 		try {
@@ -121,24 +121,26 @@ document.addEventListener("DOMContentLoaded", function () {
 			list.innerHTML = data.bookings
 				.map(
 					(b) => `
-                    <div class="guest-row">
-                        <div>
-                            <p class="meta-label">Checked in</p>
-                            <!-- Split on "T" to get just the date part from ISO timestamp -->
-                            <p class="meta-value">${b.checkIn}</p>
-                        </div>
-                        <div>
-                            <p class="meta-label">Depart</p>
-                            <p class="meta-value">${c.checkOutDate}</p>
-                        </div>
-
-                        <div class="text-right">
-                            <button onclick="checkIn('${b.id}')" class="btn-primary" style="padding:10px 20px; font-size:10px;">
-                                Check In
-                            </button>
-                        </div>
-                    </div>
-                `,
+            <div class="guest-row">
+                <div>
+                    <p class="meta-label">${b.id} · ${b.userName}</p>
+                    <p class="font-serif text-xl" style="color:var(--lux-brown-800);">${b.userName}</p>
+                </div>
+                <div>
+                    <p class="meta-label">Room</p>
+                    <p class="meta-value">Room ${b.roomId} · Floor ${b.floor}</p>
+                    <p class="meta-label mt-2">Stay</p>
+                    <p class="meta-value">${b.checkIn} - ${b.checkOut}</p>
+                    <p class="meta-label mt-2">Paid</p>
+                    <p class="meta-value">$${b.total} ✓</p>
+                </div>
+                <div class="text-right">
+                    <button onclick="checkIn('${b.id}')" class="btn-primary" style="padding:10px 20px; font-size:10px;">
+                        Check In
+                    </button>
+                </div>
+            </div>
+        `,
 				)
 				.join("");
 		} catch {
@@ -165,14 +167,32 @@ document.addEventListener("DOMContentLoaded", function () {
 			list.innerHTML = checkins
 				.map(
 					(c) => `
-                    <div class="residence-row">
-                        <div>
-                            <p class="meta-label">Attending</p>
-                            <!-- Show attending staff name or dash if unassigned -->
-                            <p class="meta-value">${c.attendingStaff || "—"}</p>
-                        </div>
+            <div class="residence-row">
+                <div>
+                    <p class="meta-label">Room ${c.roomId} · ${c.roomType}</p>
+                    <p class="font-serif text-xl" style="color:var(--lux-brown-800);">${c.guestName}</p>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="meta-label">Checked in</p>
+                        <p class="meta-value">${c.checkInTime.split("T")[0]}</p>
                     </div>
-                `,
+                    <div>
+                        <p class="meta-label">Depart</p>
+                        <p class="meta-value">${c.checkOutDate}</p>
+                    </div>
+                    <div>
+                        <p class="meta-label">Attending</p>
+                        <p class="meta-value">${c.attendingStaff || "-"}</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button onclick="checkOut('${c.id}')" class="btn-secondary" style="padding:10px 20px; font-size:10px;">
+                        Check Out
+                    </button>
+                </div>
+            </div>
+        `,
 				)
 				.join("");
 		} catch {
@@ -181,37 +201,37 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	}
 
-	// Check in action
+	// Check in and check out action
 	async function checkIn(bookingId) {
 		if (!confirm("Confirm check-in for this guest?")) return;
 		try {
-			await fetch(`/bookings/${bookingId}`, {
-				method: "PATCH",
+			const res = await fetch(`/checkins/checkin/${bookingId}`, {
+				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: "Bearer " + token,
 				},
-				body: JSON.stringify({ status: "confirmed" }),
 			});
+			if (!res.ok) throw new Error();
 			loadQueue();
 			loadCheckIns();
+			loadResidence();
 		} catch {
 			alert("Could not complete check-in.");
 		}
 	}
 
-	// Check out action
 	async function checkOut(checkinId) {
 		if (!confirm("Confirm check-out for this guest?")) return;
 		try {
-			await fetch(`/bookings/${checkinId}`, {
-				method: "PATCH",
+			const res = await fetch(`/checkins/checkout/${checkinId}`, {
+				method: "POST",
 				headers: {
 					"Content-Type": "application/json",
 					Authorization: "Bearer " + token,
 				},
-				body: JSON.stringify({ status: "checked-out" }),
 			});
+			if (!res.ok) throw new Error();
 			loadResidence();
 		} catch {
 			alert("Could not complete check-out.");

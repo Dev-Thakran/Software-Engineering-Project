@@ -1,246 +1,528 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Book – La Extravaganza</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="stylesheet" href="../css/main.css" />
+		<script src="../js/header.js"></script>
+		<script src="../js/footer.js"></script>
+		<style>
+			.step-tab {
+				font-family: "Outfit", sans-serif;
+				font-size: 11px;
+				font-weight: 500;
+				letter-spacing: 0.22em;
+				text-transform: uppercase;
+				color: var(--lux-brown-300);
+				background: none;
+				border: none;
+				cursor: pointer;
+				padding: 0 0 12px 0;
+				border-bottom: 1.5px solid transparent;
+				transition:
+					color 0.2s,
+					border-color 0.2s;
+			}
+			.step-tab.active {
+				color: var(--lux-brown-800);
+				border-bottom-color: var(--lux-brown-800);
+			}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Booking Form - La Extravaganza</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../css/main.css"/>
-    <script src="../js/header.js"></script>
-    <script src="../js/footer.js"></script>
-</head>
+			.field-input {
+				width: 100%;
+				border: none;
+				border-bottom: 1px solid var(--lux-brown-200);
+				background: transparent;
+				padding: 10px 0;
+				font-size: 15px;
+				font-family: "Outfit", sans-serif;
+				color: var(--lux-brown-800);
+				outline: none;
+				transition: border-color 0.2s;
+			}
+			.field-input:focus {
+				border-bottom-color: var(--lux-brown-700);
+			}
+			.field-input::placeholder {
+				color: var(--lux-brown-300);
+			}
+			input[type="date"].field-input {
+				cursor: pointer;
+			}
 
+			.mock-card {
+				background: #2c1f14;
+				border-radius: 8px;
+				padding: 20px 22px;
+				color: rgba(250, 247, 242, 0.9);
+				font-family: "Outfit", sans-serif;
+				max-width: 340px;
+				min-height: 160px;
+				display: flex;
+				flex-direction: column;
+				justify-content: space-between;
+				margin-bottom: 28px;
+			}
+			.mock-card-number {
+				font-size: 14px;
+				letter-spacing: 0.15em;
+				color: rgba(250, 247, 242, 0.7);
+				font-family: "Courier New", monospace;
+				margin: 18px 0 14px;
+			}
+			.mock-card-field-label {
+				font-size: 8px;
+				letter-spacing: 0.2em;
+				text-transform: uppercase;
+				opacity: 0.5;
+				margin-bottom: 3px;
+			}
+			.mock-card-value {
+				font-size: 11px;
+				letter-spacing: 0.08em;
+				opacity: 0.85;
+			}
+			.btn-submit {
+				width: 100%;
+				background: var(--lux-brown-800);
+				color: var(--lux-cream);
+				font-family: "Outfit", sans-serif;
+				font-size: 11px;
+				font-weight: 600;
+				letter-spacing: 0.22em;
+				text-transform: uppercase;
+				padding: 16px;
+				border: none;
+				cursor: pointer;
+				transition: background 0.2s;
+				margin-top: 20px;
+				display: inline-block;
+			}
+			.btn-submit:hover {
+				background: #1a140f;
+			}
+			.btn-submit:disabled {
+				background: var(--lux-brown-200);
+				color: var(--lux-brown-400);
+				cursor: not-allowed;
+			}
 
-<body>
-    <header id="header"></header>
+			.notice {
+				font-family: "Outfit", sans-serif;
+				font-size: 12px;
+				padding: 10px 14px;
+				margin-top: 10px;
+				display: none;
+			}
+			.notice.error {
+				background: #fef2f2;
+				color: #b91c1c;
+				border: 1px solid #fecaca;
+			}
+			.notice.success {
+				background: #f0fdf4;
+				color: #166534;
+				border: 1px solid #bbf7d0;
+			}
 
-    <section bg-[#FAF7F2]>
-        <p class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-4 pt-16 pl-9">
-            Reservation
-        </p>
+			.slide-hidden {
+				display: none;
+			}
 
-        <p class="font-serif text-4xl text-[#2C241B] mb-4 pl-9 italic">
-            Secure your stay
-        </p>
+			@media (max-width: 768px) {
+				.booking-grid {
+					grid-template-columns: 1fr !important;
+				}
+				.summary-sticky {
+					position: static !important;
+				}
+			}
+		</style>
+	</head>
+	<body class="bg-[#FAF7F2]">
+		<header id="header"></header>
 
-        <div class="max-w-7xl w-full grid grid-cols-1 lg:grid-cols-3 gap-6 pl-16 py-4">
-            <div>
-                <button class="text-[#4A3B32] text-lg" id="infobtn">1 — Dates & Guests</button>
-                <hr class="border-t-2 border-[#4A3B32] my-3" id="infolne">
-            </div>
-            <div>
-                <button class="text-[#4A3B32] text-lg" id="paybtn">2 — Payment</button>
-                <hr class="border-t-2 border-[#4A3B32] my-3" id="paylne">
-            </div>
-        </div>
-        <hr class="border-t border-[#4A3B32] my-3">
-    </section>
+		<main class="mx-auto px-6 md:px-12 py-12 pb-24" style="max-width: 1100px">
+			<p class="kicker mb-1">Reservation</p>
+			<h1
+				class="font-serif font-normal mb-7 leading-tight"
+				style="font-size: 42px; color: var(--lux-brown-800)">
+				Secure your stay
+			</h1>
 
-    <!--Dates & Guests slide-->
-    <section class="py-4 " id="info-slide">
-        <div class="py-4">
-            <div class="max-w-7xl mx-auto w-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 bg-[#FFFFFF]">
-                    <div class="grid grid-cols-2 gap-4 py-4">
-                        <div class="h-12 pl-2">
-                            <label for="checkin">Check-In</label><br>
-                            <input type="date" id="checkin" class="w-[200px]"> 
-                            <hr class="border-t border-[#4A3B32] my-3">
-                        </div>
-                        <div class="h-12">
-                            <label for="checkout">Check Out</label><br>
-                            <input type="date" id="checkout" class="w-[200px]">
-                            <hr class="border-t border-[#4A3B32] my-3">
-                        </div>
-                    </div>
+			<!-- Step tabs -->
+			<div
+				class="flex gap-8 mb-8"
+				style="border-bottom: 1px solid var(--lux-brown-100)">
+				<button class="step-tab active" id="tab-dates" onclick="goToStep(1)">
+					1 - Dates & Guests
+				</button>
+				<button class="step-tab" id="tab-payment" onclick="goToStep(2)">
+					2 - Payment
+				</button>
+			</div>
 
-                    <div class="w-full py-4 pl-2">
-                        <label for="guestinput">Guests (Max -)</label><br>
-                        <input type="text" id="guestinput" class="w-[500px]">
-                        <hr class="border-t border-[#4A3B32] my-3">
-                    </div>
+			<!-- Grid -->
+			<div
+				class="booking-grid"
+				style="
+					display: grid;
+					grid-template-columns: 1fr 280px;
+					gap: 24px;
+					align-items: start;
+				">
+				<!-- LEFT -->
+				<div>
+					<!-- Step 1 -->
+					<div
+						id="step-dates"
+						class="bg-white p-8"
+						style="border: 1px solid var(--lux-brown-100)">
+						<div class="kicker flex items-center gap-1 mb-6">
+							<svg
+								width="13"
+								height="13"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="1.5">
+								<rect x="3" y="4" width="18" height="18" rx="2" />
+								<path d="M16 2v4M8 2v4M3 10h18" />
+							</svg>
+							Check-in & Check-out
+						</div>
 
-                    <div class="pl-2 pt-2 pb-4">
-                        <button type="button" class="bg-[#4A3B32] uppercase tracking-[0.2em] text-xs hover:bg-[#342A24] transition text-[white] py-4 px-4" id="continuepaybtn">Continue to payment</button>
-                    </div>
-                </div>
+						<div class="grid grid-cols-1 sm:grid-cols-2 gap-8 mb-7">
+							<div>
+								<div
+									class="kicker flex items-center gap-1 mb-2"
+									style="font-size: 10px">
+									<svg
+										width="11"
+										height="11"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="1.5">
+										<rect x="3" y="4" width="18" height="18" rx="2" />
+										<path d="M16 2v4M8 2v4M3 10h18" />
+									</svg>
+									Check-in
+								</div>
+								<input type="date" id="checkin" class="field-input" />
+							</div>
+							<div>
+								<div
+									class="kicker flex items-center gap-1 mb-2"
+									style="font-size: 10px">
+									<svg
+										width="11"
+										height="11"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="1.5">
+										<rect x="3" y="4" width="18" height="18" rx="2" />
+										<path d="M16 2v4M8 2v4M3 10h18" />
+									</svg>
+									Check-out
+								</div>
+								<input type="date" id="checkout" class="field-input" />
+							</div>
+						</div>
 
-                <!--summary-->
-                <div class="lg:col-span-1 bg-[white] p-6" >
-                    <div class="overflow-hidden w-full py-4">
-                        <img src="#" alt="#" class="w-full h-auto object-cover"/>
-                    </div>
+						<div class="mb-7">
+							<div
+								class="kicker flex items-center gap-1 mb-2"
+								style="font-size: 10px">
+								<svg
+									width="11"
+									height="11"
+									viewBox="0 0 24 24"
+									fill="none"
+									stroke="currentColor"
+									stroke-width="1.5">
+									<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+									<circle cx="9" cy="7" r="4" />
+									<path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+									<path d="M16 3.13a4 4 0 0 1 0 7.75" />
+								</svg>
+								Guests (max
+								<span id="max-guests-label">2</span>
+								)
+							</div>
+							<input
+								type="number"
+								id="guestinput"
+								class="field-input"
+								min="1"
+								max="2"
+								value="1"
+								placeholder="1" />
+							<div class="notice error" id="guest-error">
+								Please enter a valid number of guests.
+							</div>
+						</div>
 
-                    <div class="mt-6 space-y-5 text-[#2C241B]">
-                        <div>
-                            <p class="uppercase tracking-[0.3em] text-3xl text-[#9A7355]" id="room-floor">-</p>
-                            <h2 class="font-serif text-xs mt-2" id="room-id">-</h2>
-                        </div>
-                    </div>
-                    
-                    <hr class="border-t border-[#4A3B32] my-3">
-                    <div class="space-y-3 pb-3">
-                        <div class="flex justify-between ">
-                            <span>Check-in</span>
-                            <span id="checkin-input">-</span>
-                        </div>
-                        <div class="flex justify-between ">
-                            <span>Check-out</span>
-                            <span id="checkout-input">-</span>
-                        </div>
-                        <div class="flex justify-between  ">
-                            <span>Guests</span>
-                            <span id="guest-input">-</span>
-                        </div>
-                        <div class="flex justify-between ">
-                            <span>Nights</span>
-                            <span id="checkdate-sum">-</span>
-                        </div>
-                    </div>
-                    <hr class="border-t border-[#4A3B32] my-3">
+						<button
+							class="btn-submit"
+							id="continuepaybtn"
+							onclick="goToStep(2)">
+							Continue to payment
+						</button>
+						<div class="notice error" id="dates-error">
+							Please select valid check-in and check-out dates.
+						</div>
+					</div>
 
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span><span id="price">$-</span> x <span id="nightsdisplay">-</span></span>
-                            <span id="subtotal">$-</span>
-                        </div>
+					<!-- Step 2 -->
+					<div
+						id="step-payment"
+						class="bg-white p-8 slide-hidden"
+						style="border: 1px solid var(--lux-brown-100)">
+						<div class="kicker flex items-center gap-1 mb-6">
+							<svg
+								width="13"
+								height="13"
+								viewBox="0 0 24 24"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="1.5">
+								<rect x="1" y="4" width="22" height="16" rx="2" />
+								<path d="M1 10h22" />
+							</svg>
+							Secure mock payment
+						</div>
 
-                        <div class="flex justify-between">
-                            <span>Taxes & fees</span>
-                            <span>$30</span>
-                        </div>
-                    </div>
+						<div class="mock-card w-full">
+							<div class="flex justify-between items-center">
+								<span
+									class="mock-card-value"
+									style="
+										font-weight: 600;
+										letter-spacing: 0.22em;
+										text-transform: uppercase;
+										opacity: 0.9;
+									">
+									La Extravaganza Pay
+								</span>
+								<svg width="32" height="20" viewBox="0 0 32 20" fill="none">
+									<circle
+										cx="11"
+										cy="10"
+										r="10"
+										fill="rgba(255,255,255,0.18)" />
+									<circle
+										cx="21"
+										cy="10"
+										r="10"
+										fill="rgba(255,255,255,0.10)" />
+								</svg>
+							</div>
+							<div class="mock-card-number" id="card-display-number">
+								•••• &nbsp;•••• &nbsp;•••• &nbsp;••••
+							</div>
+							<div class="flex justify-between items-end">
+								<div>
+									<div class="mock-card-field-label">Name on card</div>
+									<div class="mock-card-value" id="card-display-name">
+										NAME ON CARD
+									</div>
+								</div>
+								<div class="text-right">
+									<div class="mock-card-field-label">MM/YY</div>
+									<div class="mock-card-value" id="card-display-exp">MM/YY</div>
+								</div>
+							</div>
+						</div>
 
-                    <hr class="border-t border-[#4A3B32] my-3">
-                    <div class="pt-4 flex justify-between items-end">
-                        <span class="uppercase tracking-[0.3em] text-xs text-[#928065]">Total</span>
-                        <span class="text-3xl font-semibold" id="total">-</span>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-    </section>
+						<div class="mb-6">
+							<div class="kicker mb-2" style="font-size: 10px">
+								Name on card
+							</div>
+							<input
+								type="text"
+								id="cardname"
+								class="field-input"
+								placeholder="Jane Thompson"
+								autocomplete="cc-name" />
+						</div>
+						<div class="mb-6">
+							<div class="kicker mb-2" style="font-size: 10px">Card number</div>
+							<input
+								type="text"
+								id="cardno"
+								class="field-input"
+								placeholder="4242 4242 4242 4242"
+								maxlength="19"
+								autocomplete="cc-number"
+								inputmode="numeric" />
+						</div>
+						<div class="grid grid-cols-2 gap-8 mb-2">
+							<div>
+								<div class="kicker mb-2" style="font-size: 10px">Expiry</div>
+								<input
+									type="text"
+									id="cardexp"
+									class="field-input"
+									placeholder="MM/YY"
+									maxlength="5"
+									autocomplete="cc-exp"
+									inputmode="numeric" />
+							</div>
+							<div>
+								<div class="kicker mb-2" style="font-size: 10px">CVV</div>
+								<input
+									type="text"
+									id="cardcvv"
+									class="field-input"
+									placeholder="123"
+									maxlength="4"
+									autocomplete="cc-csc"
+									inputmode="numeric" />
+							</div>
+						</div>
 
+						<div class="notice error" id="pay-error"></div>
+						<div class="notice success" id="pay-success"></div>
 
-    <!--Payment slide-->
-    <section class="py-4 hidden" id="pay-slide">
-        <div class="py-4">
-            <div class="max-w-7xl mx-auto w-auto grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-2 bg-[#FFFFFF] pl-6">
+						<button class="btn-submit" id="pay-btn" onclick="submitPayment()">
+							Pay
+							<span id="pay-btn-total">-</span>
+						</button>
+					</div>
+				</div>
 
-                    <div class="grid grid-cols-2 lg:grid-cols-2 gap-4 py-2 w-[1100px]">
-                        <p class="text-lg pl-8">Secure Mock Payment</p> <br>
+				<!-- RIGHT - summary -->
+				<div
+					class="summary-sticky bg-white overflow-hidden"
+					style="
+						border: 1px solid var(--lux-brown-100);
+						position: sticky;
+						top: 24px;
+					">
+					<img
+						id="summary-img"
+						src=""
+						alt="Room"
+						class="w-full object-cover block"
+						style="height: 180px" />
+					<div
+						style="
+							width: 100%;
+							height: 180px;
+							background: var(--lux-cream-dark);
+							display: none;
+							align-items: center;
+							justify-content: center;
+							font-family: &quot;Outfit&quot;, sans-serif;
+							font-size: 10px;
+							color: var(--lux-brown-300);
+							letter-spacing: 0.2em;
+							text-transform: uppercase;
+						">
+						Room photo
+					</div>
 
-                        <div class="grid grid-cols-2 lg:grid-cols-2 gap-4 py-2 bg-[#221B14] text-[#FAF7E5] px-8 uppercase text-sm">
-                            <div class="lg:col-span-2 py-4">
-                                <p>LuxStay Pay</p>
-                            </div>
-                            <div class="lg:col-span-2 py-8">
-                                <p id="cardno-dis">4242 4242 42424 4242</p>
-                            </div>
-                            <div class="lg:col-span-1 py-4">
-                                <p id="cardname-dis">Name on card</p>
-                            </div>
-                            <div class="lg:col-span-1 py-4">
-                                <p id="cardexp-dis">MM/YY</p>
-                            </div>
-                            
-                        </div>
-                    </div>
+					<div class="p-5 bg-white">
+						<p class="kicker mb-1" id="summary-tier" style="font-size: 10px">
+							-
+						</p>
+						<p
+							class="font-serif font-normal mb-4"
+							id="summary-room-name"
+							style="font-size: 26px; color: var(--lux-brown-800)">
+							-
+						</p>
 
-                    <hr class="border-t border-[#4A3B32] my-3">
-                    <div class="w-full py-4 pl-2">
-                        <label for="cardname">Name on Card</label><br>
-                        <input type="text" id="cardname" class="w-[500px]">
-                        <hr class="border-t border-[#4A3B32] my-3">
-                    </div>
+						<hr
+							class="my-3"
+							style="
+								border: none;
+								border-top: 1px solid var(--lux-brown-100);
+							" />
 
-                    <div class="w-full py-4 pl-2">
-                        <label for="cardno">Card Number</label><br>
-                        <input type="text" id="cardno" class="w-[500px]">
-                        <hr class="border-t border-[#4A3B32] my-3">
-                    </div>
+						<p class="kicker mb-1" id="summary-tier-2" style="font-size: 10px">
+							-
+						</p>
+						<p
+							class="font-serif font-normal mb-4"
+							id="summary-room-name-2"
+							style="font-size: 26px; color: var(--lux-brown-800)">
+							-
+						</p>
 
-                    <div class="grid grid-cols-2 lg:grid-cols-2 gap-4">
-                        <div class="lg:col-span-1 py-4">
-                            <label for="cardexp">MM/YY</label><br>
-                            <input type="text" id="cardexp" class="w-[400px]">
-                            <hr class="border-t border-[#4A3B32] my-3">
-                        </div>
-                        <div class="lg:col-span-1 py-4">
-                            <label for="cardcvv">CVV</label><br>
-                            <input type="text" id="cardcvv" class="w-[400px]">
-                            <hr class="border-t border-[#4A3B32] my-3">
-                        </div>
-                    </div>
-                    
-                    <div class="flex pt-2 pb-4 justify-center">
-                        <button type="button" class="bg-[#4A3B32] uppercase tracking-[0.2em] text-xs hover:bg-[#342A24] transition text-[white] py-4 px-4 w-[750px]">Pay $-</button>
-                    </div>
-                </div>
+						<div
+							class="flex justify-between mb-2 text-sm"
+							style="color: var(--lux-brown-600)">
+							<span>Check-in</span>
+							<span id="s-checkin" style="color: var(--lux-brown-800)">-</span>
+						</div>
+						<div
+							class="flex justify-between mb-2 text-sm"
+							style="color: var(--lux-brown-600)">
+							<span>Check-out</span>
+							<span id="s-checkout" style="color: var(--lux-brown-800)">-</span>
+						</div>
+						<div
+							class="flex justify-between mb-2 text-sm"
+							style="color: var(--lux-brown-600)">
+							<span>Guests</span>
+							<span id="s-guests" style="color: var(--lux-brown-800)">-</span>
+						</div>
+						<div
+							class="flex justify-between text-sm"
+							style="color: var(--lux-brown-600)">
+							<span>Nights</span>
+							<span id="s-nights" style="color: var(--lux-brown-800)">-</span>
+						</div>
 
-                <!--summary-->
-                <div class="lg:col-span-1 bg-[white] p-6" >
-                    <div class="overflow-hidden w-full py-4">
-                        <img src="#" alt="#" class="w-full h-auto object-cover"/>
-                    </div>
+						<hr
+							class="my-3"
+							style="
+								border: none;
+								border-top: 1px solid var(--lux-brown-100);
+							" />
 
-                    <div class="mt-6 space-y-5 text-[#2C241B]">
-                        <div>
-                            <p class="uppercase tracking-[0.3em] text-3xl text-[#9A7355]" id="room-floor">-</p>
-                            <h2 class="font-serif text-xs mt-2" id="room-id">-</h2>
-                        </div>
-                    </div>
-                    
-                    <hr class="border-t border-[#4A3B32] my-3">
-                    <div class="space-y-3 pb-3">
-                        <div class="flex justify-between ">
-                            <span>Check-in</span>
-                            <span id="checkin-input2">-</span>
-                        </div>
-                        <div class="flex justify-between ">
-                            <span>Check-out</span>
-                            <span id="checkout-input2">-</span>
-                        </div>
-                        <div class="flex justify-between  ">
-                            <span>Guests</span>
-                            <span id="guest-input2">-</span>
-                        </div>
-                        <div class="flex justify-between ">
-                            <span>Nights</span>
-                            <span id="checkdate-sum2">-</span>
-                        </div>
-                    </div>
-                    <hr class="border-t border-[#4A3B32] my-3">
+						<div
+							class="flex justify-between mb-2 text-sm"
+							style="color: var(--lux-brown-600)">
+							<span id="s-price-line">$- × - nights</span>
+							<span id="s-subtotal" style="color: var(--lux-brown-800)">
+								$-
+							</span>
+						</div>
+						<div
+							class="flex justify-between text-sm"
+							style="color: var(--lux-brown-600)">
+							<span>Taxes &amp; fees</span>
+							<span style="color: var(--lux-brown-800)">$30</span>
+						</div>
 
-                    <div class="space-y-3">
-                        <div class="flex justify-between">
-                            <span><span id="price2">$-</span> x <span id="nightsdisplay2">-</span></span>
-                            <span id="subtotal2">$-</span>
-                        </div>
+						<hr
+							class="my-3"
+							style="
+								border: none;
+								border-top: 1px solid var(--lux-brown-100);
+							" />
 
-                        <div class="flex justify-between">
-                            <span>Taxes & fees</span>
-                            <span>$30</span>
-                        </div>
-                    </div>
+						<div class="flex justify-between items-baseline">
+							<span class="kicker" style="font-size: 10px">Total</span>
+							<span
+								class="font-serif font-normal"
+								id="s-total"
+								style="font-size: 32px; color: var(--lux-brown-800)">
+								-
+							</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</main>
 
-                    <hr class="border-t border-[#4A3B32] my-3">
-                    <div class="pt-4 flex justify-between items-end">
-                        <span class="uppercase tracking-[0.3em] text-xs text-[#928065]">Total</span>
-                        <span class="text-3xl font-semibold" id="total2">-</span>
-                    </div>
-                    
-                </div>
-            </div>
-        </div>
-
-    </section>
-
-    <footer id="footer"></footer>
-
-    <script src="../js/booking.js"></script>
-</body>
+		<footer id="footer"></footer>
+		<script src="../js/booking.js"></script>
+	</body>
 </html>
