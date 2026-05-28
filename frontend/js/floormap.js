@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                         </div>
                         ${
 													room.status === "available"
-														? `<a href="/pages/browserooms.html?room=${room.id}"
+														? `<a href="/pages/room.html?room=${room.id}"
                                   class="btn-primary"
                                   style="display:block; text-align:center; padding:12px 20px; font-size:10px;">
                                   Book this room
@@ -119,7 +119,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 				});
 
 				cell.className = "room-cell selected";
-				window.location.href = `/pages/browserooms.html?room=${roomId}`;
+				window.location.href = `/pages/room.html?room=${roomId}`;
 			});
 
 			roomsDiv.appendChild(cell);
