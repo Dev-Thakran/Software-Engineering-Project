@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 	const roomId = params.get("room") || params.get("roomId") || params.get("id");
 
 	if (!roomId) {
-		window.location.href = "./rooms.html";
+		window.location.href = "./browserooms.html";
 		return;
 	}
 
@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 <p class="font-serif text-4xl" style="color:var(--lux-brown-400);">
                     Room not found.
                 </p>
-                <a href="./rooms.html" class="btn-primary" style="margin-top:32px; display:inline-block;">
+                <a href="./browserooms.html" class="btn-primary" style="margin-top:32px; display:inline-block;">
                     Back to rooms
                 </a>
             </div>`;
