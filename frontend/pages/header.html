@@ -73,75 +73,27 @@
 </style>
 
 <nav>
-	<div class="mx-auto px-6 py-4 flex items-center justify-between">
-		<!-- Logo -->
-		<a
-			href="/pages/index.html"
-			class="font-serif"
-			style="
-				font-size: 22px;
-				letter-spacing: 0;
-				text-transform: none;
-				color: var(--lux-brown-800);
-				text-decoration: none;
-			">
-			La
-			<em class="font-display">Extravaganza</em>
-		</a>
-
-		<!-- Desktop nav links - hidden below 845px -->
-		<!-- Desktop nav links - hidden below 845px -->
-		<div class="desktop-nav hidden md:flex items-center gap-8">
-			<a href="/pages/index.html">Home</a>
-			<a href="/pages/browserooms.html">Rooms</a>
-			<a href="/pages/floormap.html">Floor Map</a>
-			<a href="#">About</a>
-			<a href="#">Contact</a>
-			<!-- JS: header.js shows this only when logged in as customer -->
-			<a href="/pages/mybooking.html" id="nav-mybookings" style="display: none">
-				My Bookings
-			</a>
-		</div>
-
-		<!-- Right side - always visible -->
-		<div class="flex items-center gap-5">
-			<!-- Auth - filled by header.js -->
-			<!-- nav-signin class lets us hide just the sign in part on mobile -->
-			<div id="nav-auth" class="flex items-center gap-5">
-				<a
-					href="/pages/Login.html"
-					class="nav-auth-btn nav-signin"
-					style="text-decoration: none">
-					Sign In
-				</a>
-				<a href="/pages/browserooms.html" class="btn-reserve">Reserve</a>
-			</div>
-
-			<!-- Hamburger - only visible below 845px -->
-			<button class="hamburger" id="hamburger" aria-label="Toggle menu">
-				<span></span>
-				<span></span>
-				<span></span>
-			</button>
-		</div>
-	</div>
-
-	<!-- Mobile dropdown - nav links + sign in -->
-	<div class="mobile-menu" id="mobile-menu">
-		<a href="/pages/index.html">Home</a>
-		<a href="/pages/browserooms.html">Rooms</a>
-		<a href="/pages/floormap.html">Floor Map</a>
-		<a href="#">About</a>
-		<a href="#">Contact</a>
-		<!-- JS: header.js shows this only when logged in as customer -->
-		<a
-			href="/pages/mybooking.html"
-			id="mobile-mybookings"
-			style="display: none">
-			My Bookings
-		</a>
-		<div id="mobile-auth" style="display: contents">
-			<a href="/pages/Login.html">Sign In</a>
-		</div>
-	</div>
+  <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a
+      href="index.html"
+      class="font-serif text-[#2C241B]"
+      style="font-size: 22px; letter-spacing: 0; text-transform: none"
+    >
+      La
+      <em class="font-display">Extravaganza</em>
+    </a>
+    <div class="hidden md:flex items-center gap-8">
+      <a href="../pages/index.html">Home</a>
+      <a href="../pages/browserooms.html">Rooms</a>
+      <a href="../pages/floormap.html">Floor Map</a>
+      <a href="../pages/about.html">About</a>
+      <a href="../pages/contact.html">Contact</a>
+    </div>
+    <div class="flex items-center gap-5">
+      <div id="nav-auth" class="flex items-center gap-5">
+        <a href="../pages/Login.html">Sign In</a>
+        <a href="../pages/browserooms.html" class="btn-reserve">Reserve</a>
+      </div>
+    </div>
+  </div>
 </nav>
