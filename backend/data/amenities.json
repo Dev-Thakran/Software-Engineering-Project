@@ -1,0 +1,260 @@
+[
+	{
+		"roomId": "101",
+		"amenities": ["Queen bed", "Garden view", "WiFi", "Coffee maker"]
+	},
+	{
+		"roomId": "102",
+		"amenities": ["Queen bed", "Garden view", "WiFi", "Coffee maker"]
+	},
+	{
+		"roomId": "103",
+		"amenities": ["Queen bed", "Garden view", "WiFi", "Coffee maker"]
+	},
+	{
+		"roomId": "104",
+		"amenities": ["Queen bed", "Garden view", "WiFi", "Coffee maker"]
+	},
+	{
+		"roomId": "105",
+		"amenities": ["Queen bed", "Garden view", "WiFi", "Coffee maker"]
+	},
+	{
+		"roomId": "106",
+		"amenities": ["Queen bed", "Garden view", "WiFi", "Coffee maker"]
+	},
+	{
+		"roomId": "201",
+		"amenities": [
+			"Queen bed",
+			"City view",
+			"WiFi",
+			"Coffee maker",
+			"Mini bar",
+			"Rainfall shower"
+		]
+	},
+	{
+		"roomId": "202",
+		"amenities": [
+			"Queen bed",
+			"City view",
+			"WiFi",
+			"Coffee maker",
+			"Mini bar",
+			"Rainfall shower"
+		]
+	},
+	{
+		"roomId": "203",
+		"amenities": [
+			"Queen bed",
+			"City view",
+			"WiFi",
+			"Coffee maker",
+			"Mini bar",
+			"Rainfall shower"
+		]
+	},
+	{
+		"roomId": "204",
+		"amenities": [
+			"Queen bed",
+			"City view",
+			"WiFi",
+			"Coffee maker",
+			"Mini bar",
+			"Rainfall shower"
+		]
+	},
+	{
+		"roomId": "205",
+		"amenities": [
+			"Queen bed",
+			"City view",
+			"WiFi",
+			"Coffee maker",
+			"Mini bar",
+			"Rainfall shower"
+		]
+	},
+	{
+		"roomId": "206",
+		"amenities": [
+			"Queen bed",
+			"City view",
+			"WiFi",
+			"Coffee maker",
+			"Mini bar",
+			"Rainfall shower"
+		]
+	},
+	{
+		"roomId": "301",
+		"amenities": [
+			"King bed",
+			"Panoramic view",
+			"WiFi",
+			"Coffee maker",
+			"Mini bar",
+			"Rainfall shower",
+			"Bathtub",
+			"Robes & slippers"
+		]
+	},
+	{
+		"roomId": "302",
+		"amenities": [
+			"King bed",
+			"Panoramic view",
+			"WiFi",
+			"Coffee maker",
+			"Mini bar",
+			"Rainfall shower",
+			"Bathtub",
+			"Robes & slippers"
+		]
+	},
+	{
+		"roomId": "303",
+		"amenities": [
+			"King bed",
+			"Panoramic view",
+			"WiFi",
+			"Coffee maker",
+			"Mini bar",
+			"Rainfall shower",
+			"Bathtub",
+			"Robes & slippers"
+		]
+	},
+	{
+		"roomId": "304",
+		"amenities": [
+			"King bed",
+			"Panoramic view",
+			"WiFi",
+			"Coffee maker",
+			"Mini bar",
+			"Rainfall shower",
+			"Bathtub",
+			"Robes & slippers"
+		]
+	},
+	{
+		"roomId": "305",
+		"amenities": [
+			"King bed",
+			"Panoramic view",
+			"WiFi",
+			"Coffee maker",
+			"Mini bar",
+			"Rainfall shower",
+			"Bathtub",
+			"Robes & slippers"
+		]
+	},
+	{
+		"roomId": "306",
+		"amenities": [
+			"King bed",
+			"Panoramic view",
+			"WiFi",
+			"Coffee maker",
+			"Mini bar",
+			"Rainfall shower",
+			"Bathtub",
+			"Robes & slippers"
+		]
+	},
+	{
+		"roomId": "401",
+		"amenities": [
+			"King bed",
+			"Full city panorama",
+			"WiFi",
+			"Nespresso machine",
+			"Mini bar",
+			"Rainfall shower",
+			"Bathtub",
+			"Robes & slippers",
+			"Butler service",
+			"Private terrace"
+		]
+	},
+	{
+		"roomId": "402",
+		"amenities": [
+			"King bed",
+			"Full city panorama",
+			"WiFi",
+			"Nespresso machine",
+			"Mini bar",
+			"Rainfall shower",
+			"Bathtub",
+			"Robes & slippers",
+			"Butler service",
+			"Private terrace"
+		]
+	},
+	{
+		"roomId": "403",
+		"amenities": [
+			"King bed",
+			"Full city panorama",
+			"WiFi",
+			"Nespresso machine",
+			"Mini bar",
+			"Rainfall shower",
+			"Bathtub",
+			"Robes & slippers",
+			"Butler service",
+			"Private terrace"
+		]
+	},
+	{
+		"roomId": "404",
+		"amenities": [
+			"King bed",
+			"Full city panorama",
+			"WiFi",
+			"Nespresso machine",
+			"Mini bar",
+			"Rainfall shower",
+			"Bathtub",
+			"Robes & slippers",
+			"Butler service",
+			"Private terrace"
+		]
+	},
+	{
+		"roomId": "405",
+		"amenities": [
+			"King bed",
+			"Full city panorama",
+			"WiFi",
+			"Nespresso machine",
+			"Mini bar",
+			"Rainfall shower",
+			"Bathtub",
+			"Robes & slippers",
+			"Butler service",
+			"Private terrace"
+		]
+	},
+	{
+		"roomId": "406",
+		"amenities": [
+			"King bed",
+			"Full city panorama",
+			"WiFi",
+			"Nespresso machine",
+			"Mini bar",
+			"Rainfall shower",
+			"Bathtub",
+			"Robes & slippers",
+			"Butler service",
+			"Private terrace"
+		]
+	}
+]

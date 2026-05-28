@@ -22,7 +22,7 @@ async function register(req, res) {
 	res.status(201).json({ message: "Account created" });
 }
 
-// Login — returns a JWT token containing id, name, and role
+// Login - returns a JWT token containing id, name, and role
 async function login(req, res) {
 	const { email, password } = req.body;
 	const user = userRepo.findByEmail(email);

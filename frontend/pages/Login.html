@@ -1,155 +1,212 @@
 <!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In – La Extravaganza</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="../css/main.css" />
-    <style>
-        .room-photo {
-            background: url("/images/login-interior.jpg") center/cover no-repeat;
-            position: relative;
-        }
-        .room-photo::after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.05) 55%);
-        }
-        .photo-text {
-            position: absolute;
-            bottom: 36px;
-            left: 32px;
-            z-index: 2;
-        }
-        .role-btn {
-            flex: 1;
-            padding: 9px 6px;
-            font-size: 11px;
-            font-weight: 500;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            cursor: pointer;
-            border: 1px solid #E6DFD7;
-            background: #FFFFFF;
-            color: #8B7355;
-            transition: all 0.2s;
-            text-align: center;
-            font-family: 'Outfit', system-ui, sans-serif;
-        }
-        .role-btn.active {
-            background: #4A3B32;
-            color: #FAF7F2;
-            border-color: #4A3B32;
-        }
-        .role-btn:not(:first-child) { border-left: none; }
-        .cred-row {
-            display: grid;
-            grid-template-columns: 75px 1fr auto;
-            align-items: center;
-            gap: 8px;
-            padding: 9px 12px;
-            border: 1px solid #E6DFD7;
-            cursor: pointer;
-            transition: background 0.2s;
-            font-size: 12px;
-            margin-bottom: 6px;
-            font-family: 'Outfit', system-ui, sans-serif;
-        }
-        .cred-row:hover { background: #F2EBE1; }
-        .btn-signin {
-            width: 100%;
-            background: #4A3B32;
-            color: #FAF7F2;
-            padding: 16px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.22em;
-            text-transform: uppercase;
-            border: none;
-            cursor: pointer;
-            transition: background 0.3s;
-            font-family: 'Outfit', system-ui, sans-serif;
-        }
-        .btn-signin:hover { background: #2C241B; }
-    </style>
-    <script src="../js/header.js"></script>
-    <script src="../js/footer.js"></script>
-    <script src="../js/login.js"></script>
-</head>
-<body>
-    <header id="header"></header>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Sign In – La Extravaganza</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="stylesheet" href="../css/main.css" />
+		<style>
+			.room-photo {
+				background: url("/images/login-interior.jpg") center/cover no-repeat;
+				position: relative;
+			}
+			.room-photo::after {
+				content: "";
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(
+					to top,
+					rgba(0, 0, 0, 0.65) 0%,
+					rgba(0, 0, 0, 0.05) 55%
+				);
+			}
+			.photo-text {
+				position: absolute;
+				bottom: 36px;
+				left: 32px;
+				z-index: 2;
+			}
+			.role-btn {
+				flex: 1;
+				padding: 9px 6px;
+				font-size: 11px;
+				font-weight: 500;
+				letter-spacing: 0.22em;
+				text-transform: uppercase;
+				cursor: pointer;
+				border: 1px solid #e6dfd7;
+				background: #ffffff;
+				color: #8b7355;
+				transition: all 0.2s;
+				text-align: center;
+				font-family: "Outfit", system-ui, sans-serif;
+			}
+			.role-btn.active {
+				background: #4a3b32;
+				color: #faf7f2;
+				border-color: #4a3b32;
+			}
+			.role-btn:not(:first-child) {
+				border-left: none;
+			}
+			.cred-row {
+				display: grid;
+				grid-template-columns: 75px 1fr auto;
+				align-items: center;
+				gap: 8px;
+				padding: 9px 12px;
+				border: 1px solid #e6dfd7;
+				cursor: pointer;
+				transition: background 0.2s;
+				font-size: 12px;
+				margin-bottom: 6px;
+				font-family: "Outfit", system-ui, sans-serif;
+			}
+			.cred-row:hover {
+				background: #f2ebe1;
+			}
+			.btn-signin {
+				width: 100%;
+				background: #4a3b32;
+				color: #faf7f2;
+				padding: 16px;
+				font-size: 11px;
+				font-weight: 600;
+				letter-spacing: 0.22em;
+				text-transform: uppercase;
+				border: none;
+				cursor: pointer;
+				transition: background 0.3s;
+				font-family: "Outfit", system-ui, sans-serif;
+			}
+			.btn-signin:hover {
+				background: #2c241b;
+			}
 
-    <section class="max-w-5xl mx-auto px-6 py-12">
-        <div class="flex flex-col md:flex-row shadow-lg overflow-hidden" style="min-height:540px;">
+			@media (max-width: 495px) {
+				.cred-password {
+					display: none;
+				}
+			}
+		</style>
+		<script src="../js/header.js"></script>
+		<script src="../js/footer.js"></script>
+		<script src="../js/login.js"></script>
+	</head>
+	<body>
+		<header id="header"></header>
 
-            <!-- LEFT: PHOTO -->
-            <div class="room-photo w-full md:w-5/12 flex-shrink-0" style="min-height:480px;">
-                <div class="photo-text">
-                    <p class=" kicker mb-2" style="color:rgba(255,255,255,0.5);">Welcome Back</p>
-                    <h2 class="font-serif text-white text-3xl leading-snug">
-                        Your suite awaits.<br /><em class="font-display">Sign in to begin.</em>
-                    </h2>
-                </div>
-            </div>
+		<section class="max-w-5xl mx-auto px-6 py-12">
+			<div
+				class="flex flex-col md:flex-row shadow-lg overflow-hidden"
+				style="min-height: 540px">
+				<!-- LEFT: PHOTO -->
+				<div
+					class="room-photo w-full md:w-5/12 flex-shrink-0"
+					style="min-height: 480px">
+					<div class="photo-text">
+						<p class="kicker mb-2" style="color: rgba(255, 255, 255, 0.5)">
+							Welcome Back
+						</p>
+						<h2 class="font-serif text-white text-3xl leading-snug">
+							Your suite awaits.
+							<br />
+							<em class="font-display">Sign in to begin.</em>
+						</h2>
+					</div>
+				</div>
 
-            <!-- RIGHT: FORM -->
-            <div class="flex-1 px-10 py-10" style="background:#FAF7F2;">
-                <p class=" kicker mb-1">La Extravaganza</p>
-                <h1 class="font-serif text-5xl mb-8" style="color:#2C241B;">Sign in</h1>
+				<!-- RIGHT: FORM -->
+				<div class="flex-1 px-10 py-10" style="background: #faf7f2">
+					<p class="kicker mb-1">La Extravaganza</p>
+					<h1 class="font-serif text-5xl mb-8" style="color: #2c241b">
+						Sign in
+					</h1>
 
-                <p class=" kicker mb-2">I am a</p>
-                <div class="flex mb-1">
-                    <button class="role-btn active" onclick="setRole('customer', this)">Customer</button>
-                    <button class="role-btn" onclick="setRole('staff', this)">Staff</button>
-                    <button class="role-btn" onclick="setRole('manager', this)">Manager</button>
-                </div>
-                <p class="text-xs mb-6" style="color:#8B7355;" id="roleDesc">
-                    <em>Book rooms, manage stays, leave reviews.</em>
-                </p>
+					<p class="kicker mb-2">I am a</p>
+					<div class="flex mb-1">
+						<button class="role-btn active" onclick="setRole('customer', this)">
+							Customer
+						</button>
+						<button class="role-btn" onclick="setRole('staff', this)">
+							Staff
+						</button>
+						<button class="role-btn" onclick="setRole('manager', this)">
+							Manager
+						</button>
+					</div>
+					<p class="text-xs mb-6" style="color: #8b7355" id="roleDesc">
+						<em>Book rooms, manage stays, leave reviews.</em>
+					</p>
 
-                <div class="error-msg" id="errorMsg"></div>
+					<div class="error-msg" id="errorMsg"></div>
 
-                <div class="mb-6">
-                    <label class="input-label">Email</label>
-                    <input type="email" id="email" class="input-line" placeholder="you@example.com" />
-                </div>
+					<div class="mb-6">
+						<label class="input-label">Email</label>
+						<input
+							type="email"
+							id="email"
+							class="input-line"
+							placeholder="you@example.com" />
+					</div>
 
-                <div class="mb-8">
-                    <label class="input-label">Password</label>
-                    <input type="password" id="password" class="input-line" placeholder="••••••••" />
-                </div>
+					<div class="mb-8">
+						<label class="input-label">Password</label>
+						<input
+							type="password"
+							id="password"
+							class="input-line"
+							placeholder="••••••••" />
+					</div>
 
-                <button class="btn-signin mb-8" onclick="handleLogin()">Sign In</button>
+					<button class="btn-signin mb-8" onclick="handleLogin()">
+						Sign In
+					</button>
 
-                <p class=" kicker mb-3">Demo Credentials — Click to Autofill</p>
-                <div class="cred-row" onclick="autofill('jane@email.com', 'password', 'customer')">
-                    <span style="color:#8B7355;">Customer</span>
-                    <span style="color:#6B5743;">jane@email.com</span>
-                    <span style="color:#8B7355;">password →</span>
-                </div>
-                <div class="cred-row" onclick="autofill('staff@grandauckland.co.nz', 'password', 'staff')">
-                    <span style="color:#8B7355;">Staff</span>
-                    <span style="color:#6B5743;">staff@grandauckland.co.nz</span>
-                    <span style="color:#8B7355;">password →</span>
-                </div>
-                <div class="cred-row" onclick="autofill('manager@grandauckland.co.nz', 'password', 'manager')">
-                    <span style="color:#8B7355;">Manager</span>
-                    <span style="color:#6B5743;">manager@grandauckland.co.nz</span>
-                    <span style="color:#8B7355;">password →</span>
-                </div>
+					<p class="kicker mb-3">Demo Credentials - Click to Autofill</p>
+					<div
+						class="cred-row"
+						onclick="autofill('jane@email.com', 'password', 'customer')">
+						<span style="color: #8b7355">Customer</span>
+						<span style="color: #6b5743">jane@email.com</span>
+						<span class="cred-password" style="color: #8b7355">password →</span>
+					</div>
+					<div
+						class="cred-row"
+						onclick="
+							autofill('staff@email.co.nz', 'password', 'staff')
+						">
+						<span style="color: #8b7355">Staff</span>
+						<span style="color: #6b5743">staff@email.co.nz</span>
+						<span class="cred-password" style="color: #8b7355">password →</span>
+					</div>
+					<div
+						class="cred-row"
+						onclick="
+							autofill('manager@email.co.nz', 'password', 'manager')
+						">
+						<span style="color: #8b7355">Manager</span>
+						<span style="color: #6b5743">manager@email.co.nz</span>
+						<span class="cred-password" style="color: #8b7355">password →</span>
+					</div>
 
-                <p class="text-xs text-center mt-7" style="color:#8B7355;">
-                    New to La Extravaganza?
-                    <a href="./register.html" style="color:#4A3B32; text-decoration:underline; text-underline-offset:2px;">
-                        Create an account
-                    </a>
-                </p>
-            </div>
-        </div>
-    </section>
+					<p class="text-xs text-center mt-7" style="color: #8b7355">
+						New to La Extravaganza?
+						<a
+							href="./register.html"
+							style="
+								color: #4a3b32;
+								text-decoration: underline;
+								text-underline-offset: 2px;
+							">
+							Create an account
+						</a>
+					</p>
+				</div>
+			</div>
+		</section>
 
-    <footer id="footer"></footer>
-</body>
+		<footer id="footer"></footer>
+	</body>
 </html>

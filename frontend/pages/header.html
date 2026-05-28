@@ -1,3 +1,77 @@
+<style>
+	.mobile-menu {
+		display: none;
+		flex-direction: column;
+		background: var(--lux-cream);
+		border-top: 1px solid var(--lux-brown-100);
+		padding: 16px 24px;
+	}
+	.mobile-menu.open {
+		display: flex;
+	}
+	.mobile-menu a {
+		padding: 12px 0;
+		border-bottom: 1px solid var(--lux-brown-100);
+		font-size: 11px;
+		letter-spacing: 0.22em;
+		text-transform: uppercase;
+		color: var(--lux-brown-500);
+		text-decoration: none;
+		font-family: "Outfit", sans-serif;
+	}
+	.mobile-menu a:last-child {
+		border-bottom: none;
+	}
+	.mobile-menu a:hover {
+		color: var(--lux-brown-800);
+	}
+	.hamburger {
+		display: none;
+		flex-direction: column;
+		justify-content: center;
+		gap: 5px;
+		cursor: pointer;
+		padding: 4px;
+		background: none;
+		border: none;
+	}
+	.hamburger span {
+		display: block;
+		width: 22px;
+		height: 1.5px;
+		background: var(--lux-brown-700);
+		transition: all 0.3s;
+	}
+	.hamburger.open span:nth-child(1) {
+		transform: translateY(6.5px) rotate(45deg);
+	}
+	.hamburger.open span:nth-child(2) {
+		opacity: 0;
+	}
+	.hamburger.open span:nth-child(3) {
+		transform: translateY(-6.5px) rotate(-45deg);
+	}
+
+	@media (max-width: 1040px) {
+		/* Show hamburger */
+		.hamburger {
+			display: flex;
+		}
+		/* Hide desktop nav links */
+		.desktop-nav {
+			display: none !important;
+		}
+		/* Hide sign in from desktop auth, keep reserve/dashboard button */
+		.nav-signin {
+			display: none !important;
+		}
+		/* Hide sign out from desktop auth on mobile - it's in the hamburger menu */
+		.nav-auth-btn {
+			display: none !important;
+		}
+	}
+</style>
+
 <nav>
   <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
     <a

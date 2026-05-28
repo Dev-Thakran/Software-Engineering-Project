@@ -1,58 +1,58 @@
 [
-  {
-    "id": "u001",
-    "name": "Jane Thompson",
-    "email": "jane@email.com",
-    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-    "role": "customer"
-  },
-  {
-    "id": "u002",
-    "name": "Mike Tane",
-    "email": "staff@grandauckland.co.nz",
-    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-    "role": "staff"
-  },
-  {
-    "id": "u003",
-    "name": "Sarah Kim",
-    "email": "manager@grandauckland.co.nz",
-    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-    "role": "manager"
-  },
-  {
-    "id": "u1778992419881",
-    "name": "Dev Thakran",
-    "email": "devthakran27@gmail.com",
-    "password": "$2b$10$dD.qmc6yqJWl6ra4fy84xOQivW/AEviwZGEqN0rbcitJ0eYPMQjuS",
-    "role": "customer"
-  },
-  {
-    "id": "u1779003455079",
-    "name": "Devvrat Thakran",
-    "email": "devthakran217@gmail.com",
-    "password": "$2b$10$XaLy5AlzCHb3Vo.YTSHgtOPbJ/xErTFleVkNRj9ahMF0M/dXi5x6u",
-    "role": "customer"
-  },
-  {
-    "id": "u1779020905926",
-    "name": "Dustin Diaz",
-    "email": "dustin@gmail.com",
-    "password": "$2b$10$.zV9IW.zrLn/NVEkNTDNQ.LfXOYRWQWaUeOSj4ZPYHuelxz4Vyb/y",
-    "role": "customer"
-  },
-  {
-    "id": "u1779061416594",
-    "name": "Nihal Panithy",
-    "email": "panithynihal@gmail.com",
-    "password": "$2b$10$lxwkBIc2EyxIsUQ4YEsCeekkDFhHvmQPstI2tEVLZf0wW1HDh1ojq",
-    "role": "customer"
-  },
-  {
-    "id": "u1779401867216",
-    "name": "Bob Johns",
-    "email": "bibjohns@gmail.com",
-    "password": "$2b$10$lEaLkj8kONVxndfeNYgyH.prGEBmOfWzZP.XtRdc6uOFa16wFiJhq",
-    "role": "customer"
-  }
+	{
+		"id": "u001",
+		"name": "Jane Thompson",
+		"email": "jane@email.com",
+		"password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+		"role": "customer"
+	},
+	{
+		"id": "u002",
+		"name": "Mike Tane",
+		"email": "staff@email.co.nz",
+		"password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+		"role": "staff"
+	},
+	{
+		"id": "u003",
+		"name": "Sarah Kim",
+		"email": "manager@email.co.nz",
+		"password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+		"role": "manager"
+	},
+	{
+		"id": "u1778992419881",
+		"name": "Dev Thakran",
+		"email": "devthakran27@gmail.com",
+		"password": "$2b$10$dD.qmc6yqJWl6ra4fy84xOQivW/AEviwZGEqN0rbcitJ0eYPMQjuS",
+		"role": "customer"
+	},
+	{
+		"id": "u1779003455079",
+		"name": "Devvrat Thakran",
+		"email": "devthakran217@gmail.com",
+		"password": "$2b$10$XaLy5AlzCHb3Vo.YTSHgtOPbJ/xErTFleVkNRj9ahMF0M/dXi5x6u",
+		"role": "customer"
+	},
+	{
+		"id": "u1779020905926",
+		"name": "Dustin Diaz",
+		"email": "dustin@gmail.com",
+		"password": "$2b$10$.zV9IW.zrLn/NVEkNTDNQ.LfXOYRWQWaUeOSj4ZPYHuelxz4Vyb/y",
+		"role": "customer"
+	},
+	{
+		"id": "u1779061416594",
+		"name": "Nihal Panithy",
+		"email": "panithynihal@gmail.com",
+		"password": "$2b$10$lxwkBIc2EyxIsUQ4YEsCeekkDFhHvmQPstI2tEVLZf0wW1HDh1ojq",
+		"role": "customer"
+	},
+	{
+		"id": "u1779401867216",
+		"name": "Bob Johns",
+		"email": "bibjohns@gmail.com",
+		"password": "$2b$10$lEaLkj8kONVxndfeNYgyH.prGEBmOfWzZP.XtRdc6uOFa16wFiJhq",
+		"role": "customer"
+	}
 ]

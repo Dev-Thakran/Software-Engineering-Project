@@ -1,218 +1,218 @@
 [
-	{
-		"id": "101",
-		"floor": 1,
-		"type": "Standard Single",
-		"price": 99,
-		"status": "available",
-		"description": "Cosy single room with city views",
-		"image": "../frontend/images/tiers/floor-1/a.jpg"
-	},
-	{
-		"id": "102",
-		"floor": 1,
-		"type": "Standard Single",
-		"price": 99,
-		"status": "available",
-		"description": "Cosy single room with city views",
-		"image": "../frontend/images/tiers/floor-1/b.jpg"
-	},
-	{
-		"id": "103",
-		"floor": 1,
-		"type": "Standard Single",
-		"price": 99,
-		"status": "occupied",
-		"description": "Cosy single room with city views",
-		"image": "../frontend/images/tiers/floor-1/c.jpg"
-	},
-	{
-		"id": "104",
-		"floor": 1,
-		"type": "Standard Single",
-		"price": 99,
-		"status": "available",
-		"description": "Cosy single room with city views",
-		"image": "../frontend/images/tiers/floor-2/a.jpg"
-	},
-	{
-		"id": "105",
-		"floor": 1,
-		"type": "Standard Single",
-		"price": 99,
-		"status": "available",
-		"description": "Cosy single room with city views",
-		"image": "../frontend/images/tiers/floor-2/b.jpg"
-	},
-	{
-		"id": "106",
-		"floor": 1,
-		"type": "Standard Single",
-		"price": 99,
-		"status": "available",
-		"description": "Cosy single room with city views",
-		"image": "../frontend/images/tiers/floor-2/c.jpg"
-	},
-	{
-		"id": "201",
-		"floor": 2,
-		"type": "Deluxe Double",
-		"price": 189,
-		"status": "available",
-		"description": "Spacious double room with city view",
-		"image": "../frontend/images/tiers/floor-3/a.jpg"
-	},
-	{
-		"id": "202",
-		"floor": 2,
-		"type": "Deluxe Double",
-		"price": 189,
-		"status": "occupied",
-		"description": "Spacious double room with city view",
-		"image": "../frontend/images/tiers/floor-3/b.jpg"
-	},
-	{
-		"id": "203",
-		"floor": 2,
-		"type": "Deluxe Double",
-		"price": 189,
-		"status": "available",
-		"description": "Spacious double room with city view",
-		"image": "../frontend/images/tiers/floor-3/c.jpg"
-	},
-	{
-		"id": "204",
-		"floor": 2,
-		"type": "Deluxe Double",
-		"price": 189,
-		"status": "available",
-		"description": "Spacious double room with city view",
-		"image": "../frontend/images/tiers/floor-4/a.jpg"
-	},
-	{
-		"id": "205",
-		"floor": 2,
-		"type": "Deluxe Double",
-		"price": 189,
-		"status": "pending",
-		"description": "Spacious double room with city view",
-		"image": "../frontend/images/tiers/floor-4/b.jpg"
-	},
-	{
-		"id": "206",
-		"floor": 2,
-		"type": "Deluxe Double",
-		"price": 189,
-		"status": "available",
-		"description": "Spacious double room with city view",
-		"image": "../frontend/images/tiers/floor-4/c.jpg"
-	},
-	{
-		"id": "301",
-		"floor": 3,
-		"type": "Executive Double",
-		"price": 220,
-		"status": "occupied",
-		"description": "Premium double with panoramic views",
-		"image": "../frontend/images/tiers/floor-5/a.jpg"
-	},
-	{
-		"id": "302",
-		"floor": 3,
-		"type": "Executive Double",
-		"price": 220,
-		"status": "available",
-		"description": "Premium double with panoramic views",
-		"image": "../frontend/images/tiers/floor-5/b.jpg"
-	},
-	{
-		"id": "303",
-		"floor": 3,
-		"type": "Executive Double",
-		"price": 220,
-		"status": "available",
-		"description": "Premium double with panoramic views",
-		"image": "../frontend/images/tiers/floor-6/b.jpg"
-	},
-	{
-		"id": "304",
-		"floor": 3,
-		"type": "Executive Double",
-		"price": 220,
-		"status": "available",
-		"description": "Premium double with panoramic views",
-		"image": "../frontend/images/tiers/floor-6/c.jpg"
-	},
-	{
-		"id": "305",
-		"floor": 3,
-		"type": "Executive Double",
-		"price": 220,
-		"status": "occupied",
-		"description": "Premium double with panoramic views",
-		"image": "../frontend/images/tiers/floor-7/c.jpg"
-	},
-	{
-		"id": "306",
-		"floor": 3,
-		"type": "Executive Double",
-		"price": 220,
-		"status": "available",
-		"description": "Premium double with panoramic views",
-		"image": "../frontend/images/tiers/floor-8/c.jpg"
-	},
-	{
-		"id": "401",
-		"floor": 4,
-		"type": "Penthouse Suite",
-		"price": 380,
-		"status": "available",
-		"description": "Luxury suite with full city panorama",
-		"image": "../frontend/images/tiers/floor-1/a.jpg"
-	},
-	{
-		"id": "402",
-		"floor": 4,
-		"type": "Penthouse Suite",
-		"price": 380,
-		"status": "occupied",
-		"description": "Luxury suite with full city panorama",
-		"image": "../frontend/images/tiers/floor-1/b.jpg"
-	},
-	{
-		"id": "403",
-		"floor": 4,
-		"type": "Penthouse Suite",
-		"price": 380,
-		"status": "available",
-		"description": "Luxury suite with full city panorama",
-		"image": "../frontend/images/tiers/floor-1/c.jpg"
-	},
-	{
-		"id": "404",
-		"floor": 4,
-		"type": "Penthouse Suite",
-		"price": 380,
-		"status": "available",
-		"description": "Luxury suite with full city panorama",
-		"image": "../frontend/images/tiers/floor-2/a.jpg"
-	},
-	{
-		"id": "405",
-		"floor": 4,
-		"type": "Penthouse Suite",
-		"price": 380,
-		"status": "occupied",
-		"description": "Luxury suite with full city panorama",
-		"image": " ../frontend/images/tiers/floor-2/b.jpg"
-	},
-	{
-		"id": "406",
-		"floor": 4,
-		"type": "Penthouse Suite",
-		"price": 380,
-		"status": "available",
-		"description": "Luxury suite with full city panorama",
-		"image": "../frontend/images/tiers/floor-2/c.jpg"
-	}
+  {
+    "id": "101",
+    "floor": 1,
+    "type": "Standard Single",
+    "price": 99,
+    "status": "occupied",
+    "description": "Cosy single room with city views",
+    "image": "../frontend/images/tiers/floor-1/a.jpg"
+  },
+  {
+    "id": "102",
+    "floor": 1,
+    "type": "Standard Single",
+    "price": 99,
+    "status": "occupied",
+    "description": "Cosy single room with city views",
+    "image": "../frontend/images/tiers/floor-1/b.jpg"
+  },
+  {
+    "id": "103",
+    "floor": 1,
+    "type": "Standard Single",
+    "price": 99,
+    "status": "occupied",
+    "description": "Cosy single room with city views",
+    "image": "../frontend/images/tiers/floor-1/c.jpg"
+  },
+  {
+    "id": "104",
+    "floor": 1,
+    "type": "Standard Single",
+    "price": 99,
+    "status": "available",
+    "description": "Cosy single room with city views",
+    "image": "../frontend/images/tiers/floor-2/a.jpg"
+  },
+  {
+    "id": "105",
+    "floor": 1,
+    "type": "Standard Single",
+    "price": 99,
+    "status": "available",
+    "description": "Cosy single room with city views",
+    "image": "../frontend/images/tiers/floor-2/b.jpg"
+  },
+  {
+    "id": "106",
+    "floor": 1,
+    "type": "Standard Single",
+    "price": 99,
+    "status": "available",
+    "description": "Cosy single room with city views",
+    "image": "../frontend/images/tiers/floor-2/c.jpg"
+  },
+  {
+    "id": "201",
+    "floor": 2,
+    "type": "Deluxe Double",
+    "price": 189,
+    "status": "available",
+    "description": "Spacious double room with city view",
+    "image": "../frontend/images/tiers/floor-3/a.jpg"
+  },
+  {
+    "id": "202",
+    "floor": 2,
+    "type": "Deluxe Double",
+    "price": 189,
+    "status": "occupied",
+    "description": "Spacious double room with city view",
+    "image": "../frontend/images/tiers/floor-3/b.jpg"
+  },
+  {
+    "id": "203",
+    "floor": 2,
+    "type": "Deluxe Double",
+    "price": 189,
+    "status": "available",
+    "description": "Spacious double room with city view",
+    "image": "../frontend/images/tiers/floor-3/c.jpg"
+  },
+  {
+    "id": "204",
+    "floor": 2,
+    "type": "Deluxe Double",
+    "price": 189,
+    "status": "available",
+    "description": "Spacious double room with city view",
+    "image": "../frontend/images/tiers/floor-4/a.jpg"
+  },
+  {
+    "id": "205",
+    "floor": 2,
+    "type": "Deluxe Double",
+    "price": 189,
+    "status": "pending",
+    "description": "Spacious double room with city view",
+    "image": "../frontend/images/tiers/floor-4/b.jpg"
+  },
+  {
+    "id": "206",
+    "floor": 2,
+    "type": "Deluxe Double",
+    "price": 189,
+    "status": "available",
+    "description": "Spacious double room with city view",
+    "image": "../frontend/images/tiers/floor-4/c.jpg"
+  },
+  {
+    "id": "301",
+    "floor": 3,
+    "type": "Executive Double",
+    "price": 220,
+    "status": "occupied",
+    "description": "Premium double with panoramic views",
+    "image": "../frontend/images/tiers/floor-5/a.jpg"
+  },
+  {
+    "id": "302",
+    "floor": 3,
+    "type": "Executive Double",
+    "price": 220,
+    "status": "available",
+    "description": "Premium double with panoramic views",
+    "image": "../frontend/images/tiers/floor-5/b.jpg"
+  },
+  {
+    "id": "303",
+    "floor": 3,
+    "type": "Executive Double",
+    "price": 220,
+    "status": "available",
+    "description": "Premium double with panoramic views",
+    "image": "../frontend/images/tiers/floor-6/b.jpg"
+  },
+  {
+    "id": "304",
+    "floor": 3,
+    "type": "Executive Double",
+    "price": 220,
+    "status": "occupied",
+    "description": "Premium double with panoramic views",
+    "image": "../frontend/images/tiers/floor-6/c.jpg"
+  },
+  {
+    "id": "305",
+    "floor": 3,
+    "type": "Executive Double",
+    "price": 220,
+    "status": "occupied",
+    "description": "Premium double with panoramic views",
+    "image": "../frontend/images/tiers/floor-7/c.jpg"
+  },
+  {
+    "id": "306",
+    "floor": 3,
+    "type": "Executive Double",
+    "price": 220,
+    "status": "available",
+    "description": "Premium double with panoramic views",
+    "image": "../frontend/images/tiers/floor-8/c.jpg"
+  },
+  {
+    "id": "401",
+    "floor": 4,
+    "type": "Penthouse Suite",
+    "price": 380,
+    "status": "available",
+    "description": "Luxury suite with full city panorama",
+    "image": "../frontend/images/tiers/floor-1/a.jpg"
+  },
+  {
+    "id": "402",
+    "floor": 4,
+    "type": "Penthouse Suite",
+    "price": 380,
+    "status": "occupied",
+    "description": "Luxury suite with full city panorama",
+    "image": "../frontend/images/tiers/floor-1/b.jpg"
+  },
+  {
+    "id": "403",
+    "floor": 4,
+    "type": "Penthouse Suite",
+    "price": 380,
+    "status": "available",
+    "description": "Luxury suite with full city panorama",
+    "image": "../frontend/images/tiers/floor-1/c.jpg"
+  },
+  {
+    "id": "404",
+    "floor": 4,
+    "type": "Penthouse Suite",
+    "price": 380,
+    "status": "available",
+    "description": "Luxury suite with full city panorama",
+    "image": "../frontend/images/tiers/floor-2/a.jpg"
+  },
+  {
+    "id": "405",
+    "floor": 4,
+    "type": "Penthouse Suite",
+    "price": 380,
+    "status": "occupied",
+    "description": "Luxury suite with full city panorama",
+    "image": " ../frontend/images/tiers/floor-2/b.jpg"
+  },
+  {
+    "id": "406",
+    "floor": 4,
+    "type": "Penthouse Suite",
+    "price": 380,
+    "status": "occupied",
+    "description": "Luxury suite with full city panorama",
+    "image": "../frontend/images/tiers/floor-2/c.jpg"
+  }
 ]
