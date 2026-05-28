@@ -27,7 +27,7 @@ router.get("/queue", authenticate, (req, res) => {
 	const bookings = readJSON(BOOKINGS_FILE);
 	const today = new Date().toLocaleDateString("en-CA");
 	const queue = bookings.filter(
-		(b) => b.checkIn === today && b.status === "pending",
+		(b) => b.checkIn === today && b.status === "booked",
 	);
 	res.json({ count: queue.length, bookings: queue });
 });
@@ -35,7 +35,7 @@ router.get("/queue", authenticate, (req, res) => {
 // Currently in residence - checked-in entries
 router.get("/residence", authenticate, (req, res) => {
 	const checkins = readJSON(CHECKINS_FILE);
-	const inRes = checkins.filter((c) => c.status === "checked-in");
+	const inRes = checkins.filter((c) => c.status === "staying");
 	res.json(inRes);
 });
 
@@ -50,7 +50,7 @@ router.post("/checkin/:bookingId", authenticate, (req, res) => {
 	const booking = bookings[idx];
 
 	// Update booking status to confirmed
-	bookings[idx].status = "confirmed";
+	bookings[idx].status = "staying";
 	writeJSON(BOOKINGS_FILE, bookings);
 
 	// Create a new checkin entry
@@ -66,7 +66,7 @@ router.post("/checkin/:bookingId", authenticate, (req, res) => {
 		checkInTime: new Date().toISOString(),
 		checkOutDate: booking.checkOut,
 		total: booking.total,
-		status: "checked-in",
+		status: "staying",
 		attendingStaff: req.user.name,
 		handledBy: req.user.id,
 	};
@@ -86,13 +86,13 @@ router.post("/checkout/:checkinId", authenticate, (req, res) => {
 	if (cidx === -1) return res.status(404).json({ error: "Checkin not found" });
 
 	// Mark checkin as checked-out
-	checkins[cidx].status = "checked-out";
+	checkins[cidx].status = "completed";
 	writeJSON(CHECKINS_FILE, checkins);
 
 	// Mark the linked booking as checked-out too
 	const bidx = bookings.findIndex((b) => b.id === checkins[cidx].bookingId);
 	if (bidx !== -1) {
-		bookings[bidx].status = "checked-out";
+		bookings[bidx].status = "completed";
 		writeJSON(BOOKINGS_FILE, bookings);
 	}
 

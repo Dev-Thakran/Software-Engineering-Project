@@ -370,7 +370,8 @@
 									placeholder="MM/YY"
 									maxlength="5"
 									autocomplete="cc-exp"
-									inputmode="numeric" />
+									inputmode="numeric"
+									oninput="onCardExpInput()" />
 							</div>
 							<div>
 								<div class="kicker mb-2" style="font-size: 10px">CVV</div>
@@ -379,7 +380,7 @@
 									id="cardcvv"
 									class="field-input"
 									placeholder="123"
-									maxlength="4"
+									maxlength="3"
 									autocomplete="cc-csc"
 									inputmode="numeric" />
 							</div>

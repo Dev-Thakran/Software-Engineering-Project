@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 // Parse incoming JSON request bodies
 app.use(express.json());
 
-// ── API routes - must come before express.static ──────────────
+// - API routes — must come before express.static --------
 app.use("/auth", authRoutes);
 app.use("/rooms", roomRoutes);
 app.use("/bookings", bookingRoutes);
@@ -26,7 +26,7 @@ app.use("/shifts", shiftRoutes);
 app.use("/checkins", checkinRoutes);
 app.use("/manager", managerRoutes);
 
-// Public reviews endpoint - before static so it isn't intercepted
+// Public reviews endpoint — before static so it isn't intercepted
 app.get("/reviews", (req, res) => {
 	const reviews = JSON.parse(
 		fs.readFileSync(path.join(__dirname, "data/reviews.json"), "utf8"),
@@ -34,16 +34,20 @@ app.get("/reviews", (req, res) => {
 	res.json(reviews);
 });
 
-// ── Static files - serves frontend HTML/CSS/JS ────────────────
+// - Static files — serves frontend HTML/CSS/JS --------
 app.use(express.static(path.join(__dirname, "../frontend")));
 
-// ── Fallback - any unmatched route serves index.html ──────────
+// - Fallback — any unmatched route serves index.html -----
 app.get("/{*path}", (req, res) => {
 	res.sendFile(path.join(__dirname, "../frontend/pages/index.html"));
 });
 
-app.listen(PORT, () => {
-	console.log(`La Extravaganza server running on http://localhost:${PORT}`);
-});
+// Only start listening when this file is run directly (npm run dev)
+// When imported by tests, the test creates its own server on a random port
+if (require.main === module) {
+	app.listen(PORT, () => {
+		console.log(`La Extravaganza server running on http://localhost:${PORT}`);
+	});
+}
 
 module.exports = app;

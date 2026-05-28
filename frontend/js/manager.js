@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		return;
 	}
 
-	// ── Date display ───────────────────────────────────────────
+	// - Date display ---------------------
 	const now = new Date();
 	// Create a Date object representing the current moment
 
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		dateOptions,
 	);
 
-	// ── Chart colour palette ───────────────────────────────────
+	// - Chart colour palette ------------------
 	const browns = [
 		// A progression of brown tones from the design system
 		// Used across all charts to keep a consistent visual style
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	Chart.defaults.font.family = "'Outfit', sans-serif";
 	Chart.defaults.color = "#8B7355";
 
-	// ── Helper function ────────────────────────────────────────
+	// - Helper function --------------------
 	async function get(url) {
 		// Reusable fetch helper that automatically attaches the JWT token
 		// Every manager route is protected so this saves repeating headers
@@ -59,7 +59,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Parse and return the JSON response body
 	}
 
-	// ── KPI Stats ──────────────────────────────────────────────
+	// - KPI Stats -----------------------
 	async function loadStats() {
 		// Fetch the four headline numbers from the backend
 		// The backend calculates these from bookings.json, rooms.json, reviews.json
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		document.getElementById("stat-bookings").textContent = d.totalBookings;
 	}
 
-	// ── Top rooms bar chart ────────────────────────────────────
+	// - Top rooms bar chart ------------------
 	async function loadTopRooms() {
 		// Fetch the most booked rooms - backend counts bookings per roomId
 		const data = await get("/manager/top-rooms");
@@ -133,7 +133,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
-	// ── Booking mix doughnut chart ─────────────────────────────
+	// - Booking mix doughnut chart ---------------
 	async function loadMix() {
 		// Fetch booking counts grouped by room type
 		// e.g. Standard Single: 2, Deluxe Double: 3
@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
-	// ── Booking trend line chart ───────────────────────────────
+	// - Booking trend line chart ----------------
 	async function loadTrend() {
 		// Fetch daily booking counts for the last 14 days
 		// Backend loops through dates and counts bookings created on each day
@@ -206,7 +206,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
-	// ── Revenue by floor bar chart ─────────────────────────────
+	// - Revenue by floor bar chart ---------------
 	async function loadFloorRevenue() {
 		// Fetch total revenue grouped by hotel floor
 		// Backend sums booking totals per floor number
@@ -241,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	}
 
-	// ── Staff assignments table ────────────────────────────────
+	// - Staff assignments table ----------------
 	async function loadStaff() {
 		// Fetch all staff members with their shift, attendance, and check-in stats
 		// Backend joins users.json, shifts.json, and checkins.json together
@@ -286,7 +286,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			.join(""); // Join all rows into one HTML string
 	}
 
-	// ── Recent reviews ─────────────────────────────────────────
+	// - Recent reviews ---------------------
 	async function loadReviews() {
 		// Fetch the 6 most recent guest reviews
 		// Backend returns reviews in reverse order so newest appears first
@@ -314,7 +314,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			.join("");
 	}
 
-	// ── Load everything on page open ───────────────────────────
+	// - Load everything on page open --------------
 	// All functions are called simultaneously using individual async calls
 	// They don't depend on each other so they can all run at the same time
 	loadStats();

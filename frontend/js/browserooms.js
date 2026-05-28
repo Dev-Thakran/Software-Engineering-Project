@@ -71,6 +71,7 @@ function applyFilters() {
 	// Sort the filtered list
 	if (sort === "price-asc") list.sort((a, b) => a.price - b.price);
 	if (sort === "price-desc") list.sort((a, b) => b.price - a.price);
+	if (sort === "floor-desc") list.sort((a, b) => b.floor - a.floor);
 	// Default sort is floor low to high which is the natural order from the backend
 
 	render(list);

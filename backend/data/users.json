@@ -54,5 +54,33 @@
 		"email": "bibjohns@gmail.com",
 		"password": "$2b$10$lEaLkj8kONVxndfeNYgyH.prGEBmOfWzZP.XtRdc6uOFa16wFiJhq",
 		"role": "customer"
+	},
+	{
+		"id": "u1780007193725",
+		"name": "Test User",
+		"email": "inttest_1780007193577@email.com",
+		"password": "$2b$10$4yKLbV8ZRtazTJMXp9fOCOfqxTvuJCJ6BwEs1XtojgfV/wbFIKk/e",
+		"role": "customer"
+	},
+	{
+		"id": "u1780007302069",
+		"name": "Test User",
+		"email": "inttest_1780007301922@email.com",
+		"password": "$2b$10$q57PYGIYjrF.l4cuv37VVevN5SDEBaRFZ08ScD.ANfBCI1QGbs/jS",
+		"role": "customer"
+	},
+	{
+		"id": "u1780007450859",
+		"name": "Test User",
+		"email": "inttest_1780007450714@email.com",
+		"password": "$2b$10$qi96e.RUi1UbVLPylVBspuoKkPprcLG3vioONWjlNmQpj5MP7ky2q",
+		"role": "customer"
+	},
+	{
+		"id": "u1780007790469",
+		"name": "Test User",
+		"email": "inttest_1780007790330@email.com",
+		"password": "$2b$10$gDif.hybmbTFOG72FOxwMuWORMFe3vyL80p/iiBKyzFQ9OyDlc4qa",
+		"role": "customer"
 	}
 ]

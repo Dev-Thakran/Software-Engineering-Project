@@ -34,7 +34,7 @@ function create(req, res) {
 		checkOut,
 		nights,
 		total: nights * room.price,
-		status: "pending",
+		status: "booked",
 		createdAt: new Date().toISOString(),
 	};
 	bookingRepo.save(booking);

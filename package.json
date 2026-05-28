@@ -5,6 +5,7 @@
     "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
+    "axios": "^1.16.1",
     "jest": "^30.3.0",
     "nodemon": "^3.1.14"
   },

@@ -136,11 +136,15 @@
 				function getStatusBadge(booking) {
 					const today = new Date().toLocaleDateString("en-CA");
 					const isToday = booking.checkIn === today;
-					const isFuture = booking.checkIn > today;
 
+					if (booking.status === "staying")
+						return { label: "Staying", cls: "confirmed" };
+					if (booking.status === "completed")
+						return { label: "Completed", cls: "cancelled" };
+					if (booking.status === "cancelled")
+						return { label: "Cancelled", cls: "cancelled" };
 					if (isToday) return { label: "Arriving", cls: "arriving" };
-					if (isFuture) return { label: "Upcoming", cls: "confirmed" };
-					return { label: booking.status, cls: booking.status };
+					return { label: "Booked", cls: "confirmed" };
 				}
 
 				function buildCard(b) {
@@ -185,14 +189,15 @@
 					// Split into upcoming/current and past
 					const upcoming = bookings.filter(
 						(b) =>
-							b.checkIn >= today &&
+							(b.checkIn >= today || b.status === "staying") &&
 							b.status !== "cancelled" &&
-							b.status !== "checked-out",
+							b.status !== "completed",
 					);
+
 					const past = bookings.filter(
 						(b) =>
-							b.checkIn < today ||
-							b.status === "checked-out" ||
+							(b.checkIn < today && b.status !== "staying") ||
+							b.status === "completed" ||
 							b.status === "cancelled",
 					);
 
