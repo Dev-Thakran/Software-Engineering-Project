@@ -70,42 +70,35 @@
 			</div>
 
 			<!-- Stat Banner -->
-			<div class="bg-white py-10 md:py-12">
-				<div
-					class="max-w-7xl px-6 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-9 items-start">
-					<div class="col-span-2 md:col-span-1">
-						<p
-							class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-3 md:mb-4">
-							Since 2014
-						</p>
-						<h2
-							class="font-serif text-2xl md:text-3xl text-black leading-tight">
-							A quiet benchmark in hospitality.
-						</h2>
-					</div>
+            <section class="bg-[white] py-16 z-15">
+                <div class="max-w-7xl mx-auto px-5 grid grid-cols-1 md:grid-cols-4 gap-9  items-center">
 
-					<div class="border-l border-[#E6DFD7] pl-6 md:pl-7">
-						<h3 class="font-serif text-3xl md:text-4xl text-black">24</h3>
-						<p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">
-							Rooms & Suites
-						</p>
-					</div>
+                    <div class="sectiona-left-text">
+                        <p class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-4">
+                            Since 2014
+                        </p>
 
-					<div class="border-l border-[#E6DFD7] pl-6 md:pl-7">
-						<h3 class="font-serif text-3xl md:text-4xl text-black">4</h3>
-						<p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">
-							Floors, Each a tier
-						</p>
-					</div>
+                        <h2 class="font-serif font-light text-2xl text-[#2C241B] leading-tight pr-8">
+                            A quiet benchmark in hospitality.
+                        </h2>
+                    </div>
+                    
+                    <div class="border-l border-[#E6DFD7] pl-4 md:pl-6">
+                        <h3 class="font-serif text-4xl text-[black]">48</h3>
+                        <p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">Rooms & Suites</p>
+                    </div>
 
-					<div class="border-l border-[#E6DFD7] pl-6 md:pl-7">
-						<h3 class="font-serif text-3xl md:text-4xl text-black">4.9</h3>
-						<p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">
-							Average Review
-						</p>
-					</div>
-				</div>
-			</div>
+                    <div class="border-l border-[#E6DFD7] pl-4 md:pl-6">
+                        <h3 class="font-serif text-4xl text-[black]">8</h3>
+                        <p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">Floors, Each a tier</p>
+                    </div>
+
+                    <div class="border-l border-[#E6DFD7] pl-4 md:pl-6">
+                        <h3 class="font-serif text-4xl text-[black]">4.9</h3>
+                        <p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">Average Review</p>
+                    </div>
+                </div>
+            </section>
 
 			<!-- Collection -->
 			<div class="bg-[#FAF7F2] py-12 md:py-16">
@@ -290,17 +283,5 @@
 
 		<footer id="footer"></footer>
 
-		<script>
-			// Navbar opacity transition on scroll - home page only
-			window.addEventListener("scroll", () => {
-				const navbar = document.getElementById("header");
-				if (!navbar) return;
-				if (window.scrollY > 500) {
-					navbar.classList.replace("opacity-80", "opacity-100");
-				} else {
-					navbar.classList.replace("opacity-100", "opacity-80");
-				}
-			});
-		</script>
 	</body>
 </html>
