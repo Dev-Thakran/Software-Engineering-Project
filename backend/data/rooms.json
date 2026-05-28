@@ -4,7 +4,7 @@
     "floor": 1,
     "type": "Standard Single",
     "price": 99,
-    "status": "available",
+    "status": "occupied",
     "description": "Cosy single room with city views",
     "image": "../frontend/images/tiers/floor-1/a.jpg"
   },
@@ -13,7 +13,7 @@
     "floor": 1,
     "type": "Standard Single",
     "price": 99,
-    "status": "available",
+    "status": "occupied",
     "description": "Cosy single room with city views",
     "image": "../frontend/images/tiers/floor-1/b.jpg"
   },
