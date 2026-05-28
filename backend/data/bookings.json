@@ -98,7 +98,7 @@
     "checkOut": "2026-05-30",
     "nights": 2,
     "total": 198,
-    "status": "pending",
+    "status": "confirmed",
     "createdAt": "2026-05-27T23:23:27.343Z"
   },
   {
@@ -112,7 +112,7 @@
     "checkOut": "2026-06-03",
     "nights": 6,
     "total": 594,
-    "status": "pending",
+    "status": "confirmed",
     "createdAt": "2026-05-27T23:26:48.169Z"
   }
 ]
