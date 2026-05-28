@@ -52,7 +52,7 @@
 		transform: translateY(-6.5px) rotate(-45deg);
 	}
 
-	@media (max-width: 845px) {
+	@media (max-width: 1040px) {
 		/* Show hamburger */
 		.hamburger {
 			display: flex;
@@ -65,11 +65,15 @@
 		.nav-signin {
 			display: none !important;
 		}
+		/* Hide sign out from desktop auth on mobile - it's in the hamburger menu */
+		.nav-auth-btn {
+			display: none !important;
+		}
 	}
 </style>
 
 <nav>
-	<div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+	<div class="mx-auto px-6 py-4 flex items-center justify-between">
 		<!-- Logo -->
 		<a
 			href="/pages/index.html"
@@ -85,18 +89,23 @@
 			<em class="font-display">Extravaganza</em>
 		</a>
 
-		<!-- Desktop nav links — hidden below 845px -->
+		<!-- Desktop nav links - hidden below 845px -->
+		<!-- Desktop nav links - hidden below 845px -->
 		<div class="desktop-nav hidden md:flex items-center gap-8">
 			<a href="/pages/index.html">Home</a>
 			<a href="/pages/browserooms.html">Rooms</a>
 			<a href="/pages/floormap.html">Floor Map</a>
 			<a href="#">About</a>
 			<a href="#">Contact</a>
+			<!-- JS: header.js shows this only when logged in as customer -->
+			<a href="/pages/mybooking.html" id="nav-mybookings" style="display: none">
+				My Bookings
+			</a>
 		</div>
 
-		<!-- Right side — always visible -->
+		<!-- Right side - always visible -->
 		<div class="flex items-center gap-5">
-			<!-- Auth — filled by header.js -->
+			<!-- Auth - filled by header.js -->
 			<!-- nav-signin class lets us hide just the sign in part on mobile -->
 			<div id="nav-auth" class="flex items-center gap-5">
 				<a
@@ -108,7 +117,7 @@
 				<a href="/pages/browserooms.html" class="btn-reserve">Reserve</a>
 			</div>
 
-			<!-- Hamburger — only visible below 845px -->
+			<!-- Hamburger - only visible below 845px -->
 			<button class="hamburger" id="hamburger" aria-label="Toggle menu">
 				<span></span>
 				<span></span>
@@ -117,14 +126,20 @@
 		</div>
 	</div>
 
-	<!-- Mobile dropdown — nav links + sign in -->
+	<!-- Mobile dropdown - nav links + sign in -->
 	<div class="mobile-menu" id="mobile-menu">
 		<a href="/pages/index.html">Home</a>
 		<a href="/pages/browserooms.html">Rooms</a>
 		<a href="/pages/floormap.html">Floor Map</a>
 		<a href="#">About</a>
 		<a href="#">Contact</a>
-		<!-- Sign in / auth state shown in hamburger on mobile -->
+		<!-- JS: header.js shows this only when logged in as customer -->
+		<a
+			href="/pages/mybooking.html"
+			id="mobile-mybookings"
+			style="display: none">
+			My Bookings
+		</a>
 		<div id="mobile-auth" style="display: contents">
 			<a href="/pages/Login.html">Sign In</a>
 		</div>

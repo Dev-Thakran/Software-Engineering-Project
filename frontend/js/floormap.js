@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 			cell.className = `room-cell ${status}`;
 			cell.textContent = roomId;
 
-			// Hover — show preview
+			// Hover - show preview
 			cell.addEventListener("mouseenter", () => {
 				const room = getRoomDetails(roomId);
 				const preview = document.getElementById("preview-content");
@@ -94,18 +94,19 @@ document.addEventListener("DOMContentLoaded", async function () {
                             <span style="width:8px;height:8px;border-radius:50%;background:${statusColor};display:inline-block;"></span>
                             <span class="meta-label">${room.status}</span>
                         </div>
-                        ${room.status === "available"
-						? `<a href="/pages/room.html?room=${room.id}"
+                        ${
+													room.status === "available"
+														? `<a href="/pages/room.html?room=${room.id}"
                                   class="btn-primary"
                                   style="display:block; text-align:center; padding:12px 20px; font-size:10px;">
                                   Book this room
                                </a>`
-						: `<p class="meta-label" style="color:#B89F89;">Not available for booking</p>`
-					}
+														: `<p class="meta-label" style="color:#B89F89;">Not available for booking</p>`
+												}
                     `;
 			});
 
-			// Click — select room and go to booking
+			// Click - select room and go to booking
 			cell.addEventListener("click", () => {
 				const room = getRoomDetails(roomId);
 				if (!room || room.status !== "available") return;

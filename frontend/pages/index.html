@@ -8,35 +8,48 @@
 		<script src="../js/header.js"></script>
 		<script src="../js/footer.js"></script>
 		<link rel="stylesheet" href="../css/main.css" />
+		<style>
+			.hero-overlay {
+				position: absolute;
+				inset: 0;
+				background: linear-gradient(
+					to right,
+					rgba(26, 20, 15, 0.75) 0%,
+					rgba(26, 20, 15, 0.15) 100%
+				);
+			}
+		</style>
 	</head>
 
 	<body>
 		<header class="sticky top-0 z-20" id="header"></header>
 
 		<section id="main">
-
 			<!-- Hero -->
 			<div class="relative h-[85vh] overflow-hidden">
 				<img
 					src="../images/hero/home-hero.jpg"
 					alt="LuxStay Hero Banner"
 					class="absolute inset-0 w-full h-full object-cover" />
-				<div class="absolute inset-0 bg-black/35"></div>
+				<div class="hero-overlay"></div>
 
 				<div class="relative z-10 px-6 md:pl-10 h-full flex items-center">
 					<div class="max-w-5xl w-full text-white">
-						<p class="uppercase tracking-[0.2cm] text-sm text-white/70 mb-6 md:mb-8">
+						<p
+							class="uppercase tracking-[0.2cm] text-sm text-white/70 mb-6 md:mb-8">
 							An Auckland Sanctuary
 						</p>
 
-						<h1 class="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight font-light max-w-3xl text-white mb-6 md:mb-8">
+						<h1
+							class="font-serif text-4xl md:text-5xl lg:text-6xl leading-tight font-light max-w-3xl text-white mb-6 md:mb-8">
 							Where every floor is
 							<span class="italic block">a world unto itself</span>
 						</h1>
 
-						<p class="mt-4 md:mt-8 text-base md:text-lg max-w-xl text-white/85 leading-relaxed">
-							Eight floors. Forty-eight rooms. One address that lingers in
-							memory long after you depart.
+						<p
+							class="mt-4 md:mt-8 text-base md:text-lg max-w-xl text-white/85 leading-relaxed">
+							Four floors. Twenty-four rooms. One address that lingers in memory
+							long after you depart.
 						</p>
 
 						<!-- Buttons -->
@@ -58,25 +71,28 @@
 
 			<!-- Stat Banner -->
 			<div class="bg-white py-10 md:py-12">
-				<div class="max-w-7xl mx-auto px-6 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-9 items-start">
+				<div
+					class="max-w-7xl lg:ms-12 px-6 grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-9 items-start">
 					<div class="col-span-2 md:col-span-1">
-						<p class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-3 md:mb-4">
+						<p
+							class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-3 md:mb-4">
 							Since 2014
 						</p>
-						<h2 class="font-serif text-2xl md:text-3xl text-black leading-tight">
+						<h2
+							class="font-serif text-2xl md:text-3xl text-black leading-tight">
 							A quiet benchmark in hospitality.
 						</h2>
 					</div>
 
 					<div class="border-l border-[#E6DFD7] pl-6 md:pl-7">
-						<h3 class="font-serif text-3xl md:text-4xl text-black">48</h3>
+						<h3 class="font-serif text-3xl md:text-4xl text-black">24</h3>
 						<p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">
 							Rooms & Suites
 						</p>
 					</div>
 
 					<div class="border-l border-[#E6DFD7] pl-6 md:pl-7">
-						<h3 class="font-serif text-3xl md:text-4xl text-black">8</h3>
+						<h3 class="font-serif text-3xl md:text-4xl text-black">4</h3>
 						<p class="uppercase tracking-[0.2em] text-xs mt-2 text-[#A97355]">
 							Floors, Each a tier
 						</p>
@@ -99,27 +115,37 @@
 					</p>
 					<div class="flex items-end justify-between gap-4">
 						<p class="font-serif text-3xl md:text-5xl text-[#2C241B]">
-							Ascend through our <span class="italic">tiers</span>
+							Ascend through our
+							<span class="italic">tiers</span>
 						</p>
-						<a href="browserooms.html" class="kicker text-[#2C241B] whitespace-nowrap pb-1">
+						<a href="browserooms.html" class="kicker whitespace-nowrap pb-1">
 							Browse all rooms →
 						</a>
 					</div>
 				</div>
 
-				<div class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
-
-					<!-- Penthouse — large left -->
-					<div class="relative lg:col-span-2 h-[300px] md:h-[425px] lg:h-[525px] overflow-hidden group">
+				<div
+					class="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-3 gap-4 md:gap-6">
+					<!-- Penthouse - large left -->
+					<div
+						class="relative lg:col-span-2 h-[300px] md:h-[425px] lg:h-[525px] overflow-hidden group">
 						<img
 							src="../images/featured-tier-1-bedroom.jpg"
 							class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
 							alt="Featured Bedroom Tier 1" />
 						<div class="absolute inset-0 bg-black/25"></div>
 						<div class="absolute bottom-6 left-6 z-10 text-white">
-							<p class="uppercase tracking-[0.2em] text-xs text-white/70 mb-2 md:mb-3">Floor 8</p>
-							<h4 class="font-serif text-3xl md:text-4xl mb-1 md:mb-2 text-white">Penthouse</h4>
-							<p class="uppercase tracking-[0.2em] text-xs text-white/80">From $1,650 / Night</p>
+							<p
+								class="uppercase tracking-[0.2em] text-xs text-white/70 mb-2 md:mb-3">
+								Floor 4
+							</p>
+							<h4
+								class="font-serif text-3xl md:text-4xl mb-1 md:mb-2 text-white">
+								Penthouse
+							</h4>
+							<p class="uppercase tracking-[0.2em] text-xs text-white/80">
+								From $1,650 / Night
+							</p>
 						</div>
 					</div>
 
@@ -132,9 +158,17 @@
 								alt="Featured Twin Suite Tier 2" />
 							<div class="absolute inset-0 bg-black/25"></div>
 							<div class="absolute bottom-6 left-6 z-10 text-white">
-								<p class="uppercase tracking-[0.2em] text-xs text-white/70 mb-2 md:mb-3">Floor 6</p>
-								<h4 class="font-serif text-3xl md:text-4xl mb-1 md:mb-2 text-white">Ambassador</h4>
-								<p class="uppercase tracking-[0.2em] text-xs text-white/80">From $780 / Night</p>
+								<p
+									class="uppercase tracking-[0.2em] text-xs text-white/70 mb-2 md:mb-3">
+									Floor 3
+								</p>
+								<h4
+									class="font-serif text-3xl md:text-4xl mb-1 md:mb-2 text-white">
+									Ambassador
+								</h4>
+								<p class="uppercase tracking-[0.2em] text-xs text-white/80">
+									From $780 / Night
+								</p>
 							</div>
 						</div>
 
@@ -145,24 +179,41 @@
 								alt="Featured Luxury Tier 3" />
 							<div class="absolute inset-0 bg-black/25"></div>
 							<div class="absolute bottom-6 left-6 z-10 text-white">
-								<p class="uppercase tracking-[0.2em] text-xs text-white/70 mb-2 md:mb-3">Floor 4</p>
-								<h4 class="font-serif text-3xl md:text-4xl mb-1 md:mb-2 text-white">Premier</h4>
-								<p class="uppercase tracking-[0.2em] text-xs text-white/80">From $420 / Night</p>
+								<p
+									class="uppercase tracking-[0.2em] text-xs text-white/70 mb-2 md:mb-3">
+									Floor 2
+								</p>
+								<h4
+									class="font-serif text-3xl md:text-4xl mb-1 md:mb-2 text-white">
+									Premier
+								</h4>
+								<p class="uppercase tracking-[0.2em] text-xs text-white/80">
+									From $420 / Night
+								</p>
 							</div>
 						</div>
 					</div>
 
-					<!-- Garden — full width bottom row -->
-					<div class="relative lg:col-span-3 h-[220px] md:h-[280px] overflow-hidden group">
+					<!-- Garden - full width bottom row -->
+					<div
+						class="relative lg:col-span-3 h-[220px] md:h-[280px] overflow-hidden group">
 						<img
 							src="../images/hero-exterior.jpg"
 							class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
 							alt="Featured Garden" />
 						<div class="absolute inset-0 bg-black/25"></div>
 						<div class="absolute bottom-6 left-6 z-10 text-white">
-							<p class="uppercase tracking-[0.2em] text-xs text-white/70 mb-2 md:mb-3">Floor 1</p>
-							<h4 class="font-serif text-3xl md:text-4xl mb-1 md:mb-2 text-white">Garden</h4>
-							<p class="uppercase tracking-[0.2em] text-xs text-white/80">From $180 / Night</p>
+							<p
+								class="uppercase tracking-[0.2em] text-xs text-white/70 mb-2 md:mb-3">
+								Floor 1
+							</p>
+							<h4
+								class="font-serif text-3xl md:text-4xl mb-1 md:mb-2 text-white">
+								Garden
+							</h4>
+							<p class="uppercase tracking-[0.2em] text-xs text-white/80">
+								From $180 / Night
+							</p>
 						</div>
 					</div>
 				</div>
@@ -171,7 +222,6 @@
 			<!-- Experience -->
 			<div class="w-full bg-[#F2EBE1]">
 				<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
-
 					<div class="h-[400px] lg:h-auto min-h-[500px] overflow-hidden">
 						<img
 							src="../images/concierge-editorial.jpg"
@@ -179,15 +229,19 @@
 							alt="Concierge Room" />
 					</div>
 
-					<div class="py-12 px-6 md:px-10 lg:py-16 lg:px-14 flex flex-col justify-center">
+					<div
+						class="py-12 px-6 md:px-10 lg:py-16 lg:px-14 flex flex-col justify-center">
 						<p class="uppercase tracking-[0.2em] text-xs text-[#928065] mb-4">
 							The Experience
 						</p>
 
-						<p class="font-serif text-3xl md:text-4xl lg:text-5xl text-[#2C241B] mb-6 leading-tight">
+						<p
+							class="font-serif text-3xl md:text-4xl lg:text-5xl text-[#2C241B] mb-6 leading-tight">
 							A stay that feels
-							<span class="italic"><em class="font-display">like a novel</em></span>
-							— with every detail written.
+							<span class="italic">
+								<em class="font-display">like a novel</em>
+							</span>
+							- with every detail written.
 						</p>
 
 						<p class="text-base md:text-lg text-[#928065] mb-8 leading-relaxed">
@@ -211,7 +265,7 @@
 							</div>
 							<div>
 								<hr class="border-t-4 border-[#D4C4B0] mb-3" />
-								<p class="text-sm md:text-base">Butler service (floor 6+)</p>
+								<p class="text-sm md:text-base">Butler service (floor 4)</p>
 							</div>
 						</div>
 					</div>
@@ -222,33 +276,31 @@
 			<div class="w-full bg-[#2C241B] my-20">
 				<div class="max-w-3xl mx-auto px-6 py-16 md:py-24 text-center">
 					<p class="text-[#C9A961] text-2xl md:text-3xl mb-6">★★★★★</p>
-					<em class="font-display text-2xl md:text-4xl text-[#FAF7F2] leading-snug block mb-6">
+					<em
+						class="font-display text-2xl md:text-4xl text-[#FAF7F2] leading-snug block mb-6">
 						"The penthouse terrace at dusk, a butler who knew our names by
-						breakfast — we will measure every stay against this one."
+						breakfast - we will measure every stay against this one."
 					</em>
 					<p class="text-[#928065] text-sm uppercase tracking-[0.2em]">
-						— Sophia R., Floor 8, January
+						- Sophia R., Floor 8, January
 					</p>
 				</div>
 			</div>
-
 		</section>
 
 		<footer id="footer"></footer>
 
-
-
 		<script>
-            // Navbar opacity transition on scroll — home page only
-window.addEventListener("scroll", () => {
-	const navbar = document.getElementById("header");
-	if (!navbar) return;
-	if (window.scrollY > 500) {
-		navbar.classList.replace("opacity-80", "opacity-100");
-	} else {
-		navbar.classList.replace("opacity-100", "opacity-80");
-	}
-});
-        </script>
+			// Navbar opacity transition on scroll - home page only
+			window.addEventListener("scroll", () => {
+				const navbar = document.getElementById("header");
+				if (!navbar) return;
+				if (window.scrollY > 500) {
+					navbar.classList.replace("opacity-80", "opacity-100");
+				} else {
+					navbar.classList.replace("opacity-100", "opacity-80");
+				}
+			});
+		</script>
 	</body>
 </html>

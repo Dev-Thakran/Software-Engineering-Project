@@ -1,4 +1,4 @@
-// Extra metadata per room type — bed size, guest count, room size
+// Extra metadata per room type - bed size, guest count, room size
 const ROOM_META = {
 	"Standard Single": { bed: "Queen", guests: 1, sqm: 28 },
 	"Deluxe Double": { bed: "Queen", guests: 2, sqm: 38 },
@@ -107,7 +107,7 @@ function render(list) {
 				? room.image.replace("../frontend/", "/")
 				: ROOM_IMAGES[room.type]?.[0] || ROOM_IMAGES["Standard Single"][0];
 
-			// Status badge colour — only shown when room is not available
+			// Status badge colour - only shown when room is not available
 			const statusColors = {
 				occupied: "background:#D4C4B0; color:#6B5743;",
 				pending: "background:#E6DFD7; color:#6B5743;",
@@ -170,24 +170,26 @@ function render(list) {
                         <span>⬜ ${meta.sqm}m²</span>
 
                         <!-- Show status badge if not available -->
-                        ${!isAvail
-					? `
+                        ${
+													!isAvail
+														? `
                             <span style="margin-left:auto; padding:4px 10px; font-size:10px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; ${badgeStyle}">
                                 ${room.status}
                             </span>`
-					: ""
-				}
+														: ""
+												}
 
                         <!-- Show Reserve button only if room is available -->
-                        ${isAvail
-					? `
+                        ${
+													isAvail
+														? `
                             <a href="./room.html?room=${room.id}"
                                class="btn-primary"
                                style="margin-left:auto; padding:8px 16px; font-size:10px;">
                                 Reserve
                             </a>`
-					: ""
-				}
+														: ""
+												}
                     </div>
                 </div>
                 </a>
