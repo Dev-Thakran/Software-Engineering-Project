@@ -4,7 +4,7 @@
 //           card display, payment submission, booking creation
 // ============================================================
 
-// ── Room metadata (matches browserooms.js) ──────────────────
+//  Room metadata (matches browserooms.js) 
 const FLOOR_NAMES = {
 	1: "Garden",
 	2: "Classic",
@@ -23,7 +23,7 @@ let room = null; // Loaded room object from backend
 let nights = 0; // Calculated nights
 let total = 0; // Total amount including tax
 
-// ── On page load ─────────────────────────────────────────────
+//  On page load ─
 document.addEventListener("DOMContentLoaded", async function () {
 	// Redirect to login if not logged in - booking requires auth
 	const token = localStorage.getItem("token");
@@ -108,7 +108,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 	document.getElementById("cardexp").addEventListener("input", onCardExpInput);
 });
 
-// ── Summary panel population ─────────────────────────────────
+//  Summary panel population ─
 function populateSummary() {
 	if (!room) return;
 
@@ -141,7 +141,7 @@ function populateSummary() {
 	updateSummaryPricing();
 }
 
-// ── Update summary pricing rows ───────────────────────────────
+//  Update summary pricing rows ─
 function updateSummaryPricing() {
 	if (!room) return;
 
@@ -173,7 +173,7 @@ function updateSummaryPricing() {
 	}
 }
 
-// ── Date change handlers ──────────────────────────────────────
+//  Date change handlers 
 function onCheckinChange() {
 	const val = document.getElementById("checkin").value;
 	// Checkout must be after check-in
@@ -204,7 +204,7 @@ function calculateNights() {
 	updateSummaryPricing();
 }
 
-// ── Guest change handler ──────────────────────────────────────
+//  Guest change handler 
 function onGuestChange() {
 	const meta = ROOM_META[room?.type] || { guests: 2 };
 	const val = parseInt(document.getElementById("guestinput").value);
@@ -218,7 +218,7 @@ function onGuestChange() {
 	updateSummaryPricing();
 }
 
-// ── Card field live display ───────────────────────────────────
+//  Card field live display ─
 function updateCardDisplay() {
 	const name = document.getElementById("cardname").value.toUpperCase();
 	document.getElementById("card-display-name").textContent =
@@ -253,7 +253,7 @@ function onCardExpInput() {
 	document.getElementById("card-display-exp").textContent = val || "MM/YY";
 }
 
-// ── Step switching ────────────────────────────────────────────
+//  Step switching 
 function goToStep(step) {
 	if (step === 2) {
 		// Validate dates before allowing payment step
@@ -289,7 +289,7 @@ function goToStep(step) {
 	}
 }
 
-// ── Payment submission ────────────────────────────────────────
+//  Payment submission 
 async function submitPayment() {
 	const token = localStorage.getItem("token");
 	const errEl = document.getElementById("pay-error");
