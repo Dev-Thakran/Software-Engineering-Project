@@ -256,17 +256,25 @@ function onCardExpInput() {
 //  Step switching
 function goToStep(step) {
 	if (step === 2) {
-		// Validate dates before allowing payment step
-		const checkin = document.getElementById("checkin").value;
-		const checkout = document.getElementById("checkout").value;
-		const err = document.getElementById("dates-error");
+    const checkin  = document.getElementById("checkin").value;
+    const checkout = document.getElementById("checkout").value;
+    const err      = document.getElementById("dates-error");
 
-		if (!checkin || !checkout || nights < 1) {
-			err.style.display = "block";
-			return;
-		}
-		err.style.display = "none";
-	}
+    if (!checkin || !checkout || nights < 1) {
+        err.style.display = "block";
+        return;
+    }
+    err.style.display = "none";
+
+    // Validate guests
+    const val  = parseInt(document.getElementById("guestinput").value);
+    const meta = ROOM_META[room?.type] || { guests: 2 };
+    if (isNaN(val) || val < 1 || val > meta.guests) {
+        document.getElementById("guest-error").style.display = "block";
+        return;
+    }
+    document.getElementById("guest-error").style.display = "none";
+}
 
 	const dateStep = document.getElementById("step-dates");
 	const payStep = document.getElementById("step-payment");
