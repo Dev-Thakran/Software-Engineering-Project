@@ -94,5 +94,21 @@
     "status": "checked-out",
     "attendingStaff": "Mike Tane",
     "handledBy": "u002"
+  },
+  {
+    "id": "ci1781827763170",
+    "bookingId": "b1781827696603",
+    "userId": "u001",
+    "guestName": "Jane Thompson",
+    "guestEmail": "",
+    "roomId": "302",
+    "roomType": "Executive Double",
+    "floor": 3,
+    "checkInTime": "2026-06-19T00:09:23.170Z",
+    "checkOutDate": "2026-06-26",
+    "total": 1540,
+    "status": "staying",
+    "attendingStaff": "Mike Tane",
+    "handledBy": "u002"
   }
 ]
