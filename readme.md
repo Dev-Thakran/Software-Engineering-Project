@@ -24,9 +24,8 @@ live booking data.
   end-to-end integration flow.
 
 ## Screenshots
-
-*(Add 2–3 screenshots or a short GIF here — the manager dashboard with charts and the
-booking flow are the strongest ones to show.)*
+![Image of the Manager Dashboard landing.](image.png)
+![Customer current/upcoming and previous stays using the booking system.](image-1.png)
 
 ## Tech Stack
 
