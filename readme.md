@@ -64,9 +64,6 @@ a real backend is structured before you swap the JSON datastore for a proper dat
 npm install
 ```
 
-Copy `.env.example` to `.env` and set a `JWT_SECRET` (any long random string works for
-local development — see [Security Notes](#security-notes) below):
-
 ```bash
 cp .env.example .env
 ```
