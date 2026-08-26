@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const SECRET = "laextravaganza_secret_2024";
+const SECRET = process.env.JWT_SECRET || "laextravaganza_secret_2024";
 
 // Verifies the JWT token and attaches user info to req.user
 function authenticate(req, res, next) {
