@@ -62,13 +62,6 @@ document.addEventListener("DOMContentLoaded", async function () {
 		return;
 	}
 
-	// Block if room is not available
-	if (room.status !== "available") {
-		alert(`Room ${room.id} is currently ${room.status}. Redirecting to rooms.`);
-		window.location.href = "/pages/browserooms.html";
-		return;
-	}
-
 	// Populate summary panel with room data
 	populateSummary();
 
@@ -81,6 +74,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 	if (checkOut) {
 		document.getElementById("checkout").value = checkOut;
 	}
+	const guestsParam = params.get("guests");
+	if (guestsParam) document.getElementById("guestinput").value = guestsParam;
 	if (checkIn && checkOut) calculateNights();
 
 	// Set minimum date on check-in to today
@@ -124,12 +119,10 @@ function populateSummary() {
 	// Hide the placeholder - it sits right after the img element
 	const placeholder = img.nextElementSibling;
 	if (placeholder) placeholder.style.display = "none";
-	// Tier and room name - shown twice as per the design
+	// Tier and room name
 	const tier = `Floor ${room.floor} - ${FLOOR_NAMES[room.floor] || "Floor " + room.floor}`;
 	const name = `Room ${room.id}`;
 	document.getElementById("summary-tier").textContent = tier;
-	document.getElementById("summary-room-name-2").textContent = name;
-	document.getElementById("summary-tier-2").textContent = tier;
 	document.getElementById("summary-room-name").textContent = name;
 
 	// Max guests from room type metadata
@@ -254,13 +247,14 @@ function onCardExpInput() {
 }
 
 //  Step switching
-function goToStep(step) {
+async function goToStep(step) {
 	if (step === 2) {
     const checkin  = document.getElementById("checkin").value;
     const checkout = document.getElementById("checkout").value;
     const err      = document.getElementById("dates-error");
 
     if (!checkin || !checkout || nights < 1) {
+        err.textContent = "Please select valid check-in and check-out dates.";
         err.style.display = "block";
         return;
     }
@@ -274,6 +268,25 @@ function goToStep(step) {
         return;
     }
     document.getElementById("guest-error").style.display = "none";
+
+    // Make sure nobody else has the room for these dates
+    try {
+        const res = await fetch(
+            `/rooms/${room.id}/availability?checkIn=${checkin}&checkOut=${checkout}`,
+        );
+        const data = await res.json();
+        if (!res.ok || !data.available) {
+            err.textContent = res.ok
+                ? "Sorry, this room is already booked for those dates."
+                : data.error;
+            err.style.display = "block";
+            return;
+        }
+    } catch {
+        err.textContent = "Could not check availability. Is the server running?";
+        err.style.display = "block";
+        return;
+    }
 }
 
 	const dateStep = document.getElementById("step-dates");

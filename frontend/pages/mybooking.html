@@ -143,6 +143,9 @@
 						return { label: "Completed", cls: "cancelled" };
 					if (booking.status === "cancelled")
 						return { label: "Cancelled", cls: "cancelled" };
+					// The stay ended without the guest ever checking in
+					if (booking.checkOut <= today)
+						return { label: "No-show", cls: "cancelled" };
 					if (isToday) return { label: "Arriving", cls: "arriving" };
 					return { label: "Booked", cls: "confirmed" };
 				}
@@ -165,7 +168,7 @@
                     <div class="booking-row">
                         <span>Check-in</span><span>${b.checkIn}</span>
                     </div>
-                    <div class="booking-row">La Extravaganza
+                    <div class="booking-row">
                         <span>Check-out</span><span>${b.checkOut}</span>
                     </div>
                     <div class="booking-row">
@@ -187,19 +190,12 @@
 					const today = new Date().toLocaleDateString("en-CA");
 
 					// Split into upcoming/current and past
-					const upcoming = bookings.filter(
-						(b) =>
-							(b.checkIn >= today || b.status === "staying") &&
-							b.status !== "cancelled" &&
-							b.status !== "completed",
-					);
-
-					const past = bookings.filter(
-						(b) =>
-							(b.checkIn < today && b.status !== "staying") ||
-							b.status === "completed" ||
-							b.status === "cancelled",
-					);
+					// Upcoming: staying now, or booked and the stay hasn't ended yet
+					const isUpcoming = (b) =>
+						b.status === "staying" ||
+						(b.status === "booked" && b.checkOut > today);
+					const upcoming = bookings.filter(isUpcoming);
+					const past = bookings.filter((b) => !isUpcoming(b));
 
 					// Render upcoming
 					const upcomingGrid = document.getElementById("upcoming-grid");
@@ -228,8 +224,9 @@
 					}
 				} catch (err) {
 					console.error(err);
-					document.getElementById("upcoming-grid").innerHTML =
-						`<p class="text-sm" style="color:var(--lux-brown-400);">Could not load bookings.</p>`;
+					const msg = `<p class="text-sm" style="color:var(--lux-brown-400);">Could not load bookings.</p>`;
+					document.getElementById("upcoming-grid").innerHTML = msg;
+					document.getElementById("past-grid").innerHTML = msg;
 				}
 			});
 		</script>

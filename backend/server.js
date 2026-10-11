@@ -1,7 +1,6 @@
 // Entry point for the Express server
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
 
 const authRoutes = require("./routes/auth.routes");
 const roomRoutes = require("./routes/room.routes");
@@ -10,6 +9,8 @@ const paymentRoutes = require("./routes/payment.routes");
 const shiftRoutes = require("./routes/shift.routes");
 const checkinRoutes = require("./routes/checkin.routes");
 const managerRoutes = require("./routes/manager.routes");
+const aiRoutes = require("./routes/ai.routes");
+const referenceRepo = require("./repositories/reference.repository");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -25,13 +26,11 @@ app.use("/payment", paymentRoutes);
 app.use("/shifts", shiftRoutes);
 app.use("/checkins", checkinRoutes);
 app.use("/manager", managerRoutes);
+app.use("/ai", aiRoutes);
 
 // Public reviews endpoint — before static so it isn't intercepted
 app.get("/reviews", (req, res) => {
-	const reviews = JSON.parse(
-		fs.readFileSync(path.join(__dirname, "data/reviews.json"), "utf8"),
-	);
-	res.json(reviews);
+	res.json(referenceRepo.getReviews());
 });
 
 // - Static files — serves frontend HTML/CSS/JS --------

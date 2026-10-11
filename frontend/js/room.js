@@ -1,3 +1,14 @@
+// Escapes user-supplied text before it is inserted with innerHTML
+function escapeHtml(value) {
+	return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;",
+		"\"": "&quot;",
+		"'": "&#39;",
+	})[ch]);
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
 	// Get room ID from URL - supports ?room=101, ?roomId=101, ?id=101
 	const params = new URLSearchParams(window.location.search);
@@ -82,21 +93,14 @@ document.addEventListener("DOMContentLoaded", async function () {
 
 		// Reserve button
 		const reserveBtn = document.getElementById("reserve-btn");
-		if (room.status === "available") {
-			reserveBtn.href = `./bookingform.html?room=${room.id}`;
-			reserveBtn.addEventListener("mouseover", () => {
-				reserveBtn.style.background = "var(--lux-brown-900)";
-			});
-			reserveBtn.addEventListener("mouseout", () => {
-				reserveBtn.style.background = "var(--lux-brown-800)";
-			});
-		} else {
-			reserveBtn.textContent = "Currently Unavailable";
-			reserveBtn.style.background = "var(--lux-brown-200)";
-			reserveBtn.style.color = "var(--lux-brown-500)";
-			reserveBtn.style.cursor = "default";
-			reserveBtn.style.pointerEvents = "none";
-		}
+		reserveBtn.href = `./bookingform.html?room=${room.id}`;
+		reserveBtn.addEventListener("mouseover", () => {
+			reserveBtn.style.background = "var(--lux-brown-900)";
+		});
+		reserveBtn.addEventListener("mouseout", () => {
+			reserveBtn.style.background = "var(--lux-brown-800)";
+		});
+
 
 		// Amenities grid
 		const amenGrid = document.getElementById("amenities-grid");
@@ -109,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 					(a) => `
                 <div class="amenity-item">
                     <span class="amenity-check">✓</span>
-                    <span>${a}</span>
+                    <span>${escapeHtml(a)}</span>
                 </div>`,
 				)
 				.join("");
@@ -131,12 +135,12 @@ document.addEventListener("DOMContentLoaded", async function () {
                     <div class="review-item">
                         <p class="stars text-sm mb-2">${stars}</p>
                         <p class="font-serif text-xl mb-2"
-                           style="color:var(--lux-brown-800);">"${r.title}"</p>
+                           style="color:var(--lux-brown-800);">"${escapeHtml(r.title)}"</p>
                         <p style="font-family:'Outfit',sans-serif; font-size:13px;
                                   color:var(--lux-brown-600); line-height:1.7; margin-bottom:8px;">
-                            ${r.comment}
+                            ${escapeHtml(r.comment)}
                         </p>
-                        <p class="kicker" style="font-size:10px;">${r.guestName}</p>
+                        <p class="kicker" style="font-size:10px;">${escapeHtml(r.guestName)}</p>
                     </div>`;
 				})
 				.join("");

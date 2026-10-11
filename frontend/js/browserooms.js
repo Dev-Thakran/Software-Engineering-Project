@@ -15,7 +15,7 @@ const FLOOR_NAMES = {
 };
 
 let allRooms = []; // Stores all rooms fetched from the backend
-let maxPrice = 400; // Current max price filter value
+let maxPrice = Infinity; // Current max price filter value
 
 //  INIT
 document.addEventListener("DOMContentLoaded", () => {
@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		})
 		.then((data) => {
 			allRooms = data;
+			setPriceRange(data);
 			applyFilters(); // Render all rooms immediately on load
 		})
 		.catch((err) => {
@@ -40,6 +41,17 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //  PRICE SLIDER
+// Sets the slider's range from the cheapest and most expensive rooms
+function setPriceRange(rooms) {
+	if (!rooms.length) return;
+	const prices = rooms.map((r) => r.price);
+	const slider = document.getElementById("priceFilter");
+	slider.min = Math.min(...prices);
+	slider.max = Math.max(...prices);
+	slider.value = slider.max;
+	updatePrice(slider.max);
+}
+
 function updatePrice(val) {
 	// Called every time the price slider moves
 	// Updates the displayed price label and the maxPrice variable
@@ -170,27 +182,22 @@ function render(list) {
                         <span>👤 ${meta.guests}</span>
                         <span>⬜ ${meta.sqm}m²</span>
 
-                        <!-- Show status badge if not available -->
+                        <!-- Show a badge when someone is staying in the room today -->
                         ${
 													!isAvail
 														? `
                             <span style="margin-left:auto; padding:4px 10px; font-size:10px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; ${badgeStyle}">
-                                ${room.status}
+                                Occupied today
                             </span>`
 														: ""
 												}
 
-                        <!-- Show Reserve button only if room is available -->
-                        ${
-													isAvail
-														? `
-                            <a href="./room.html?room=${room.id}"
-                               class="btn-primary"
-                               style="margin-left:auto; padding:8px 16px; font-size:10px;">
-                                Reserve
-                            </a>`
-														: ""
-												}
+                        <!-- Rooms can be reserved for any dates they're free -->
+                        <a href="./room.html?room=${room.id}"
+                           class="btn-primary"
+                           style="margin-left:${isAvail ? "auto" : "8px"}; padding:8px 16px; font-size:10px;">
+                            Reserve
+                        </a>
                     </div>
                 </div>
                 </a>

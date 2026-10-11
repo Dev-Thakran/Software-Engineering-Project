@@ -1,3 +1,14 @@
+// Escapes user-supplied text before it is inserted with innerHTML
+function escapeHtml(value) {
+	return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;",
+		"\"": "&quot;",
+		"'": "&#39;",
+	})[ch]);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 	// Wait for the full HTML to load before running any JavaScript
 	// This prevents errors from trying to access elements that don't exist yet
@@ -165,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			legend.innerHTML += `
                 <div class="flex items-center gap-1">
                     <span style="width:10px;height:10px;background:${browns[i]};display:inline-block;"></span>
-                    <span style="font-size:11px;color:#8B7355;">${d.type}</span>
+                    <span style="font-size:11px;color:#8B7355;">${escapeHtml(d.type)}</span>
                 </div>`;
 		});
 	}
@@ -259,7 +270,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 				// Show attending guests or "None" if not attending anyone
 				const attending = s.attending.length
-					? s.attending.join("<br>") // Multiple guests separated by line break
+					? s.attending.map(escapeHtml).join("<br>") // Multiple guests separated by line break
 					: `<span style="color:#B89F89;">None</span>`;
 
 				// Return the HTML for one staff row in the table
@@ -267,10 +278,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     <div class="staff-row">
                         <div class="flex items-center gap-3">
                             <!-- Avatar circle with initials -->
-                            <div class="staff-avatar">${initials}</div>
+                            <div class="staff-avatar">${escapeHtml(initials)}</div>
                             <div>
-                                <p class="meta-value font-medium">${s.name}</p>
-                                <p style="font-size:11px; color:#B89F89;">${s.email}</p>
+                                <p class="meta-value font-medium">${escapeHtml(s.name)}</p>
+                                <p style="font-size:11px; color:#B89F89;">${escapeHtml(s.email)}</p>
                             </div>
                         </div>
                         <!-- Shift type and hours -->
@@ -304,11 +315,11 @@ document.addEventListener("DOMContentLoaded", function () {
                         <!-- Gold star rating -->
                         <p class="stars text-sm mb-2">${stars}</p>
                         <!-- Review title in quotes -->
-                        <p class="font-serif text-lg mb-2" style="color:#2C241B;">"${r.title}"</p>
+                        <p class="font-serif text-lg mb-2" style="color:#2C241B;">"${escapeHtml(r.title)}"</p>
                         <!-- Review body text -->
-                        <p class="text-sm mb-3" style="color:#6B5743;">${r.comment}</p>
+                        <p class="text-sm mb-3" style="color:#6B5743;">${escapeHtml(r.comment)}</p>
                         <!-- Guest name and room number -->
-                        <p class="meta-label">${r.guestName} · Room ${r.roomId}</p>
+                        <p class="meta-label">${escapeHtml(r.guestName)} · Room ${escapeHtml(r.roomId)}</p>
                     </div>`;
 			})
 			.join("");

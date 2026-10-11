@@ -4,7 +4,6 @@
     "floor": 1,
     "type": "Standard Single",
     "price": 99,
-    "status": "available",
     "description": "Cosy single room with city views",
     "image": "../frontend/images/tiers/floor-1/a.jpg"
   },
@@ -13,7 +12,6 @@
     "floor": 1,
     "type": "Standard Single",
     "price": 99,
-    "status": "occupied",
     "description": "Cosy single room with city views",
     "image": "../frontend/images/tiers/floor-1/b.jpg"
   },
@@ -22,7 +20,6 @@
     "floor": 1,
     "type": "Standard Single",
     "price": 99,
-    "status": "available",
     "description": "Cosy single room with city views",
     "image": "../frontend/images/tiers/floor-1/c.jpg"
   },
@@ -31,7 +28,6 @@
     "floor": 1,
     "type": "Standard Single",
     "price": 99,
-    "status": "available",
     "description": "Cosy single room with city views",
     "image": "../frontend/images/tiers/floor-2/a.jpg"
   },
@@ -40,7 +36,6 @@
     "floor": 1,
     "type": "Standard Single",
     "price": 99,
-    "status": "available",
     "description": "Cosy single room with city views",
     "image": "../frontend/images/tiers/floor-2/b.jpg"
   },
@@ -49,7 +44,6 @@
     "floor": 1,
     "type": "Standard Single",
     "price": 99,
-    "status": "available",
     "description": "Cosy single room with city views",
     "image": "../frontend/images/tiers/floor-2/c.jpg"
   },
@@ -58,7 +52,6 @@
     "floor": 2,
     "type": "Deluxe Double",
     "price": 189,
-    "status": "available",
     "description": "Spacious double room with city view",
     "image": "../frontend/images/tiers/floor-3/a.jpg"
   },
@@ -67,7 +60,6 @@
     "floor": 2,
     "type": "Deluxe Double",
     "price": 189,
-    "status": "available",
     "description": "Spacious double room with city view",
     "image": "../frontend/images/tiers/floor-3/b.jpg"
   },
@@ -76,7 +68,6 @@
     "floor": 2,
     "type": "Deluxe Double",
     "price": 189,
-    "status": "available",
     "description": "Spacious double room with city view",
     "image": "../frontend/images/tiers/floor-3/c.jpg"
   },
@@ -85,7 +76,6 @@
     "floor": 2,
     "type": "Deluxe Double",
     "price": 189,
-    "status": "available",
     "description": "Spacious double room with city view",
     "image": "../frontend/images/tiers/floor-4/a.jpg"
   },
@@ -94,7 +84,6 @@
     "floor": 2,
     "type": "Deluxe Double",
     "price": 189,
-    "status": "available",
     "description": "Spacious double room with city view",
     "image": "../frontend/images/tiers/floor-4/b.jpg"
   },
@@ -103,7 +92,6 @@
     "floor": 2,
     "type": "Deluxe Double",
     "price": 189,
-    "status": "available",
     "description": "Spacious double room with city view",
     "image": "../frontend/images/tiers/floor-4/c.jpg"
   },
@@ -112,7 +100,6 @@
     "floor": 3,
     "type": "Executive Double",
     "price": 220,
-    "status": "available",
     "description": "Premium double with panoramic views",
     "image": "../frontend/images/tiers/floor-5/a.jpg"
   },
@@ -121,7 +108,6 @@
     "floor": 3,
     "type": "Executive Double",
     "price": 220,
-    "status": "occupied",
     "description": "Premium double with panoramic views",
     "image": "../frontend/images/tiers/floor-5/b.jpg"
   },
@@ -130,7 +116,6 @@
     "floor": 3,
     "type": "Executive Double",
     "price": 220,
-    "status": "available",
     "description": "Premium double with panoramic views",
     "image": "../frontend/images/tiers/floor-6/b.jpg"
   },
@@ -139,7 +124,6 @@
     "floor": 3,
     "type": "Executive Double",
     "price": 220,
-    "status": "available",
     "description": "Premium double with panoramic views",
     "image": "../frontend/images/tiers/floor-6/c.jpg"
   },
@@ -148,7 +132,6 @@
     "floor": 3,
     "type": "Executive Double",
     "price": 220,
-    "status": "available",
     "description": "Premium double with panoramic views",
     "image": "../frontend/images/tiers/floor-7/c.jpg"
   },
@@ -157,7 +140,6 @@
     "floor": 3,
     "type": "Executive Double",
     "price": 220,
-    "status": "available",
     "description": "Premium double with panoramic views",
     "image": "../frontend/images/tiers/floor-8/c.jpg"
   },
@@ -166,7 +148,6 @@
     "floor": 4,
     "type": "Penthouse Suite",
     "price": 380,
-    "status": "available",
     "description": "Luxury suite with full city panorama",
     "image": "../frontend/images/tiers/floor-1/a.jpg"
   },
@@ -175,7 +156,6 @@
     "floor": 4,
     "type": "Penthouse Suite",
     "price": 380,
-    "status": "available",
     "description": "Luxury suite with full city panorama",
     "image": "../frontend/images/tiers/floor-1/b.jpg"
   },
@@ -184,7 +164,6 @@
     "floor": 4,
     "type": "Penthouse Suite",
     "price": 380,
-    "status": "available",
     "description": "Luxury suite with full city panorama",
     "image": "../frontend/images/tiers/floor-1/c.jpg"
   },
@@ -193,7 +172,6 @@
     "floor": 4,
     "type": "Penthouse Suite",
     "price": 380,
-    "status": "available",
     "description": "Luxury suite with full city panorama",
     "image": "../frontend/images/tiers/floor-2/a.jpg"
   },
@@ -202,7 +180,6 @@
     "floor": 4,
     "type": "Penthouse Suite",
     "price": 380,
-    "status": "available",
     "description": "Luxury suite with full city panorama",
     "image": "../frontend/images/tiers/floor-2/b.jpg"
   },
@@ -211,7 +188,6 @@
     "floor": 4,
     "type": "Penthouse Suite",
     "price": 380,
-    "status": "occupied",
     "description": "Luxury suite with full city panorama",
     "image": "../frontend/images/tiers/floor-2/c.jpg"
   }

@@ -3,30 +3,27 @@
 		"id": "sh001",
 		"staffId": "u002",
 		"staffName": "Mike Tane",
-		"date": "2026-06-19",
+		"days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
 		"shiftStart": "07:00",
-		"shiftEnd": "23:59",
-		"shiftType": "Morning",
-		"status": "active"
+		"shiftEnd": "15:00",
+		"shiftType": "Morning"
 	},
 	{
 		"id": "sh002",
 		"staffId": "u002",
 		"staffName": "Mike Tane",
-		"date": "2026-05-23",
+		"days": ["Saturday"],
 		"shiftStart": "15:00",
 		"shiftEnd": "23:00",
-		"shiftType": "Afternoon",
-		"status": "upcoming"
+		"shiftType": "Afternoon"
 	},
 	{
 		"id": "sh003",
 		"staffId": "u002",
 		"staffName": "Mike Tane",
-		"date": "2026-05-24",
+		"days": ["Sunday"],
 		"shiftStart": "23:00",
 		"shiftEnd": "07:00",
-		"shiftType": "Night",
-		"status": "upcoming"
+		"shiftType": "Night"
 	}
 ]

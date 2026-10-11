@@ -3,6 +3,8 @@
 // Starts the Express server internally so no external server is needed
 // ============================================================
 
+// Use a temporary copy of the data so test accounts never reach the real files
+require("./helpers/temp-data");
 const app = require("../backend/server");
 const http = require("http");
 const axios = require("axios");

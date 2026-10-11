@@ -1,3 +1,14 @@
+// Escapes user-supplied text before it is inserted with innerHTML
+function escapeHtml(value) {
+	return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;",
+		"\"": "&quot;",
+		"'": "&#39;",
+	})[ch]);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
 	const token = localStorage.getItem("token");
 	const staffName = localStorage.getItem("name") || "Staff";
@@ -123,14 +134,14 @@ document.addEventListener("DOMContentLoaded", function () {
 					(b) => `
             <div class="guest-row">
                 <div>
-                    <p class="meta-label">${b.id} · ${b.userName}</p>
-                    <p class="font-serif text-xl" style="color:var(--lux-brown-800);">${b.userName}</p>
+                    <p class="meta-label">${escapeHtml(b.id)} · ${escapeHtml(b.userName)}</p>
+                    <p class="font-serif text-xl" style="color:var(--lux-brown-800);">${escapeHtml(b.userName)}</p>
                 </div>
                 <div>
                     <p class="meta-label">Room</p>
                     <p class="meta-value">Room ${b.roomId} · Floor ${b.floor}</p>
                     <p class="meta-label mt-2">Stay</p>
-                    <p class="meta-value">${b.checkIn} - ${b.checkOut}</p>
+                    <p class="meta-value">${escapeHtml(b.checkIn)} - ${escapeHtml(b.checkOut)}</p>
                     <p class="meta-label mt-2">Paid</p>
                     <p class="meta-value">$${b.total} ✓</p>
                 </div>
@@ -169,8 +180,8 @@ document.addEventListener("DOMContentLoaded", function () {
 					(c) => `
             <div class="residence-row">
                 <div>
-                    <p class="meta-label">Room ${c.roomId} · ${c.roomType}</p>
-                    <p class="font-serif text-xl" style="color:var(--lux-brown-800);">${c.guestName}</p>
+                    <p class="meta-label">Room ${escapeHtml(c.roomId)} · ${escapeHtml(c.roomType)}</p>
+                    <p class="font-serif text-xl" style="color:var(--lux-brown-800);">${escapeHtml(c.guestName)}</p>
                 </div>
                 <div class="grid grid-cols-2 gap-4">
                     <div>
@@ -179,11 +190,11 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                     <div>
                         <p class="meta-label">Depart</p>
-                        <p class="meta-value">${c.checkOutDate}</p>
+                        <p class="meta-value">${escapeHtml(c.checkOutDate)}</p>
                     </div>
                     <div>
                         <p class="meta-label">Attending</p>
-                        <p class="meta-value">${c.attendingStaff || "-"}</p>
+                        <p class="meta-value">${escapeHtml(c.attendingStaff || "-")}</p>
                     </div>
                 </div>
                 <div class="text-right">
@@ -247,4 +258,11 @@ document.addEventListener("DOMContentLoaded", function () {
 	loadCheckIns();
 	loadQueue();
 	loadResidence();
+
+	// Refresh the lists when a check-in or check-out is confirmed in the chat
+	window.addEventListener("ai:data-changed", () => {
+		loadCheckIns();
+		loadQueue();
+		loadResidence();
+	});
 });

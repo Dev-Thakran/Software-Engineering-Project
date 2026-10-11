@@ -77,9 +77,9 @@ async function handleLogin() {
 		localStorage.setItem("name", data.name);
 
 		// Redirect by role
-		if (data.role === "manager") window.location.href = "manager.html";
-		else if (data.role === "staff") window.location.href = "staff.html";
-		else window.location.href = "rooms.html";
+		if (data.role === "manager") window.location.href = "/pages/manager.html";
+		else if (data.role === "staff") window.location.href = "/pages/staff.html";
+		else window.location.href = "/pages/browserooms.html";
 	} catch {
 		el.textContent = "Network error. Is the server running?";
 		el.style.display = "block";

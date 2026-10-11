@@ -1,6 +1,6 @@
 const fs = require("fs");
-const path = require("path");
-const FILE = path.join(__dirname, "../data/users.json");
+const { dataFile } = require("../config/paths");
+const FILE = dataFile("users.json");
 
 function getAll() {
 	return JSON.parse(fs.readFileSync(FILE, "utf8"));

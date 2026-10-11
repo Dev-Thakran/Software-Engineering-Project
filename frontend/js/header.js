@@ -1,3 +1,14 @@
+// Escapes user-supplied text before it is inserted with innerHTML
+function escapeHtml(value) {
+	return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;",
+		"\"": "&quot;",
+		"'": "&#39;",
+	})[ch]);
+}
+
 window.addEventListener("load", function () {
 	var header = document.getElementById("header");
 	var xmlhttp = new XMLHttpRequest();
@@ -56,7 +67,7 @@ window.addEventListener("load", function () {
 		if (role === "staff") {
 			authEl.innerHTML = `
             <a href="/pages/staff.html" style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#555;text-decoration:none;">
-                ${firstName} - Dashboard
+                ${escapeHtml(firstName)} - Dashboard
             </a>
             <button id="nav-logout" class="nav-auth-btn" style="text-decoration:none;">
                 Sign Out
@@ -64,7 +75,7 @@ window.addEventListener("load", function () {
 		} else if (role === "manager") {
 			authEl.innerHTML = `
             <a href="/pages/manager.html" style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#555;text-decoration:none;">
-                ${firstName} - Dashboard
+                ${escapeHtml(firstName)} - Dashboard
             </a>
             <button id="nav-logout" class="nav-auth-btn" style="text-decoration:none;">
                 Sign Out
@@ -72,7 +83,7 @@ window.addEventListener("load", function () {
 		} else {
 			authEl.innerHTML = `
             <span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#555;">
-                ${firstName}
+                ${escapeHtml(firstName)}
             </span>
             <button id="nav-logout" class="nav-auth-btn" style="text-decoration:none;">
                 Sign Out
@@ -130,3 +141,11 @@ function handleLogout() {
 	localStorage.clear();
 	window.location.href = "/pages/Login.html";
 }
+
+// AI assistant widget on every page except sign-in and registration
+window.addEventListener("load", function () {
+	if (/\/(login|register)\.html$/i.test(window.location.pathname)) return;
+	const script = document.createElement("script");
+	script.src = "/js/chat.js";
+	document.body.appendChild(script);
+});

@@ -1,32 +1,4 @@
 document.addEventListener("DOMContentLoaded", async function () {
-	// Floor definitions matching your 4-floor hotel
-	const floors = [
-		{
-			floor: 4,
-			name: "Penthouse Suite",
-			price: "$380",
-			rooms: ["401", "402", "403", "404", "405", "406"],
-		},
-		{
-			floor: 3,
-			name: "Executive Double",
-			price: "$220",
-			rooms: ["301", "302", "303", "304", "305", "306"],
-		},
-		{
-			floor: 2,
-			name: "Deluxe Double",
-			price: "$189",
-			rooms: ["201", "202", "203", "204", "205", "206"],
-		},
-		{
-			floor: 1,
-			name: "Standard Single",
-			price: "$99",
-			rooms: ["101", "102", "103", "104", "105", "106"],
-		},
-	];
-
 	// Fetch live room data from backend
 	let roomData = [];
 	try {
@@ -35,6 +7,22 @@ document.addEventListener("DOMContentLoaded", async function () {
 	} catch {
 		console.error("Could not load rooms");
 	}
+
+	// Build the floors from the room data, top floor first: each floor lists
+	// its rooms, its room type(s) and its cheapest nightly price
+	const floors = [...new Set(roomData.map((r) => r.floor))]
+		.sort((a, b) => b - a)
+		.map((floor) => {
+			const onFloor = roomData
+				.filter((r) => r.floor === floor)
+				.sort((a, b) => a.id.localeCompare(b.id, undefined, { numeric: true }));
+			return {
+				floor,
+				name: [...new Set(onFloor.map((r) => r.type))].join(" / "),
+				price: "$" + Math.min(...onFloor.map((r) => r.price)),
+				rooms: onFloor.map((r) => r.id),
+			};
+		});
 
 	function getRoomStatus(roomId) {
 		const room = roomData.find((r) => r.id === roomId);
@@ -94,22 +82,18 @@ document.addEventListener("DOMContentLoaded", async function () {
                             <span style="width:8px;height:8px;border-radius:50%;background:${statusColor};display:inline-block;"></span>
                             <span class="meta-label">${room.status}</span>
                         </div>
-                        ${
-													room.status === "available"
-														? `<a href="/pages/room.html?room=${room.id}"
-                                  class="btn-primary"
-                                  style="display:block; text-align:center; padding:12px 20px; font-size:10px;">
-                                  Book this room
-                               </a>`
-														: `<p class="meta-label" style="color:#B89F89;">Not available for booking</p>`
-												}
+                        <a href="/pages/room.html?room=${room.id}"
+                           class="btn-primary"
+                           style="display:block; text-align:center; padding:12px 20px; font-size:10px;">
+                           Book this room
+                        </a>
                     `;
 			});
 
 			// Click - select room and go to booking
 			cell.addEventListener("click", () => {
 				const room = getRoomDetails(roomId);
-				if (!room || room.status !== "available") return;
+				if (!room) return;
 
 				// Deselect all
 				document.querySelectorAll(".room-cell.selected").forEach((c) => {

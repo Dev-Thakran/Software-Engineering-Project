@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.131.0",
     "bcryptjs": "^3.0.3",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3"
@@ -18,8 +19,9 @@
   },
   "scripts": {
     "test": "jest",
-    "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js"
+    "start": "node --env-file-if-exists=.env backend/server.js",
+    "dev": "nodemon --exec \"node --env-file-if-exists=.env\" backend/server.js",
+    "setup:ai": "node scripts/setup-ai.js"
   },
   "repository": {
     "type": "git",
@@ -32,5 +34,12 @@
   "bugs": {
     "url": "https://github.com/Dev-Thakran/Software-Engineering-Project/issues"
   },
-  "homepage": "https://github.com/Dev-Thakran/Software-Engineering-Project#readme"
+  "homepage": "https://github.com/Dev-Thakran/Software-Engineering-Project#readme",
+  "nodemonConfig": {
+    "ignore": [
+      "backend/data/*",
+      "frontend/*",
+      "tests/*"
+    ]
+  }
 }

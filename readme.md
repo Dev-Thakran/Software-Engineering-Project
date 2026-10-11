@@ -20,8 +20,15 @@ live booking data.
 - **Layered backend architecture**: routes → controllers → repositories, with
   Express middleware handling auth and role checks — separation of concerns rather
   than logic living directly in route handlers.
-- **23 automated tests** (Jest) covering auth, booking calculations, payments, and an
-  end-to-end integration flow.
+- **AI assistant with voice**: a chat widget on every page that can find and book
+  rooms for guests, check guests in and out for staff, and summarise performance for
+  the manager. It can only use tools allowed for the signed-in role, and every change
+  waits for the user to click Confirm. It runs on a hosted AI model: free Groq or
+  Google Gemini keys, or the paid Claude API - see [AI Assistant](#ai-assistant).
+- **Date-based availability**: a room can be booked for any dates that don't overlap
+  an existing stay; "occupied" means someone is in the room today.
+- **58 automated tests** (Jest) covering auth, booking calculations, availability,
+  payments, the AI assistant, and an end-to-end integration flow.
 
 ## Screenshots
 ![Image of the Manager Dashboard landing.](image.png)
@@ -30,10 +37,12 @@ live booking data.
 ## Tech Stack
 
 - **Backend**: Node.js, Express 5, JWT (`jsonwebtoken`), `bcryptjs`
+- **AI**: [Groq](https://groq.com) or [Google Gemini](https://ai.google.dev) (free tiers),
+  or Claude via the Anthropic SDK (`@anthropic-ai/sdk`); browser Web Speech API for voice
 - **Frontend**: Vanilla HTML/CSS/JS, [Chart.js](https://www.chartjs.org/) for the
   manager analytics dashboard
 - **Data**: JSON files as a lightweight datastore (see [Data](#data) below)
-- **Testing**: Jest (23 tests across auth, booking, payment, and integration)
+- **Testing**: Jest (58 tests across auth, booking, availability, payment, AI, and integration)
 - **Tooling**: ESLint, Nodemon
 
 ## Architecture
@@ -41,8 +50,10 @@ live booking data.
 ```
 backend/
   routes/         → defines API endpoints, applies auth/role middleware
-  controllers/     → request handling and business logic
+  controllers/     → request handling
+  services/        → business logic shared by routes and the AI assistant
   repositories/    → reads/writes the JSON datastore
+  ai/              → the AI assistant: config, tools per role, model providers
   middleware/      → JWT authentication and role-based access control
   data/            → JSON files acting as the dev datastore
 frontend/
@@ -64,8 +75,11 @@ a real backend is structured before you swap the JSON datastore for a proper dat
 npm install
 ```
 
+Set up the AI assistant (creates `.env`, asks for a free Groq or Gemini key and
+checks it works):
+
 ```bash
-cp .env.example .env
+npm run setup:ai
 ```
 
 Run in development (auto-restarts on changes):
@@ -91,15 +105,21 @@ server starts.
 | POST   | `/auth/login`         | Public           | Login, returns a JWT               |
 | GET    | `/rooms`              | Public           | List rooms                         |
 | GET    | `/rooms/:id`          | Public           | Room details                       |
-| POST   | `/bookings`           | Authenticated    | Create a booking                   |
+| GET    | `/rooms/:id/availability` | Public       | Is a room free for given dates?    |
+| POST   | `/bookings`           | Customer         | Create a booking                   |
 | GET    | `/bookings`           | Authenticated    | List bookings                      |
-| POST   | `/payment`            | Authenticated    | Payment endpoint (stub)            |
-| GET    | `/shifts`             | Staff/Manager    | Staff shift schedule               |
+| POST   | `/payment/process`    | Authenticated    | Payment endpoint (stub)            |
+| GET    | `/shifts/mine`        | Staff/Manager    | Your shift schedule                |
 | GET    | `/checkins/today`     | Staff/Manager    | Today's check-ins                  |
 | GET    | `/checkins/queue`     | Staff/Manager    | Guests awaiting check-in           |
+| POST   | `/checkins/checkin/:id`  | Staff/Manager | Check a guest in                   |
+| POST   | `/checkins/checkout/:id` | Staff/Manager | Check a guest out, freeing the room|
 | GET    | `/manager/stats`      | Manager only     | Revenue, occupancy, ratings summary|
 | GET    | `/manager/top-rooms`  | Manager only     | Booking counts by room             |
 | GET    | `/reviews`            | Public           | Public guest reviews               |
+| GET    | `/ai/greeting`        | Authenticated    | Assistant's opening message        |
+| POST   | `/ai/chat`            | Authenticated    | Send a message to the assistant    |
+| POST   | `/ai/actions/:id/confirm` | Authenticated | Carry out a card the user confirmed |
 
 Role checks (`staff`, `manager`) are enforced by middleware on the server, not just
 hidden in the frontend — a customer token cannot access manager routes even by calling
@@ -119,8 +139,56 @@ routes and controllers wouldn't need to change.
 npm test
 ```
 
-23 Jest tests across four suites: authentication, booking logic (night calculation,
-availability, total pricing), payment handling, and an end-to-end integration flow.
+58 Jest tests across seven suites: authentication, booking logic, date-based
+availability and check-in/out, payment handling, the AI assistant, and an end-to-end
+integration flow. Tests run against a temporary copy of `backend/data/`, so they never
+change the real data files. The AI tests use a scripted fake model, so they need no API
+key and cost nothing.
+
+## AI Assistant
+
+A round chat button sits in the bottom-right corner of every page (except sign-in and
+registration). What the assistant can do depends on who is signed in:
+
+| Role | Can do |
+| ---- | ------ |
+| Customer | Search rooms by dates, price and guests; explain rooms; show their bookings; propose a booking, then send them to the payment form |
+| Staff | See who's arriving and who's in residence; check room availability; check guests in and out |
+| Manager | Read-only: summarise revenue, occupancy, trends, floors, staff and reviews in any form asked |
+
+**Safety.** The server picks the assistant's tools from the role in the login token,
+so a customer can never reach staff or manager tools. Tools never change data
+themselves: they show a card, and the change happens only when the user clicks
+Confirm.
+
+**Voice.** Press the microphone to speak a message, and the speaker icon to have
+replies read aloud. This uses the browser's built-in speech features (Chrome, Edge,
+Safari). In other browsers the buttons are hidden.
+
+**Customising it.** Everything about the assistant's behaviour lives in
+[`backend/ai/assistant.config.js`](backend/ai/assistant.config.js): its name,
+personality, the hotel facts it can share, each role's greeting, suggestions and
+instructions, and safety limits. Tools are in `backend/ai/tools/`, one file per role.
+
+**Choosing the model.** Aria runs on a hosted model, so nothing extra is installed
+on your computer. Run `npm run setup:ai` to pick one, or set a key in `.env` yourself:
+
+| Provider | Cost | Get a key | Notes |
+| -------- | ---- | --------- | ----- |
+| Groq | Free tier | [console.groq.com/keys](https://console.groq.com/keys) | Very fast; free tier has per-minute limits |
+| Google Gemini | Free tier | [aistudio.google.com/apikey](https://aistudio.google.com/apikey) | On the free tier Google may use chats to improve its products |
+| Claude | Paid per message | [console.anthropic.com](https://console.anthropic.com) | Most capable with tools |
+
+With `AI_PROVIDER=auto` (the default) Aria uses whichever keys are set. When one service hits
+its free limit, Aria quietly switches to the next and switches back once the limit resets, so
+setting both a Groq and a Gemini key roughly combines their free allowances. If every
+service is at its limit, the chat says Aria needs a short break and pauses until one is back.
+`npm run setup:ai` offers to add the second free key as a backup. Every teammate creates their own free key. **Never commit a
+key** - keys live only in `.env`, which git ignores. Without a key, the chat window shows how
+to set one up.
+
+Conversations are kept
+in server memory and reset when the server restarts.
 
 ## Security Notes
 
