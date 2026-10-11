@@ -14,7 +14,10 @@ function handle(fn) {
 			res.json(await fn(req));
 		} catch (err) {
 			if (err instanceof AiBusyError)
-				return res.status(503).json({ error: err.message, retryAfter: err.retryAfter });
+				return res.status(503).json({
+					error: assistant.awayMessage(err.retryAfter),
+					retryAfter: err.retryAfter,
+				});
 			if (err instanceof AiUnavailableError)
 				return res.status(503).json({ error: err.message });
 			if (err.status) return res.status(err.status).json({ error: err.message });

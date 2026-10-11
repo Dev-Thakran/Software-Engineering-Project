@@ -276,10 +276,12 @@
 				return showSetup(greeting.setup);
 			}
 			launcher.setAttribute("aria-label", `Chat with ${greeting.name}`);
+			if (greeting.backMessage) backMessage = greeting.backMessage;
 			typing.remove();
 			addMessage("bot", greeting.text);
 			greeting.actions.forEach(addActionCard);
-			addChips(greeting.suggestions);
+			if (loadPending()) continueBreakAfterRefresh();
+			else addChips(greeting.suggestions);
 		} catch (err) {
 			typing.remove();
 			if (err.message !== "signed-out") {
@@ -289,15 +291,20 @@
 		}
 	}
 
-	async function send(text) {
+	// Sends a message. `resend` answers a message already shown in the chat
+	// (one that was waiting while Aria was on a break).
+	async function send(text, { resend = false } = {}) {
 		text = text.trim();
-		if (!text || busy) return;
-		messagesEl.querySelectorAll(".ai-chips").forEach((c) => c.remove());
-		addMessage("user", text);
-		input.value = "";
-		resizeInput();
+		if (!text || (busy && !resend)) return;
+		if (!resend) {
+			messagesEl.querySelectorAll(".ai-chips").forEach((c) => c.remove());
+			addMessage("user", text);
+			input.value = "";
+			resizeInput();
+		}
 		setBusy(true);
 		const typing = showTyping();
+		let onBreak = false;
 		try {
 			const result = await api("/ai/chat", {
 				method: "POST",
@@ -309,33 +316,111 @@
 		} catch (err) {
 			typing.remove();
 			if (err.retryAfter) {
-				addMessage("bot", err.message);
-				pauseFor(err.retryAfter);
+				onBreak = true;
+				// Say so once; if a retry hits a limit again, wait quietly
+				if (!resend) addMessage("bot", err.message);
+				startBreak(text, err.message, err.retryAfter);
 			} else if (err.message !== "signed-out") addMessage("error", err.message);
 		} finally {
-			setBusy(isPaused());
-			if (!isPaused()) input.focus();
+			if (!onBreak) {
+				setBusy(false);
+				input.focus();
+			}
 		}
 	}
 
 	// ---------- Breaks ----------
-	// When every AI provider has hit its free limit, the input pauses until
-	// the server says one is available again
-	let pausedUntil = 0;
+	// When every AI service has hit its free limit, the input pauses and the
+	// unanswered message is kept (in sessionStorage, so it survives a page
+	// refresh). As soon as the server says a service is free again, Aria says
+	// she's back and answers that message.
+	const PENDING_KEY = "ai-pending";
 	const normalPlaceholder = input.placeholder;
+	let backMessage = "Sorry about that! I'm back now.";
+	let breakTimer = null;
 
-	function isPaused() {
-		return Date.now() < pausedUntil;
+	function loadPending() {
+		try {
+			const pending = JSON.parse(sessionStorage.getItem(PENDING_KEY));
+			// Only for the same signed-in user
+			return pending && pending.owner === readStorage("name") ? pending : null;
+		} catch {
+			return null;
+		}
+	}
+	function savePending(pending) {
+		try {
+			sessionStorage.setItem(PENDING_KEY, JSON.stringify(pending));
+		} catch {
+			/* the break still works, it just won't survive a refresh */
+		}
+	}
+	function clearPending() {
+		try {
+			sessionStorage.removeItem(PENDING_KEY);
+		} catch {
+			/* nothing to clear */
+		}
 	}
 
-	function pauseFor(seconds) {
-		pausedUntil = Date.now() + seconds * 1000;
+	function startBreak(text, awayText, seconds) {
+		savePending({
+			text,
+			awayText,
+			owner: readStorage("name"),
+			resumeAt: Date.now() + seconds * 1000,
+		});
+		pauseInput();
+		scheduleCheck(seconds);
+	}
+
+	function pauseInput() {
+		setBusy(true);
 		input.placeholder = "Aria is on a short break…";
-		setTimeout(() => {
-			if (isPaused()) return;
-			input.placeholder = normalPlaceholder;
-			setBusy(false);
-		}, seconds * 1000 + 100);
+	}
+
+	function scheduleCheck(seconds) {
+		clearTimeout(breakTimer);
+		breakTimer = setTimeout(checkBack, Math.max(1, seconds) * 1000 + 250);
+	}
+
+	// Asks the server whether a service is free yet; if so, Aria comes back
+	async function checkBack() {
+		const pending = loadPending();
+		if (!pending) return resumeInput();
+		let status;
+		try {
+			status = await api("/ai/status");
+		} catch (err) {
+			if (err.message === "signed-out") return clearPending();
+			return scheduleCheck(15); // server unreachable; try again shortly
+		}
+		if (status.ready === false) {
+			clearPending();
+			return resumeInput();
+		}
+		if (status.availableIn > 0) return scheduleCheck(status.availableIn);
+
+		clearPending();
+		resumeInput();
+		addMessage("bot", backMessage);
+		await send(pending.text, { resend: true });
+	}
+
+	function resumeInput() {
+		input.placeholder = normalPlaceholder;
+		setBusy(false);
+	}
+
+	// After a page refresh during a break: show the waiting message again and
+	// keep waiting for Aria to come back
+	function continueBreakAfterRefresh() {
+		const pending = loadPending();
+		if (!pending) return;
+		addMessage("user", pending.text);
+		addMessage("bot", pending.awayText);
+		pauseInput();
+		scheduleCheck(Math.max(0, (pending.resumeAt - Date.now()) / 1000));
 	}
 
 	// ---------- Opening and closing ----------
@@ -484,4 +569,8 @@
 			recognition.start();
 		});
 	}
+
+	// A message was waiting for Aria when the page was refreshed: reopen the
+	// chat so the user sees her come back and answer it
+	if (loadPending()) open();
 })();

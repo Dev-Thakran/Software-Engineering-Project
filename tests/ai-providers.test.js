@@ -13,6 +13,7 @@ const {
 	AiUnavailableError,
 	AiNotConfiguredError,
 	AiBusyError,
+	secondsUntilAvailable,
 } = require("../backend/ai/providers");
 const assistant = require("../backend/ai/assistant");
 
@@ -253,4 +254,39 @@ test("Gemini gets its own signed tool calls back, and other providers' calls as 
 	expect(out[5]).toEqual({ role: "tool", tool_call_id: "m1", content: "[]" });
 	// Groq never sees Gemini's extras
 	expect(toOpenAIMessages("sys", history, "groq")[4].tool_calls[0].extra_content).toBeUndefined();
+});
+
+test("Aria reports how long until she's back, and words it from the config", async () => {
+	quiet();
+	process.env.GROQ_API_KEY = "q";
+	process.env.GEMINI_API_KEY = "g";
+	let now = 9_000_000;
+	jest.spyOn(Date, "now").mockImplementation(() => now);
+	expect(secondsUntilAvailable()).toBe(0);
+
+	let groqLimited = true;
+	mockFetch({
+		"api.groq.com": () =>
+			groqLimited ? { status: 429, headers: { "retry-after": "40" } } : reply({ content: "Groq is back" }),
+		"generativelanguage.googleapis.com": () => ({ status: 429, headers: { "retry-after": "120" } }),
+	});
+	await expect(getProvider().chat(request)).rejects.toThrow(AiBusyError);
+	// Groq is free first, after 40 seconds
+	expect(secondsUntilAvailable()).toBe(40);
+	expect(assistant.status().availableIn).toBe(40);
+	expect(assistant.awayMessage(40)).toBe("Aria needs a short break - she'll be back in less than a minute.");
+
+	// Once Groq's rest is over, Aria is available again and answers
+	now += 41_000;
+	groqLimited = false;
+	expect(secondsUntilAvailable()).toBe(0);
+	expect((await getProvider().chat(request)).text).toBe("Groq is back");
+});
+
+test("the greeting carries the message Aria says when she's back", () => {
+	process.env.GROQ_API_KEY = "q";
+	const greeting = assistant.greeting({ id: "u001", name: "Jane Thompson", role: "customer" });
+	expect(greeting.backMessage).toBe(
+		"Sorry about that! I'm an AI that needs a power nap every minute, but I'll be quick to help you :)",
+	);
 });

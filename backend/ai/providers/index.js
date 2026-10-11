@@ -128,6 +128,14 @@ function outOfProvidersError(list) {
 	return busyError(list);
 }
 
+// Seconds until at least one configured provider can be used: 0 when one is
+// ready now. Throws AiNotConfiguredError when no provider has a key.
+function secondsUntilAvailable() {
+	const list = availableProviders();
+	if (list.some((p) => !isResting(p.name))) return 0;
+	return secondsUntilFree(list);
+}
+
 // Returns a provider that tries each available one in order, skipping any
 // that are resting. When all of them are resting it throws AiBusyError.
 function getProvider() {
@@ -160,6 +168,8 @@ function getProvider() {
 
 module.exports = {
 	getProvider,
+	secondsUntilAvailable,
+	describeWait,
 	AiUnavailableError,
 	AiNotConfiguredError,
 	AiBusyError,

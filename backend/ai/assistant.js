@@ -12,7 +12,12 @@
 
 const config = require("./assistant.config");
 const store = require("./store");
-const { getProvider, AiNotConfiguredError } = require("./providers");
+const {
+	getProvider,
+	secondsUntilAvailable,
+	describeWait,
+	AiNotConfiguredError,
+} = require("./providers");
 const { toolsForRole } = require("./tools");
 const { checkinCard } = require("./tools/shared");
 const availability = require("../services/availability.service");
@@ -208,6 +213,7 @@ function greeting(user) {
 		actions: actions.map(publicAction),
 		suggestions: role.suggestions,
 		voice: config.voice,
+		backMessage: config.breaks.back,
 		...status(),
 	};
 }
@@ -258,11 +264,25 @@ function addNote(userId, note) {
 	if (messages.length) messages.push({ role: "user", content: note });
 }
 
+// What Aria says when every provider is resting
+function awayMessage(seconds) {
+	return config.breaks.away
+		.replace("{name}", config.name)
+		.replace("{wait}", describeWait(seconds));
+}
+
 // Which model is in use, or what to do when none is set up
 function status() {
 	try {
 		const provider = getProvider();
-		return { name: config.name, ready: true, provider: provider.name, model: provider.model };
+		return {
+			name: config.name,
+			ready: true,
+			provider: provider.name,
+			model: provider.model,
+			// Seconds until Aria can answer again (0 = now)
+			availableIn: secondsUntilAvailable(),
+		};
 	} catch (err) {
 		if (!(err instanceof AiNotConfiguredError)) throw err;
 		return { name: config.name, ready: false, setup: err.message };
@@ -275,6 +295,7 @@ module.exports = {
 	confirmAction,
 	cancelAction,
 	status,
+	awayMessage,
 	resetConversation: store.clearConversation,
 	buildSystemPrompt,
 };

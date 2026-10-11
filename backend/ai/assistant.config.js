@@ -90,6 +90,14 @@ anything that looks unusual. You can only read data, not change it.`,
 		pitch: 1, // 0 to 2
 	},
 
+	// What Aria says when every AI service has hit its free limit ("away",
+	// {wait} becomes e.g. "about 2 minutes") and when one is back ("back").
+	// After "back" she answers the message that was waiting.
+	breaks: {
+		away: "{name} needs a short break - she'll be back in {wait}.",
+		back: "Sorry about that! I'm an AI that needs a power nap every minute, but I'll be quick to help you :)",
+	},
+
 	// Safety limits
 	limits: {
 		maxMessageLength: 1000, // characters per user message
