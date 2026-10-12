@@ -7,7 +7,6 @@ const {
 	describeRoom,
 	getRoomOrThrow,
 	checkStay,
-	checkinCard,
 	dateParam,
 } = require("./shared");
 
@@ -129,31 +128,38 @@ module.exports = [
 		},
 	},
 	{
-		name: "propose_checkin",
+		name: "check_in_guest",
 		description:
-			"Show a card to check a guest in. Give the booking ID, or just the guest's name - you don't need to look up the ID first. Nothing happens until the staff member confirms.",
+			"Check a guest in right away. Use it when the staff member asks you to check someone in. Give the booking ID, or just the guest's name or room number - you don't need to look up the ID first. If the name matches more than one guest, ask which one.",
 		parameters: {
 			type: "object",
 			properties: {
-				booking: { type: "string", description: "Booking ID or guest name" },
+				booking: { type: "string", description: "Booking ID, guest name or room number" },
 			},
 			required: ["booking"],
 		},
 		run(input, ctx) {
+			ctx.oneChangePerMessage();
 			const b = findOne(
 				checkins.getQueue(),
 				input.booking,
-				(b) => [b.id, b.userName],
+				(b) => [b.id, b.roomId, b.userName],
 				"due to check in today",
 			);
-			ctx.propose("staff_checkin", { bookingId: b.id }, checkinCard(b));
-			return "Check-in card shown. Waiting for the staff member to confirm.";
+			const ci = checkins.checkIn(b.id, ctx.user);
+			ctx.performed("undo_checkin", { checkinId: ci.id }, {
+				title: `Checked in ${ci.guestName}`,
+				lines: [`Room ${ci.roomId} · ${ci.roomType}`, `Staying until ${ci.checkOutDate}`],
+				confirmLabel: "Undo",
+				done: true,
+			});
+			return `Done: ${ci.guestName} is checked in to room ${ci.roomId}.`;
 		},
 	},
 	{
-		name: "propose_checkout",
+		name: "check_out_guest",
 		description:
-			"Show a card to check a guest out. Give the guest's name, their room number, or the check-in ID. Nothing happens until the staff member confirms.",
+			"Check a guest out right away. Use it when the staff member asks you to check someone out. Give the guest's name, their room number, or the check-in ID. If it matches more than one guest, ask which one.",
 		parameters: {
 			type: "object",
 			properties: {
@@ -162,26 +168,22 @@ module.exports = [
 			required: ["guest"],
 		},
 		run(input, ctx) {
+			ctx.oneChangePerMessage();
 			const c = findOne(
 				checkins.getInResidence(),
 				input.guest,
 				(c) => [c.id, c.roomId, c.guestName],
 				"currently staying",
 			);
-			const room = roomRepo.findById(c.roomId);
-			ctx.propose(
-				"staff_checkout",
-				{ checkinId: c.id },
-				{
-					title: `Check out ${c.guestName}`,
-					lines: [
-						`Room ${c.roomId} · ${room ? room.type : c.roomType}`,
-						`Booked until ${c.checkOutDate}`,
-					],
-					confirmLabel: "Check out",
-				},
-			);
-			return "Check-out card shown. Waiting for the staff member to confirm.";
+			const done = checkins.checkOut(c.id, ctx.user);
+			const room = roomRepo.findById(done.roomId);
+			ctx.performed("undo_checkout", { checkinId: done.id }, {
+				title: `Checked out ${done.guestName}`,
+				lines: [`Room ${done.roomId} · ${room ? room.type : done.roomType}`, "The room is free again"],
+				confirmLabel: "Undo",
+				done: true,
+			});
+			return `Done: ${done.guestName} is checked out of room ${done.roomId}.`;
 		},
 	},
 ];

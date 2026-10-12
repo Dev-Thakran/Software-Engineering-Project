@@ -37,7 +37,22 @@ const toolCall = (name, input = {}) => ({
 	toolCalls: [{ id: `call_${name}`, name, input }],
 });
 
+const { hotelNow, hotelTimeToMs } = require("../backend/config/hotel-time");
+const realNow = Date.now();
+
 beforeEach(() => {
+	// Mike is on shift: these tests run at 10:00 am New Zealand time
+	writeData("shifts.json", [
+		{
+			id: "s1",
+			staffId: "u002",
+			days: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+			shiftStart: "07:00",
+			shiftEnd: "15:00",
+			shiftType: "Morning",
+		},
+	]);
+	jest.spyOn(Date, "now").mockReturnValue(hotelTimeToMs(hotelNow(realNow).date, "10:00"));
 	writeData("bookings.json", [
 		{
 			id: "bT",
@@ -58,50 +73,91 @@ beforeEach(() => {
 	[staff, customer, manager].forEach((u) => assistant.resetConversation(u.id));
 });
 
+afterEach(() => jest.restoreAllMocks());
+
 test("each role only gets its own tools", () => {
 	const names = (role) => toolsForRole(role).map((t) => t.name);
 	expect(names("customer")).toContain("propose_booking");
-	expect(names("customer")).not.toContain("propose_checkin");
-	expect(names("staff")).toContain("propose_checkin");
+	expect(names("customer")).not.toContain("check_in_guest");
+	expect(names("staff")).toContain("check_in_guest");
 	expect(names("staff")).not.toContain("get_overview");
 	expect(names("manager").some((n) => n.startsWith("propose_"))).toBe(false);
 	expect(names("visitor")).toEqual([]);
 });
 
-test("staff can check a guest in through the chat after confirming", async () => {
+test("staff ask Aria to check a guest in and she does it straight away", async () => {
 	const model = fakeModel(
-		toolCall("get_checkin_queue"),
-		toolCall("propose_checkin", { booking: "bT" }),
-		{ text: "Jane Thompson is ready to check in." },
+		toolCall("check_in_guest", { booking: "Jane Thompson" }),
+		{ text: "Done - Jane Thompson is checked in to room 203." },
 	);
-	const result = await assistant.chat(staff, "Who's waiting?", model);
+	const result = await assistant.chat(staff, "Check her in for me", model);
 
-	// The server words the reply itself, using the card's button label
-	expect(result.reply).toBe(
-		"Please check the details below and click **Check in** to go ahead.",
-	);
-	expect(result.actions).toHaveLength(1);
-	expect(result.actions[0].title).toBe("Check in Jane Thompson");
-	// The queue tool's result reached the model
-	const toolMsg = model.calls[1].messages.find((m) => m.role === "tool");
-	expect(toolMsg.content).toContain("bT");
-	// Nothing changes until Confirm is clicked
-	expect(readData("bookings.json")[0].status).toBe("booked");
-
-	const done = assistant.confirmAction(staff, result.actions[0].id);
-	expect(done.refresh).toBe(true);
+	expect(result.reply).toBe("Done - Jane Thompson is checked in to room 203.");
+	expect(result.refresh).toBe(true); // the dashboard lists update
 	expect(readData("bookings.json")[0].status).toBe("staying");
 	expect(rooms.getRoom("203").status).toBe("occupied");
+	// What she did, with an Undo button
+	expect(result.actions).toEqual([
+		expect.objectContaining({ title: "Checked in Jane Thompson", confirmLabel: "Undo", done: true }),
+	]);
 
-	// A card can only be used once
-	expect(() => assistant.confirmAction(staff, result.actions[0].id)).toThrow(/expired|used/);
+	// Undo puts the guest back in the queue and frees the room
+	const undone = assistant.confirmAction(staff, result.actions[0].id);
+	expect(undone.message).toMatch(/back in the check-in queue/);
+	expect(readData("bookings.json")[0].status).toBe("booked");
+	expect(readData("checkins.json")).toEqual([]);
+	expect(rooms.getRoom("203").status).toBe("available");
 });
 
-test("another user can't confirm someone else's card", async () => {
-	const model = fakeModel(toolCall("propose_checkin", { booking: "bT" }), { text: "OK" });
+test("check-out happens straight away and can be undone too", async () => {
+	await assistant.chat(staff, "Check in Jane", fakeModel(toolCall("check_in_guest", { booking: "bT" }), { text: "OK" }));
+	const result = await assistant.chat(
+		staff,
+		"Now check out room 203",
+		fakeModel(toolCall("check_out_guest", { guest: "203" }), { text: "" }),
+	);
+	// With no text from the model, the reply says what was done
+	expect(result.reply).toBe("Checked out Jane Thompson.");
+	expect(rooms.getRoom("203").status).toBe("available");
+
+	assistant.confirmAction(staff, result.actions[0].id);
+	expect(rooms.getRoom("203").status).toBe("occupied");
+	expect(readData("bookings.json")[0].status).toBe("staying");
+});
+
+test("only one check-in or check-out happens per message", async () => {
+	const twoAtOnce = { toolCalls: [
+		{ id: "a", name: "check_in_guest", input: { booking: "bT" } },
+		{ id: "b", name: "check_out_guest", input: { guest: "203" } },
+	] };
+	const model = fakeModel(twoAtOnce, { text: "Done." });
+	const result = await assistant.chat(staff, "Check Jane in and out", model);
+	expect(result.actions).toHaveLength(1);
+	const refused = model.calls[1].messages.filter((m) => m.role === "tool")[1];
+	expect(refused.isError).toBe(true);
+	expect(refused.content).toMatch(/Only one check-in or check-out per message/);
+	expect(rooms.getRoom("203").status).toBe("occupied");
+});
+
+test("if the AI fails after checking someone in, Aria reports it instead of retrying", async () => {
+	let calls = 0;
+	const flaky = {
+		async chat() {
+			if (++calls === 1)
+				return { text: "", toolCalls: [{ id: "c", name: "check_in_guest", input: { booking: "bT" } }], raw: null };
+			throw new Error("service hit its limit");
+		},
+	};
+	const result = await assistant.chat(staff, "Check her in", flaky);
+	expect(result.reply).toBe("Checked in Jane Thompson.");
+	expect(readData("bookings.json")[0].status).toBe("staying");
+});
+
+test("another user can't use someone else's card", async () => {
+	const model = fakeModel(toolCall("check_in_guest", { booking: "bT" }), { text: "OK" });
 	const { actions } = await assistant.chat(staff, "Check in Jane", model);
 	expect(() => assistant.confirmAction(customer, actions[0].id)).toThrow();
-	expect(readData("bookings.json")[0].status).toBe("booked");
+	expect(readData("bookings.json")[0].status).toBe("staying");
 });
 
 test("customer booking card sends them to the payment form", async () => {
@@ -143,7 +199,7 @@ test("a tool error is reported to the model instead of creating a card", async (
 });
 
 test("a customer can't use staff tools even if the model asks for one", async () => {
-	const model = fakeModel(toolCall("propose_checkin", { booking: "bT" }), { text: "Sorry." });
+	const model = fakeModel(toolCall("check_in_guest", { booking: "bT" }), { text: "Sorry." });
 	const { actions } = await assistant.chat(customer, "Check me in", model);
 	expect(actions).toHaveLength(0);
 	const toolMsg = model.calls[1].messages.find((m) => m.role === "tool");
@@ -203,16 +259,19 @@ test("Claude adapter groups tool results and replays Claude's own blocks", () =>
 });
 
 test("staff tools find guests by name, and explain when they can't", async () => {
+	// A guessed booking ID gets an error listing who is actually waiting
+	const checkinTool = toolsForRole("staff").find((t) => t.name === "check_in_guest");
+	const ctx = { user: staff, performed: () => {}, oneChangePerMessage: () => {} };
+	expect(() => checkinTool.run({ booking: "JaneThompson123" }, ctx)).toThrow(
+		/No guest due to check in today matches .* bT \/ 203 \/ Jane Thompson/,
+	);
+	expect(readData("bookings.json")[0].status).toBe("booked");
+
+	// The guest's name (any case) is enough
 	const model = fakeModel(
-		toolCall("propose_checkin", { booking: "jane thompson" }),
+		toolCall("check_in_guest", { booking: "jane thompson" }),
 		{ text: "OK" },
 	);
 	const { actions } = await assistant.chat(staff, "Check in Jane", model);
-	expect(actions[0].title).toBe("Check in Jane Thompson");
-
-	const checkinTool = toolsForRole("staff").find((t) => t.name === "propose_checkin");
-	const ctx = { user: staff, propose: () => {} };
-	expect(() => checkinTool.run({ booking: "JaneThompson123" }, ctx)).toThrow(
-		/No guest due to check in today matches .* bT \/ Jane Thompson/,
-	);
+	expect(actions[0].title).toBe("Checked in Jane Thompson");
 });

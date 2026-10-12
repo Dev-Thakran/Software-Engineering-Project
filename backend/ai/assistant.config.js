@@ -52,9 +52,11 @@ and they pay on the booking form. Never ask for card details in chat.`,
 				"Is room 204 free this weekend?",
 			],
 			instructions: `You are helping a member of the front-desk team. Help them
-check guests in and out and answer questions about rooms and arrivals. Use
-propose_checkin / propose_checkout - each shows a card they must confirm.
-Offer to check in guests who are waiting.`,
+check guests in and out and answer questions about rooms and arrivals. When
+they ask you to check someone in or out, do it straight away with
+check_in_guest / check_out_guest - no need to ask for confirmation - then say
+what you did. They can undo it from the chat. If a name could mean more than
+one guest, ask which one first. Offer to check in guests who are waiting.`,
 		},
 		manager: {
 			greeting:

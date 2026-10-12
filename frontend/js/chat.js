@@ -182,7 +182,7 @@
 			${(action.lines || []).map((l) => `<div class="ai-card-line">${escapeHtml(l)}</div>`).join("")}
 			<div class="ai-card-buttons">
 				<button type="button" class="ai-btn" data-confirm>${escapeHtml(action.confirmLabel || "Confirm")}</button>
-				<button type="button" class="ai-btn secondary" data-cancel>Cancel</button>
+				${action.done ? "" : '<button type="button" class="ai-btn secondary" data-cancel>Cancel</button>'}
 			</div>`;
 		const buttons = card.querySelector(".ai-card-buttons");
 		const finish = (message, isError) => {
@@ -204,7 +204,7 @@
 				if (err.message !== "signed-out") finish(err.message, true);
 			}
 		});
-		card.querySelector("[data-cancel]").addEventListener("click", async () => {
+		card.querySelector("[data-cancel]")?.addEventListener("click", async () => {
 			buttons.querySelectorAll("button").forEach((b) => (b.disabled = true));
 			try {
 				await api(`/ai/actions/${action.id}/cancel`, { method: "POST" });
@@ -313,6 +313,8 @@
 			typing.remove();
 			addMessage("bot", result.reply);
 			result.actions.forEach(addActionCard);
+			// Aria changed something (e.g. checked a guest in): refresh the page's lists
+			if (result.refresh) window.dispatchEvent(new CustomEvent("ai:data-changed"));
 		} catch (err) {
 			typing.remove();
 			if (err.retryAfter) {

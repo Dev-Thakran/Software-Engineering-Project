@@ -192,21 +192,6 @@
     "createdAt": "2026-09-29T04:27:09.393Z"
   },
   {
-    "id": "b1790901382915",
-    "userId": "u001",
-    "userName": "Jane Thompson",
-    "guestEmail": "jane@email.com",
-    "roomId": "303",
-    "roomType": "Executive Double",
-    "floor": 3,
-    "checkIn": "2026-10-03",
-    "checkOut": "2026-10-17",
-    "nights": 14,
-    "total": 3080,
-    "status": "booked",
-    "createdAt": "2026-10-02T00:36:22.915Z"
-  },
-  {
     "id": "b1790901961718",
     "userId": "u001",
     "userName": "Jane Thompson",

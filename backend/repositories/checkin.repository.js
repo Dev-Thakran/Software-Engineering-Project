@@ -25,4 +25,9 @@ function update(id, changes) {
 	return checkins[idx];
 }
 
-module.exports = { getAll, findById, save, update };
+function remove(id) {
+	const checkins = getAll().filter((c) => c.id !== id);
+	fs.writeFileSync(FILE, JSON.stringify(checkins, null, 2));
+}
+
+module.exports = { getAll, findById, save, update, remove };

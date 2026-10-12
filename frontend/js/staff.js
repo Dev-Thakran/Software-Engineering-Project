@@ -42,61 +42,133 @@ document.addEventListener("DOMContentLoaded", function () {
 	updateClock();
 	setInterval(updateClock, 1000);
 
-	// Shift countdown
+	// Shift clock - runs on New Zealand time. The server sends the exact
+	// start and end of today's shift, so the countdown is right whatever time
+	// zone this computer is set to.
+	let shift = { state: "none", messages: {} };
+	let clockOffset = 0; // server clock minus this computer's clock
+	let shiftTimer = null;
+	const isManager = localStorage.getItem("role") === "manager";
+
+	const pad = (n) => String(n).padStart(2, "0");
+	function formatDuration(ms) {
+		const total = Math.max(0, Math.floor(ms / 1000));
+		return `${pad(Math.floor(total / 3600))}:${pad(Math.floor((total % 3600) / 60))}:${pad(total % 60)}`;
+	}
+
 	async function loadShift() {
 		if (!token) return;
 		try {
-			const res = await fetch("/shifts/mine", {
+			const res = await fetch("/shifts/status", {
 				headers: { Authorization: "Bearer " + token },
 			});
-			const shifts = await res.json();
-			const today = new Date().toLocaleDateString("en-CA");
-			const active = shifts.find(
-				(s) => s.date === today && s.status === "active",
-			);
-
-			if (!active) {
-				document.getElementById("shift-type").textContent = "No active shift";
-				document.getElementById("shift-countdown").textContent = "--:--:--";
-				return;
-			}
-
-			document.getElementById("shift-type").textContent = active.shiftType;
-			document.getElementById("shift-hours").textContent =
-				" (" + active.shiftStart + " - " + active.shiftEnd + ")";
-
-			const [endHour, endMin] = active.shiftEnd.split(":").map(Number);
-			const shiftEnd = new Date();
-			shiftEnd.setHours(endHour, endMin, 0, 0);
-			const [startHour] = active.shiftStart.split(":").map(Number);
-			if (endHour < startHour) shiftEnd.setDate(shiftEnd.getDate() + 1);
-
-			function updateCountdown() {
-				const remaining = shiftEnd - new Date();
-				if (remaining <= 0) {
-					document.getElementById("shift-countdown").textContent = "00:00:00";
-					document.getElementById("shift-status").textContent =
-						"Shift complete";
-					return;
-				}
-				const h = Math.floor(remaining / 3600000);
-				const m = Math.floor((remaining % 3600000) / 60000);
-				const s = Math.floor((remaining % 60000) / 1000);
-				const pad = (n) => String(n).padStart(2, "0");
-				document.getElementById("shift-countdown").textContent =
-					`${pad(h)}:${pad(m)}:${pad(s)}`;
-				if (remaining < 1800000) {
-					document.getElementById("shift-countdown").style.color = "#9A826A";
-					document.getElementById("shift-status").textContent =
-						"Shift ending soon";
-				}
-			}
-			updateCountdown();
-			setInterval(updateCountdown, 1000);
-		} catch (err) {
-			document.getElementById("shift-type").textContent =
-				"Could not load shift";
+			if (!res.ok) throw new Error();
+			shift = await res.json();
+			clockOffset = shift.serverNow - Date.now();
+			clearInterval(shiftTimer);
+			renderShift();
+			shiftTimer = setInterval(renderShift, 1000);
+		} catch {
+			document.getElementById("shift-type").textContent = "Could not load shift";
 		}
+	}
+
+	// Where we are in the shift right now. Worked out every second, so the
+	// clock moves from "starts in" to "remaining" to "finished" by itself.
+	function shiftState() {
+		if (shift.state === "none") return "none";
+		const now = Date.now() + clockOffset;
+		if (now < shift.startsAt) return "before";
+		if (now < shift.endsAt) return "on";
+		return "after";
+	}
+
+	function renderShift() {
+		const typeEl = document.getElementById("shift-type");
+		const hoursEl = document.getElementById("shift-hours");
+		const countdownEl = document.getElementById("shift-countdown");
+		const labelEl = document.getElementById("shift-label");
+		const noteEl = document.getElementById("shift-status");
+		const now = Date.now() + clockOffset;
+		const state = shiftState();
+		countdownEl.style.color = "";
+		noteEl.textContent = "";
+
+		if (state === "none") {
+			typeEl.textContent = "No shift today";
+			hoursEl.textContent = "";
+			countdownEl.textContent = "--:--:--";
+			labelEl.textContent = "Day off";
+			return;
+		}
+		typeEl.textContent = shift.shiftType;
+		hoursEl.textContent = ` (${shift.hours})`;
+		if (state === "before") {
+			countdownEl.textContent = formatDuration(shift.startsAt - now);
+			labelEl.textContent = "Until your shift starts";
+			noteEl.textContent = `Starts at ${shift.hours.split(" - ")[0]}`;
+		} else if (state === "on") {
+			const left = shift.endsAt - now;
+			countdownEl.textContent = formatDuration(left);
+			labelEl.textContent = "Remaining";
+			if (left < 1800000) {
+				countdownEl.style.color = "#9A826A";
+				noteEl.textContent = "Shift ending soon";
+			}
+		} else {
+			countdownEl.textContent = "00:00:00";
+			labelEl.textContent = "Shift finished";
+			noteEl.textContent = "Thanks for today!";
+		}
+	}
+
+	// ---------- Off-shift popup ----------
+	const POPUP_TITLES = {
+		after: "Shift finished",
+		before: "Shift not started",
+		none: "No shift today",
+	};
+
+	function showShiftPopup(state, message) {
+		document.querySelector(".shift-popup")?.remove();
+		const overlay = document.createElement("div");
+		overlay.className = "shift-popup";
+		overlay.innerHTML = `
+			<div class="shift-popup-card" role="alertdialog" aria-modal="true"
+			     aria-labelledby="shift-popup-title" aria-describedby="shift-popup-text">
+				<p class="kicker">Staff console</p>
+				<h2 id="shift-popup-title" class="font-serif"></h2>
+				<p id="shift-popup-text"></p>
+				<button type="button" class="btn-primary">OK</button>
+			</div>`;
+		overlay.querySelector("h2").textContent = POPUP_TITLES[state] || "Off shift";
+		overlay.querySelector("#shift-popup-text").textContent = message;
+
+		const close = () => {
+			overlay.classList.add("closing");
+			document.removeEventListener("keydown", onKey);
+			setTimeout(() => overlay.remove(), 180);
+		};
+		const onKey = (e) => {
+			if (e.key === "Escape") close();
+		};
+		overlay.addEventListener("click", (e) => {
+			if (e.target === overlay) close();
+		});
+		overlay.querySelector("button").addEventListener("click", close);
+		document.addEventListener("keydown", onKey);
+		document.body.appendChild(overlay);
+		overlay.querySelector("button").focus();
+	}
+
+	// Staff can only check guests in or out during their shift (managers
+	// don't work shifts). The server enforces this too.
+	function blockedByShift() {
+		if (isManager) return false;
+		const state = shiftState();
+		if (state === "on") return false;
+		showShiftPopup(state, shift.messages[state]);
+		return true;
 	}
 
 	// Check-ins count
@@ -214,6 +286,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 	// Check in and check out action
 	async function checkIn(bookingId) {
+		if (blockedByShift()) return;
 		if (!confirm("Confirm check-in for this guest?")) return;
 		try {
 			const res = await fetch(`/checkins/checkin/${bookingId}`, {
@@ -223,7 +296,11 @@ document.addEventListener("DOMContentLoaded", function () {
 					Authorization: "Bearer " + token,
 				},
 			});
-			if (!res.ok) throw new Error();
+			if (!res.ok) {
+				const data = await res.json().catch(() => ({}));
+				if (data.offShift) return showShiftPopup(data.offShift, data.error);
+				throw new Error();
+			}
 			loadQueue();
 			loadCheckIns();
 			loadResidence();
@@ -233,6 +310,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	}
 
 	async function checkOut(checkinId) {
+		if (blockedByShift()) return;
 		if (!confirm("Confirm check-out for this guest?")) return;
 		try {
 			const res = await fetch(`/checkins/checkout/${checkinId}`, {
@@ -242,7 +320,11 @@ document.addEventListener("DOMContentLoaded", function () {
 					Authorization: "Bearer " + token,
 				},
 			});
-			if (!res.ok) throw new Error();
+			if (!res.ok) {
+				const data = await res.json().catch(() => ({}));
+				if (data.offShift) return showShiftPopup(data.offShift, data.error);
+				throw new Error();
+			}
 			loadResidence();
 		} catch {
 			alert("Could not complete check-out.");

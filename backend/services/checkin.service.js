@@ -2,6 +2,7 @@ const bookingRepo = require("../repositories/booking.repository");
 const checkinRepo = require("../repositories/checkin.repository");
 const { today } = require("./availability.service");
 const ServiceError = require("./service-error");
+const { assertCanHandleGuests } = require("./shift.service");
 
 // Guests due to be in the hotel today who haven't checked in yet. Includes
 // late arrivals whose stay started earlier but hasn't ended.
@@ -30,6 +31,7 @@ function getTodaysCheckins() {
 // Marks a booking as staying and records the check-in, which makes the room
 // show as occupied
 function checkIn(bookingId, staff) {
+	assertCanHandleGuests(staff);
 	const booking = bookingRepo.findById(bookingId);
 	if (!booking) throw new ServiceError(404, "Booking not found");
 	if (booking.status !== "booked")
@@ -61,7 +63,8 @@ function checkIn(bookingId, staff) {
 }
 
 // Completes a stay; the room shows as available again automatically
-function checkOut(checkinId) {
+function checkOut(checkinId, user) {
+	assertCanHandleGuests(user);
 	const checkin = checkinRepo.findById(checkinId);
 	if (!checkin) throw new ServiceError(404, "Checkin not found");
 	if (checkin.status !== "staying")
@@ -74,7 +77,36 @@ function checkOut(checkinId) {
 	return checkinRepo.findById(checkin.id);
 }
 
+// Reverses a check-in made by mistake: the guest goes back to the queue
+function undoCheckIn(checkinId, user) {
+	assertCanHandleGuests(user);
+	const checkin = checkinRepo.findById(checkinId);
+	if (!checkin || checkin.status !== "staying")
+		throw new ServiceError(409, "That check-in can't be undone any more");
+	checkinRepo.remove(checkin.id);
+	if (bookingRepo.findById(checkin.bookingId))
+		bookingRepo.update(checkin.bookingId, { status: "booked" });
+	return checkin;
+}
+
+// Reverses a check-out made by mistake: the guest is staying again, as long
+// as nobody else has checked in to the room since
+function undoCheckOut(checkinId, user) {
+	assertCanHandleGuests(user);
+	const checkin = checkinRepo.findById(checkinId);
+	if (!checkin || checkin.status !== "completed")
+		throw new ServiceError(409, "That check-out can't be undone any more");
+	if (getInResidence().some((c) => c.roomId === checkin.roomId))
+		throw new ServiceError(409, `Someone else is now staying in room ${checkin.roomId}`);
+	checkinRepo.update(checkin.id, { status: "staying" });
+	if (bookingRepo.findById(checkin.bookingId))
+		bookingRepo.update(checkin.bookingId, { status: "staying" });
+	return checkinRepo.findById(checkin.id);
+}
+
 module.exports = {
+	undoCheckIn,
+	undoCheckOut,
 	getQueue,
 	getInResidence,
 	getTodaysCheckins,

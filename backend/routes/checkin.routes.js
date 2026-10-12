@@ -12,7 +12,8 @@ function handle(fn) {
 		try {
 			res.json(fn(req));
 		} catch (err) {
-			if (err.status) return res.status(err.status).json({ error: err.message });
+			if (err.status)
+				return res.status(err.status).json({ error: err.message, offShift: err.offShift });
 			next(err);
 		}
 	};
@@ -50,7 +51,7 @@ router.post(
 router.post(
 	"/checkout/:checkinId",
 	handle((req) => {
-		checkins.checkOut(req.params.checkinId);
+		checkins.checkOut(req.params.checkinId, req.user);
 		return { message: "Checked out successfully" };
 	}),
 );
