@@ -3,6 +3,7 @@ const checkinRepo = require("../repositories/checkin.repository");
 const { today } = require("./availability.service");
 const ServiceError = require("./service-error");
 const { assertCanHandleGuests } = require("./shift.service");
+const { hotelNow } = require("../config/hotel-time");
 
 // Guests due to be in the hotel today who haven't checked in yet. Includes
 // late arrivals whose stay started earlier but hasn't ended.
@@ -20,12 +21,13 @@ function getInResidence() {
 	return checkinRepo.getAll().filter((c) => c.status === "staying");
 }
 
-// Check-ins completed today
+// Check-ins completed today. Check-in times are stored in UTC, so both
+// sides are compared as New Zealand dates.
 function getTodaysCheckins() {
-	const date = today();
+	const date = hotelNow().date;
 	return checkinRepo
 		.getAll()
-		.filter((c) => c.checkInTime.split("T")[0] === date);
+		.filter((c) => hotelNow(Date.parse(c.checkInTime)).date === date);
 }
 
 // Marks a booking as staying and records the check-in, which makes the room

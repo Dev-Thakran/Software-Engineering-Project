@@ -50,3 +50,16 @@ test("4 digit CVV passes validation", () => {
 	const errors = validateCard("4242424242424242", "12/26", "1234");
 	expect(errors).toHaveLength(0);
 });
+
+// - Card expiry dates are checked against today ---------
+const { cardExpired } = require("../backend/controllers/payment.controller");
+test("expired cards and impossible months are refused", () => {
+	const now = new Date();
+	const yy = String(now.getFullYear() % 100).padStart(2, "0");
+	const mm = String(now.getMonth() + 1).padStart(2, "0");
+	expect(cardExpired(`${mm}/${yy}`)).toBe(false); // valid to the end of this month
+	expect(cardExpired(`12/${Number(yy) + 2}`)).toBe(false);
+	expect(cardExpired(`01/${String(Number(yy) - 1).padStart(2, "0")}`)).toBe(true);
+	expect(cardExpired(`13/${Number(yy) + 1}`)).toBe(true);
+	expect(cardExpired(`00/${Number(yy) + 1}`)).toBe(true);
+});

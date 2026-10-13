@@ -6,40 +6,57 @@
 		<title>Rooms & Suites – La Extravaganza</title>
 		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="../css/main.css" />
+		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+		<meta name="description" content="Browse all 24 rooms and suites at La Extravaganza and see which are free for your dates." />
+		<script src="../js/ui.js"></script>
 		<style>
 			.filter-select {
-				border: 1px solid var(--lux-brown-100);
-				background: var(--lux-cream);
+				border: 1px solid var(--lux-brown-200);
+				background: #fff;
 				color: var(--lux-brown-700);
 				font-family: "Outfit", sans-serif;
 				font-size: 12px;
-				letter-spacing: 0.06em;
-				padding: 8px 28px 8px 10px;
-				outline: none;
+				letter-spacing: 0.04em;
+				padding: 9px 28px 9px 10px;
+				min-height: 40px;
 				cursor: pointer;
 				border-radius: 0;
-				appearance: auto;
 			}
-			.filter-select:focus {
-				border-color: var(--lux-brown-700);
-			}
-
 			input[type="range"] {
 				-webkit-appearance: none;
 				appearance: none;
 				width: 100%;
-				height: 1px;
+				height: 2px;
 				background: var(--lux-brown-700);
-				outline: none;
 				cursor: pointer;
 			}
 			input[type="range"]::-webkit-slider-thumb {
 				-webkit-appearance: none;
 				appearance: none;
-				width: 14px;
-				height: 14px;
+				width: 18px;
+				height: 18px;
 				border-radius: 50%;
 				background: var(--lux-brown-700);
+				border: 3px solid #fff;
+				box-shadow: 0 0 0 1px var(--lux-brown-700);
+			}
+			.filter-label {
+				display: block;
+				margin-bottom: 8px;
+				font-size: 11px;
+				font-weight: 600;
+				letter-spacing: 0.18em;
+				text-transform: uppercase;
+				color: var(--lux-text-soft);
+			}
+			.link-button {
+				background: none;
+				border: none;
+				padding: 8px 0;
+				font-size: 12px;
+				color: var(--lux-brown-700);
+				text-decoration: underline;
+				text-underline-offset: 3px;
 				cursor: pointer;
 			}
 		</style>
@@ -50,159 +67,89 @@
 	<body>
 		<header class="sticky top-0 z-20" id="header"></header>
 
-		<!-- PAGE HEADER -->
-		<section style="padding: 80px 48px 40px; background: var(--lux-cream)">
-			<div class="container">
+		<main style="background: var(--lux-cream)">
+			<!-- Page intro and stay search -->
+			<section class="max-w-7xl mx-auto px-4 md:px-12 pt-14 md:pt-20 pb-8">
 				<p class="kicker mb-3">The Collection</p>
 				<h1
 					class="font-serif"
-					style="
-						font-size: clamp(48px, 7vw, 80px);
-						color: var(--lux-brown-800);
-						font-weight: 400;
-						line-height: 1.05;
-					">
+					style="font-size: clamp(44px, 7vw, 80px); color: var(--lux-brown-800); font-weight: 400; line-height: 1.05">
 					Rooms &amp; Suites
 				</h1>
-				<p
-					class="font-sans mt-3"
-					style="
-						font-size: 14px;
-						color: var(--lux-brown-500);
-						max-width: 420px;
-						line-height: 1.7;
-					">
-					Twenty-four sanctuaries across four floors. Each tier a distinct
-					promise - from garden calm to penthouse grandeur.
+				<p class="mt-3 mb-10" style="font-size: 15px; color: var(--lux-text-muted); max-width: 460px; line-height: 1.7">
+					Twenty-four rooms across four floors. Add your dates to see exactly
+					what's free and what your stay will cost.
 				</p>
-			</div>
-		</section>
 
-		<!-- FILTER BAR -->
-		<div
-			style="background: var(--lux-cream); padding: 24px 48px; margin: 0 auto">
-			<div class="container">
-				<div
-					style="
-						border: 1px solid var(--lux-brown-100);
-						padding: 20px 24px;
-						display: flex;
-						flex-wrap: wrap;
-						align-items: center;
-						gap: 32px;
-						justify-content: space-between;
-					">
-					<div
-						style="
-							display: flex;
-							flex-wrap: wrap;
-							align-items: center;
-							gap: 32px;
-						">
-						<!-- Floor -->
-						<div>
-							<label
-								class="input-label"
-								style="font-size: 10px; display: block; margin-bottom: 6px">
-								Floor
-							</label>
-							<select
-								class="filter-select"
-								id="floorFilter"
-								onchange="applyFilters()">
-								<option value="all">All floors</option>
-								<option value="1">Floor 1 - Garden</option>
-								<option value="2">Floor 2 - Classic</option>
-								<option value="3">Floor 3 - Executive</option>
-								<option value="4">Floor 4 - Penthouse</option>
-							</select>
-						</div>
+				<!-- browserooms.js reads and fills these from the address bar, so a
+				     search from the home page arrives already filled in -->
+				<form id="stay-form" class="stay-search" novalidate>
+					<div class="field">
+						<label for="checkIn">Check in</label>
+						<input type="date" id="checkIn" name="checkIn" />
+					</div>
+					<div class="field">
+						<label for="checkOut">Check out</label>
+						<input type="date" id="checkOut" name="checkOut" />
+					</div>
+					<div class="field">
+						<label for="guests">Guests</label>
+						<select id="guests" name="guests">
+							<option value="0" selected>Any</option>
+							<option value="1">1 guest</option>
+							<option value="2">2 guests</option>
+							<option value="3">3 guests</option>
+							<option value="4">4 guests</option>
+						</select>
+					</div>
+					<button type="submit" class="btn-primary">
+						<span data-icon="search"></span>
+						Check availability
+					</button>
+					<p id="stay-error" class="field-error" role="alert" hidden></p>
+				</form>
+			</section>
 
-						<!-- Max price slider -->
-						<div style="min-width: 220px">
-							<label
-								class="input-label"
-								style="font-size: 10px; display: block; margin-bottom: 10px">
-								Max Price - $
-								<span id="priceLabel">400</span>
-								/Night
-							</label>
-							<input
-								type="range"
-								id="priceFilter"
-								min="99"
-								max="400"
-								value="400"
-								step="1"
-								oninput="
-									updatePrice(this.value);
-									applyFilters();
-								" />
-						</div>
-
-						<!-- Sort -->
-						<div>
-							<label
-								class="input-label"
-								style="font-size: 10px; display: block; margin-bottom: 6px">
-								Sort
-							</label>
-							<select
-								class="filter-select"
-								id="sortFilter"
-								onchange="applyFilters()">
-								<option value="default">Floor — low to high</option>
-								<option value="floor-desc">Floor — high to low</option>
-								<option value="price-asc">Price — low to high</option>
-								<option value="price-desc">Price — high to low</option>
-							</select>
-						</div>
-
-						<!-- Availability -->
-						<div>
-							<label
-								class="input-label"
-								style="font-size: 10px; display: block; margin-bottom: 6px">
-								Availability
-							</label>
-							<select
-								class="filter-select"
-								id="statusFilter"
-								onchange="applyFilters()">
-								<option value="all">All Rooms</option>
-								<option value="available">Free Today</option>
-							</select>
+			<!-- Filters -->
+			<section class="max-w-7xl mx-auto px-4 md:px-12 pb-6" aria-label="Filters">
+				<div class="flex flex-wrap items-end gap-x-10 gap-y-5 py-5" style="border-top: 1px solid var(--lux-brown-100); border-bottom: 1px solid var(--lux-brown-100)">
+					<div>
+						<span class="filter-label" id="floor-label">Floor</span>
+						<div class="chip-row" role="group" aria-labelledby="floor-label" id="floor-chips">
+							<button type="button" class="chip" data-floor="all" aria-pressed="true">All</button>
+							<button type="button" class="chip" data-floor="1" aria-pressed="false">1 · Garden</button>
+							<button type="button" class="chip" data-floor="2" aria-pressed="false">2 · Classic</button>
+							<button type="button" class="chip" data-floor="3" aria-pressed="false">3 · Executive</button>
+							<button type="button" class="chip" data-floor="4" aria-pressed="false">4 · Penthouse</button>
 						</div>
 					</div>
 
-					<!-- Room count -->
-					<p
-						id="roomCount"
-						class="kicker"
-						style="font-size: 11px; color: var(--lux-brown-500)"></p>
-				</div>
-			</div>
-		</div>
+					<div style="min-width: 200px">
+						<label class="filter-label" for="priceFilter">
+							Up to $<span id="priceLabel">400</span> a night
+						</label>
+						<input type="range" id="priceFilter" min="99" max="400" value="400" step="1" />
+					</div>
 
-		<!-- ROOMS GRID -->
-		<main style="padding: 40px 48px 96px; background: var(--lux-cream)">
-			<div class="container">
-				<div
-					id="roomsGrid"
-					class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-7"></div>
-				<div id="emptyState" class="hidden text-center" style="padding: 96px 0">
-					<p
-						class="font-serif"
-						style="font-size: 32px; color: var(--lux-brown-500)">
-						No rooms match your filters.
-					</p>
-					<p
-						class="font-sans mt-2"
-						style="font-size: 13px; color: var(--lux-brown-500)">
-						Try adjusting your selection.
-					</p>
+					<div>
+						<label class="filter-label" for="sortFilter">Sort by</label>
+						<select class="filter-select" id="sortFilter">
+							<option value="default">Floor, low to high</option>
+							<option value="floor-desc">Floor, high to low</option>
+							<option value="price-asc">Price, low to high</option>
+							<option value="price-desc">Price, high to low</option>
+						</select>
+					</div>
+
+					<button type="button" class="link-button" id="clear-filters" hidden>Clear all</button>
 				</div>
-			</div>
+				<p id="roomCount" class="mt-5 text-sm" style="color: var(--lux-text-muted)" aria-live="polite"></p>
+			</section>
+
+			<!-- Rooms grid -->
+			<section class="max-w-7xl mx-auto px-4 md:px-12 pb-24">
+				<div id="roomsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" aria-busy="true"></div>
+			</section>
 		</main>
 
 		<footer id="footer"></footer>

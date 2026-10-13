@@ -47,6 +47,7 @@ function create(req, res) {
 }
 
 // Staff and managers can cancel a booking that hasn't checked in yet.
+// Guests can cancel their own, up to the day before arrival.
 // Check-out goes through /checkins so the room is freed correctly.
 function updateStatus(req, res) {
 	const { status } = req.body;
@@ -54,6 +55,14 @@ function updateStatus(req, res) {
 		return res.status(400).json({ error: "Invalid status" });
 	const existing = bookingRepo.findById(req.params.id);
 	if (!existing) return res.status(404).json({ error: "Booking not found" });
+	if (req.user.role === "customer") {
+		if (existing.userId !== req.user.id)
+			return res.status(404).json({ error: "Booking not found" });
+		if (existing.checkIn <= availability.today())
+			return res.status(409).json({
+				error: "Same-day cancellations need the front desk - please call us on +64 9 123 4567",
+			});
+	}
 	if (existing.status !== "booked")
 		return res
 			.status(409)

@@ -17,6 +17,14 @@ router.get("/booking-mix", (req, res) => res.json(stats.getBookingMix()));
 router.get("/staff", (req, res) => res.json(stats.getStaff()));
 router.get("/reviews", (req, res) => res.json(stats.getRecentReviews()));
 
+// Figures for the last 7, 30 or 90 days, compared with the period before
+router.get("/period", (req, res) => {
+	const days = Number(req.query.days) || 30;
+	if (![7, 30, 90].includes(days))
+		return res.status(400).json({ error: "days must be 7, 30 or 90" });
+	res.json(stats.getPeriod(days));
+});
+
 // Live updates: the dashboard keeps this connection open and gets a
 // "change" message whenever hotel data changes, then re-fetches its numbers.
 // Several saves in quick succession (e.g. a check-in) are sent as one.

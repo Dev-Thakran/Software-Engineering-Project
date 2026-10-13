@@ -1,160 +1,366 @@
-// Escapes user-supplied text before it is inserted with innerHTML
-function escapeHtml(value) {
-	return String(value ?? "").replace(/[&<>"']/g, (ch) => ({
-		"&": "&amp;",
-		"<": "&lt;",
-		">": "&gt;",
-		"\"": "&quot;",
-		"'": "&#39;",
-	})[ch]);
-}
+// ============================================================
+//  room.js - One room: gallery, availability calendar, live
+//  price panel, amenities, reviews and similar rooms
+//  URL: room.html?room=301[&checkIn=…&checkOut=…&guests=2]
+// ============================================================
 
-document.addEventListener("DOMContentLoaded", async function () {
-	// Get room ID from URL - supports ?room=101, ?roomId=101, ?id=101
-	const params = new URLSearchParams(window.location.search);
+const FLOOR_NAMES = { 1: "Garden", 2: "Classic", 3: "Executive", 4: "Penthouse" };
+const ROOM_META = {
+	"Standard Single": { bed: "Queen bed", sqm: 28 },
+	"Deluxe Double": { bed: "Queen bed", sqm: 38 },
+	"Executive Double": { bed: "King bed", sqm: 48 },
+	"Penthouse Suite": { bed: "King bed", sqm: 80 },
+};
+const DESCRIPTIONS = {
+	"Standard Single": "A calm garden-level room for one, with a queen bed, rainfall shower and a desk by the window.",
+	"Deluxe Double": "A classic double on the second floor - a queen bed, a reading chair and city light through tall windows.",
+	"Executive Double": "A larger double with a king bed, separate lounge corner and the quietest outlook in the house.",
+	"Penthouse Suite": "Our top-floor suite: a king bed, living room, terrace and butler service, sleeping up to four.",
+};
+const TAX = 30;
+
+const $ = (id) => document.getElementById(id);
+const { dates } = UI;
+
+const state = {
+	room: null,
+	booked: [], // [{ checkIn, checkOut }]
+	checkIn: "",
+	checkOut: "",
+	monthOffset: 0, // first month shown, counted from this month
+};
+
+document.addEventListener("DOMContentLoaded", async () => {
+	const params = new URLSearchParams(location.search);
 	const roomId = params.get("room") || params.get("roomId") || params.get("id");
-
 	if (!roomId) {
-		window.location.href = "./browserooms.html";
+		location.href = "./browserooms.html";
 		return;
 	}
 
-	// Floor tier names
-	const FLOOR_NAMES = {
-		1: "Garden",
-		2: "Classic",
-		3: "Executive",
-		4: "Penthouse",
-	};
-
-	// Room metadata
-	const ROOM_META = {
-		"Standard Single": { guests: 1, sqm: 28 },
-		"Deluxe Double": { guests: 2, sqm: 38 },
-		"Executive Double": { guests: 2, sqm: 48 },
-		"Penthouse Suite": { guests: 4, sqm: 80 },
-	};
+	// Keep the visitor's search when they go back to the list
+	const back = new URLSearchParams(location.search);
+	back.delete("room");
+	if (back.toString()) $("back-link").href = "./browserooms.html?" + back;
 
 	try {
-		// Fetch room data, amenities and reviews in parallel
-		// /reviews is the public endpoint added to server.js
-		const [roomRes, amenRes, revRes] = await Promise.all([
-			fetch(`/rooms/${roomId}`),
-			fetch(`/rooms/${roomId}/amenities`),
-			fetch(`/reviews`),
+		const [roomRes, amenities, booked, reviews, rooms] = await Promise.all([
+			fetch(`/rooms/${encodeURIComponent(roomId)}`),
+			fetch(`/rooms/${encodeURIComponent(roomId)}/amenities`).then((r) => (r.ok ? r.json() : [])),
+			fetch(`/rooms/${encodeURIComponent(roomId)}/booked`).then((r) => (r.ok ? r.json() : [])),
+			fetch(`/reviews?roomId=${encodeURIComponent(roomId)}`).then((r) => (r.ok ? r.json() : [])),
+			fetch("/rooms").then((r) => (r.ok ? r.json() : [])),
 		]);
-
 		if (!roomRes.ok) throw new Error("Room not found");
+		state.room = await roomRes.json();
+		state.booked = booked;
 
-		const room = await roomRes.json();
-		const amenities = await amenRes.json();
-		const allReviews = revRes.ok ? await revRes.json() : [];
-
-		// Only show reviews for this specific room
-		const reviews = Array.isArray(allReviews)
-			? allReviews.filter((r) => r.roomId === roomId)
-			: [];
-
-		// Update page title
-		document.title = `Room ${room.id} – La Extravaganza`;
-
-		// Image - convert "../frontend/images/..." to "/images/..."
-		const imgPath = room.image
-			? room.image.trim().replace("../frontend/", "/")
-			: "";
-		document.getElementById("room-image").src = imgPath;
-		document.getElementById("room-image").alt = `Room ${room.id}`;
-
-		// Floor label
-		const floorName = FLOOR_NAMES[room.floor] || "Floor " + room.floor;
-		document.getElementById("room-floor-label").textContent =
-			`Floor ${room.floor} - ${floorName}`;
-
-		// Room name
-		document.getElementById("room-name").textContent = `Room ${room.id}`;
-
-		// Meta
-		const meta = ROOM_META[room.type] || { guests: 2, sqm: 36 };
-		document.getElementById("room-guests").textContent = `Up to ${meta.guests}`;
-		document.getElementById("room-sqm").textContent = `${meta.sqm} m²`;
-
-		// Description
-		const descriptions = {
-			"Standard Single": `A garden room on floor ${room.floor}, appointed with ${amenities.length} thoughtful amenities.`,
-			"Deluxe Double": `A classic double on floor ${room.floor}, appointed with ${amenities.length} thoughtful amenities.`,
-			"Executive Double": `A premium double on floor ${room.floor}, appointed with ${amenities.length} thoughtful amenities.`,
-			"Penthouse Suite": `Our finest suite on floor ${room.floor}, appointed with ${amenities.length} thoughtful amenities.`,
-		};
-		document.getElementById("room-description").textContent =
-			descriptions[room.type] || room.description;
-
-		// Price
-		document.getElementById("room-price").textContent = `$${room.price}`;
-
-		// Reserve button
-		const reserveBtn = document.getElementById("reserve-btn");
-		reserveBtn.href = `./bookingform.html?room=${room.id}`;
-		reserveBtn.addEventListener("mouseover", () => {
-			reserveBtn.style.background = "var(--lux-brown-900)";
-		});
-		reserveBtn.addEventListener("mouseout", () => {
-			reserveBtn.style.background = "var(--lux-brown-800)";
-		});
-
-
-		// Amenities grid
-		const amenGrid = document.getElementById("amenities-grid");
-		if (amenities.length === 0) {
-			amenGrid.innerHTML = `<p style="font-family:'Outfit',sans-serif; font-size:13px;
-                                           color:var(--lux-brown-400);">No amenities listed.</p>`;
-		} else {
-			amenGrid.innerHTML = amenities
-				.map(
-					(a) => `
-                <div class="amenity-item">
-                    <span class="amenity-check">✓</span>
-                    <span>${escapeHtml(a)}</span>
-                </div>`,
-				)
-				.join("");
-		}
-
-		// Reviews
-		const reviewsList = document.getElementById("reviews-list");
-		if (reviews.length === 0) {
-			reviewsList.innerHTML = `
-                <p class="font-serif" style="font-size:18px; font-style:italic;
-                                              color:var(--lux-brown-400);">
-                    No reviews yet for this room - be the first.
-                </p>`;
-		} else {
-			reviewsList.innerHTML = reviews
-				.map((r) => {
-					const stars = "★".repeat(r.rating) + "☆".repeat(5 - r.rating);
-					return `
-                    <div class="review-item">
-                        <p class="stars text-sm mb-2">${stars}</p>
-                        <p class="font-serif text-xl mb-2"
-                           style="color:var(--lux-brown-800);">"${escapeHtml(r.title)}"</p>
-                        <p style="font-family:'Outfit',sans-serif; font-size:13px;
-                                  color:var(--lux-brown-600); line-height:1.7; margin-bottom:8px;">
-                            ${escapeHtml(r.comment)}
-                        </p>
-                        <p class="kicker" style="font-size:10px;">${escapeHtml(r.guestName)}</p>
-                    </div>`;
-				})
-				.join("");
-		}
+		renderDetails(state.room, amenities);
+		renderGallery(state.room);
+		renderReviews(reviews);
+		renderSimilar(state.room, rooms);
+		setUpPanel(params);
+		setUpCalendar();
+		$("room-content").removeAttribute("aria-busy");
 	} catch (err) {
 		console.error(err);
-		document.querySelector("main").innerHTML = `
-            <div style="padding:96px 48px; text-align:center;">
-                <p class="font-serif text-4xl" style="color:var(--lux-brown-400);">
-                    Room not found.
-                </p>
-                <a href="./browserooms.html" class="btn-primary" style="margin-top:32px; display:inline-block;">
-                    Back to rooms
-                </a>
-            </div>`;
+		$("room-content").outerHTML = `
+			<div class="empty-state mt-8">
+				<h3 class="font-serif">We couldn't find that room.</h3>
+				<p>It may have been removed, or the link is incomplete.</p>
+				<a href="./browserooms.html" class="btn-primary">See all rooms</a>
+			</div>`;
 	}
 });
+
+//  DETAILS
+function renderDetails(room, amenities) {
+	const meta = ROOM_META[room.type] || { bed: "Queen bed", sqm: 36 };
+	document.title = `Room ${room.id} · ${room.type} – La Extravaganza`;
+	$("room-floor-label").textContent = `Floor ${room.floor} · ${FLOOR_NAMES[room.floor] || ""}`;
+	$("room-name").textContent = `Room ${room.id}`;
+	$("room-type").textContent = room.type;
+	$("room-meta").innerHTML = `
+		<span>${UI.icon("bed")}${meta.bed}</span>
+		<span>${UI.icon("guests")}Up to ${room.maxGuests} ${room.maxGuests === 1 ? "guest" : "guests"}</span>
+		<span>${UI.icon("area")}${meta.sqm} m²</span>`;
+	$("room-description").textContent = DESCRIPTIONS[room.type] || room.description;
+	$("panel-price").textContent = UI.money(room.price);
+
+	$("amenities-grid").innerHTML = amenities.length
+		? amenities.map((a) => `<div class="amenity-item">${UI.icon("check")}<span>${UI.escape(a)}</span></div>`).join("")
+		: `<p class="text-sm" style="color:var(--lux-text-muted)">Amenities for this room are being updated.</p>`;
+}
+
+//  GALLERY - the room's own photo first, then its floor's other photos
+function renderGallery(room) {
+	const own = room.image ? room.image.trim().replace("../frontend/", "/") : "";
+	const floorPhotos = ["a", "b", "c"].map((x) => `/images/tiers/floor-${room.floor}/${x}.jpg`);
+	const photos = [...new Set([own, ...floorPhotos].filter(Boolean))];
+
+	const main = $("room-image");
+	const show = (index) => {
+		main.style.opacity = "0";
+		setTimeout(() => {
+			main.src = photos[index];
+			main.alt = `Room ${room.id}, photo ${index + 1} of ${photos.length}`;
+			main.style.opacity = "1";
+		}, 150);
+		$("gallery-thumbs").querySelectorAll("button").forEach((b, i) => b.setAttribute("aria-current", String(i === index)));
+	};
+
+	main.onload = () => $("gallery-main").classList.remove("skeleton");
+	main.src = photos[0];
+	main.alt = `Room ${room.id}, photo 1 of ${photos.length}`;
+	main.hidden = false;
+
+	if (photos.length < 2) return;
+	$("gallery-thumbs").innerHTML = photos
+		.map((src, i) => `
+			<button type="button" class="gallery-thumb" aria-label="Show photo ${i + 1}" aria-current="${i === 0}">
+				<img src="${UI.escape(src)}" alt="" loading="lazy" onerror="this.closest('button').remove()" />
+			</button>`)
+		.join("");
+	$("gallery-thumbs").querySelectorAll("button").forEach((b, i) => b.addEventListener("click", () => show(i)));
+}
+
+//  REVIEWS
+function stars(rating) {
+	return `<span class="stars" aria-label="${rating} out of 5 stars">${"★".repeat(rating)}${"☆".repeat(5 - rating)}</span>`;
+}
+
+function renderReviews(reviews) {
+	const list = [...reviews].sort((a, b) => b.date.localeCompare(a.date));
+	if (!list.length) {
+		$("panel-rating").textContent = "New to reviews - be one of the first guests to share your stay.";
+		$("reviews-list").innerHTML = `
+			<p class="font-serif italic" style="font-size:20px; color:var(--lux-text-muted)">
+				No reviews yet for this room.
+			</p>`;
+		return;
+	}
+	const avg = list.reduce((s, r) => s + r.rating, 0) / list.length;
+	const summary = `${avg.toFixed(1)} out of 5 · ${list.length} ${list.length === 1 ? "review" : "reviews"}`;
+	$("panel-rating").innerHTML = `${stars(Math.round(avg))} &nbsp;${summary}`;
+	$("reviews-summary").textContent = summary;
+	$("reviews-list").innerHTML = list
+		.map((r) => `
+			<article class="review-item">
+				<p class="mb-2">${stars(r.rating)}</p>
+				${r.title ? `<h3 class="font-serif text-xl mb-2" style="color:var(--lux-brown-800)">${UI.escape(r.title)}</h3>` : ""}
+				<p style="font-size:15px; color:var(--lux-brown-600); line-height:1.7; max-width:62ch">${UI.escape(r.comment)}</p>
+				<p class="kicker mt-3" style="font-size:11px">${UI.escape(r.guestName)} · ${dates.pretty(r.date, true)}</p>
+			</article>`)
+		.join("");
+}
+
+//  SIMILAR ROOMS - same floor first, then the floors either side
+function renderSimilar(room, rooms) {
+	const others = rooms
+		.filter((r) => r.id !== room.id)
+		.sort((a, b) => Math.abs(a.floor - room.floor) - Math.abs(b.floor - room.floor) || a.price - b.price)
+		.slice(0, 3);
+	if (!others.length) return;
+	$("similar-section").hidden = false;
+	$("similar-rooms").innerHTML = others
+		.map((r) => {
+			const img = r.image ? r.image.replace("../frontend/", "/") : "";
+			const params = new URLSearchParams({ room: r.id });
+			if (state.checkIn) {
+				params.set("checkIn", state.checkIn);
+				params.set("checkOut", state.checkOut);
+			}
+			return `
+				<a class="room-card" href="./room.html?${params}">
+					<div class="room-card-photo">
+						${img ? `<img src="${UI.escape(img)}" alt="" loading="lazy" />` : ""}
+						<span class="room-card-tag left">Floor ${r.floor}</span>
+					</div>
+					<div class="room-card-body">
+						<p class="kicker" style="font-size:11px">${FLOOR_NAMES[r.floor] || ""}</p>
+						<h3 class="font-serif mt-1" style="font-size:24px; color:#2C241B">Room ${UI.escape(r.id)}</h3>
+						<p class="mb-4" style="font-size:13px; color:var(--lux-text-muted)">${UI.escape(r.type)}</p>
+						<div class="room-card-foot">
+							<div><p class="price-big">${UI.money(r.price)}</p><p class="price-note">per night</p></div>
+							<span class="room-card-cta">View room ${UI.icon("arrow")}</span>
+						</div>
+					</div>
+				</a>`;
+		})
+		.join("");
+}
+
+//  BOOKING PANEL
+function setUpPanel(params) {
+	const room = state.room;
+	const guests = $("guests");
+	guests.innerHTML = Array.from({ length: room.maxGuests }, (_, i) =>
+		`<option value="${i + 1}">${i + 1} ${i ? "guests" : "guest"}</option>`).join("");
+	const wanted = Math.min(Number(params.get("guests")) || Math.min(2, room.maxGuests), room.maxGuests);
+	guests.value = String(wanted);
+
+	const today = dates.today();
+	$("checkIn").min = today;
+	$("checkOut").min = dates.addDays(today, 1);
+
+	if (dates.valid(params.get("checkIn")) && dates.valid(params.get("checkOut")) && params.get("checkIn") >= today) {
+		setStay(params.get("checkIn"), params.get("checkOut"));
+	}
+
+	$("checkIn").addEventListener("change", () => {
+		const from = $("checkIn").value;
+		let to = $("checkOut").value;
+		if (from && (!to || to <= from)) to = dates.addDays(from, 1);
+		setStay(from, to);
+	});
+	$("checkOut").addEventListener("change", () => setStay($("checkIn").value, $("checkOut").value));
+
+	$("book-form").addEventListener("submit", (e) => {
+		e.preventDefault();
+		const problem = stayProblem(state.checkIn, state.checkOut);
+		if (!state.checkIn || problem) {
+			showNote(problem || "Choose your dates to reserve - use the boxes above or the calendar.", "bad");
+			(state.checkIn ? $("checkOut") : $("checkIn")).focus();
+			return;
+		}
+		const next = new URLSearchParams({
+			room: room.id,
+			checkIn: state.checkIn,
+			checkOut: state.checkOut,
+			guests: guests.value,
+		});
+		location.href = `./bookingform.html?${next}`;
+	});
+}
+
+// Is any night of this stay already taken?
+function nightTaken(day) {
+	return state.booked.some((b) => b.checkIn <= day && day < b.checkOut);
+}
+
+function stayProblem(from, to) {
+	if (!from || !to) return null;
+	if (from < dates.today()) return "Check-in can't be in the past.";
+	if (to <= from) return "Check-out needs to be after check-in.";
+	for (let d = from; d < to; d = dates.addDays(d, 1)) {
+		if (nightTaken(d)) return `Sorry - the night of ${dates.pretty(d)} is already booked. Try different dates.`;
+	}
+	return null;
+}
+
+function setStay(from, to) {
+	state.checkIn = from || "";
+	state.checkOut = to || "";
+	$("checkIn").value = state.checkIn;
+	$("checkOut").value = state.checkOut;
+	if (state.checkIn) $("checkOut").min = dates.addDays(state.checkIn, 1);
+	updatePrice();
+	renderCalendar();
+}
+
+function showNote(message, kind) {
+	const note = $("avail-note");
+	note.hidden = !message;
+	note.className = `avail-note ${kind || ""}`;
+	note.innerHTML = message ? `${UI.icon(kind === "ok" ? "check" : "close")}<span>${UI.escape(message)}</span>` : "";
+}
+
+function updatePrice() {
+	const { checkIn, checkOut, room } = state;
+	const problem = stayProblem(checkIn, checkOut);
+	const nights = checkIn && checkOut ? dates.nights(checkIn, checkOut) : 0;
+
+	$("price-breakdown").hidden = !(nights > 0 && !problem);
+	if (nights > 0 && !problem) {
+		const sub = nights * room.price;
+		$("pb-line").textContent = `${UI.money(room.price)} × ${nights} ${nights === 1 ? "night" : "nights"}`;
+		$("pb-sub").textContent = UI.money(sub);
+		$("pb-total").textContent = UI.money(sub + TAX);
+		showNote(`Free for ${dates.pretty(checkIn)} to ${dates.pretty(checkOut)}`, "ok");
+	} else {
+		showNote(problem, "bad");
+	}
+	$("reserve-btn").textContent = nights > 0 && !problem ? `Reserve · ${UI.money(nights * room.price + TAX)}` : "Reserve this room";
+}
+
+//  CALENDAR - two months at a time; tap arrival then departure
+function setUpCalendar() {
+	$("cal-prev").addEventListener("click", () => {
+		state.monthOffset = Math.max(0, state.monthOffset - 1);
+		renderCalendar();
+	});
+	$("cal-next").addEventListener("click", () => {
+		state.monthOffset = Math.min(10, state.monthOffset + 1);
+		renderCalendar();
+	});
+	$("calendar").addEventListener("click", (e) => {
+		const day = e.target.closest("[data-day]")?.dataset.day;
+		if (day) pickDay(day);
+	});
+	// If a stay was passed in, open the calendar on its month
+	if (state.checkIn) {
+		const now = new Date();
+		const start = new Date(state.checkIn + "T12:00:00");
+		state.monthOffset = Math.max(0, (start.getFullYear() - now.getFullYear()) * 12 + start.getMonth() - now.getMonth());
+	}
+	renderCalendar();
+}
+
+function pickDay(day) {
+	const { checkIn, checkOut } = state;
+	// Start a new stay, unless this completes one that has only an arrival day
+	if (!checkIn || checkOut || day <= checkIn) {
+		if (nightTaken(day)) return;
+		state.checkIn = day;
+		state.checkOut = "";
+		$("checkIn").value = day;
+		$("checkOut").value = "";
+		$("cal-status").textContent = `Arriving ${dates.pretty(day)} - now pick your departure day`;
+		$("price-breakdown").hidden = true;
+		showNote("", "");
+		renderCalendar();
+		return;
+	}
+	setStay(checkIn, day);
+	$("cal-status").textContent = `${dates.pretty(checkIn)} to ${dates.pretty(day)}`;
+}
+
+function renderCalendar() {
+	const cal = $("calendar");
+	if (!cal || !state.room) return;
+	const now = new Date();
+	const today = dates.today();
+	const html = [0, 1].map((i) => {
+		const first = new Date(now.getFullYear(), now.getMonth() + state.monthOffset + i, 1, 12);
+		const title = first.toLocaleDateString("en-NZ", { month: "long", year: "numeric" });
+		const lead = (first.getDay() + 6) % 7; // weeks start on Monday
+		const daysInMonth = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate();
+		const cells = [];
+		for (let k = 0; k < lead; k++) cells.push("<span></span>");
+		for (let d = 1; d <= daysInMonth; d++) {
+			const ymd = new Date(first.getFullYear(), first.getMonth(), d, 12).toLocaleDateString("en-CA");
+			const past = ymd < today;
+			const taken = nightTaken(ymd);
+			// A taken night can still be a departure day for a stay that ends there
+			const canDepart = state.checkIn && !state.checkOut && ymd > state.checkIn && !stayProblem(state.checkIn, ymd);
+			const disabled = past || (taken && !canDepart);
+			const selected = ymd === state.checkIn || ymd === state.checkOut;
+			const inRange = state.checkIn && state.checkOut && ymd > state.checkIn && ymd < state.checkOut;
+			const cls = ["cal-day", taken ? "booked" : "", selected ? "selected" : "", inRange ? "in-range" : ""].join(" ");
+			const label = `${dates.pretty(ymd, true)}${taken ? ", booked" : ""}${selected ? ", selected" : ""}`;
+			cells.push(`<button type="button" class="${cls}" data-day="${ymd}" ${disabled ? "disabled" : ""} aria-label="${label}" aria-pressed="${selected}">${d}</button>`);
+		}
+		return `
+			<div>
+				<p class="font-serif text-xl mb-3" style="color:var(--lux-brown-800)">${title}</p>
+				<div class="cal-grid">
+					${["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"].map((d) => `<span class="cal-dow" aria-hidden="true">${d}</span>`).join("")}
+					${cells.join("")}
+				</div>
+			</div>`;
+	});
+	cal.innerHTML = html.join("");
+	$("cal-prev").disabled = state.monthOffset === 0;
+	$("cal-next").disabled = state.monthOffset >= 10;
+	if (!state.checkIn) $("cal-status").textContent = "Tap your arrival day";
+}

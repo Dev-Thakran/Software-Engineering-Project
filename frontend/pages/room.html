@@ -6,208 +6,213 @@
 		<title>Room – La Extravaganza</title>
 		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="../css/main.css" />
+		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+		<meta name="description" content="Room details, photos, amenities, guest reviews and availability at La Extravaganza." />
+		<script src="../js/ui.js"></script>
 		<script src="../js/header.js"></script>
 		<script src="../js/footer.js"></script>
 		<script src="../js/room.js" defer></script>
 		<style>
-			.amenity-item {
-				display: flex;
-				align-items: center;
-				gap: 10px;
-				padding: 12px 0;
-				border-bottom: 1px solid var(--lux-brown-100);
-				font-family: "Outfit", sans-serif;
+			.room-layout {
+				display: grid;
+				grid-template-columns: minmax(0, 1fr) 380px;
+				gap: 56px;
+				align-items: start;
+			}
+			@media (max-width: 960px) {
+				.room-layout { grid-template-columns: 1fr; gap: 32px; }
+			}
+
+			/* Gallery */
+			.gallery-main { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #efe8df; }
+			.gallery-main img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.35s; }
+			.gallery-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
+			.gallery-thumb {
+				aspect-ratio: 4 / 3;
+				padding: 0;
+				border: 2px solid transparent;
+				overflow: hidden;
+				cursor: pointer;
+				background: #efe8df;
+				opacity: 0.7;
+				transition: opacity 0.2s, border-color 0.2s;
+			}
+			.gallery-thumb img { width: 100%; height: 100%; object-fit: cover; }
+			.gallery-thumb:hover, .gallery-thumb[aria-current="true"] { opacity: 1; }
+			.gallery-thumb[aria-current="true"] { border-color: var(--lux-brown-700); }
+
+			/* Booking panel */
+			.book-panel {
+				position: sticky;
+				top: 96px;
+				background: #fff;
+				border: 1px solid var(--lux-brown-100);
+				padding: 28px;
+				box-shadow: 0 18px 40px rgba(44, 36, 27, 0.08);
+			}
+			@media (max-width: 960px) { .book-panel { position: static; } }
+			.book-fields { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--lux-brown-200); }
+			.book-fields .field { padding: 10px 12px; gap: 2px; }
+			.book-fields .field + .field { border-left: 1px solid var(--lux-brown-200); }
+			.book-fields .field.full { grid-column: 1 / -1; border-left: none; border-top: 1px solid var(--lux-brown-200); }
+			.book-fields label { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lux-text-soft); }
+			.book-fields input, .book-fields select { border: none; background: transparent; font-size: 14px; color: var(--lux-brown-800); padding: 2px 0; width: 100%; }
+			.book-fields input:focus, .book-fields select:focus { outline: none; }
+			.book-fields .field:focus-within { box-shadow: inset 0 -2px 0 var(--lux-brown-700); }
+			.price-row { display: flex; justify-content: space-between; font-size: 14px; color: var(--lux-brown-600); padding: 4px 0; }
+			.price-row strong { color: var(--lux-brown-800); font-weight: 500; }
+			.avail-note { display: flex; align-items: center; gap: 8px; font-size: 13px; margin-top: 14px; }
+			.avail-note.ok { color: var(--lux-success); }
+			.avail-note.bad { color: var(--lux-danger); }
+
+			/* Calendar */
+			.cal-wrap { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; }
+			@media (max-width: 640px) { .cal-wrap { grid-template-columns: 1fr; } }
+			.cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+			.cal-nav { width: 40px; height: 40px; border: 1px solid var(--lux-brown-200); background: #fff; color: var(--lux-brown-700); cursor: pointer; display: grid; place-items: center; }
+			.cal-nav:disabled { opacity: 0.35; cursor: default; }
+			.cal-nav.prev .icon { transform: rotate(180deg); }
+			.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; text-align: center; }
+			.cal-dow { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--lux-text-soft); padding: 6px 0; }
+			.cal-day {
+				aspect-ratio: 1;
+				min-height: 36px;
+				border: none;
+				background: #fff;
 				font-size: 13px;
-				color: var(--lux-brown-700);
+				color: var(--lux-brown-800);
+				cursor: pointer;
+				font-variant-numeric: tabular-nums;
+				transition: background 0.15s;
 			}
-			.amenity-check {
-				color: var(--lux-brown-700);
-				font-size: 14px;
-				flex-shrink: 0;
-			}
-			.review-item {
-				padding: 20px 0;
-				border-bottom: 1px solid var(--lux-brown-100);
-			}
-			.review-item:last-child {
-				border-bottom: none;
-			}
+			.cal-day:hover:not(:disabled) { background: var(--lux-cream-dark); }
+			.cal-day:disabled { cursor: default; color: #b9ab9b; background: transparent; }
+			.cal-day.booked { color: #a8968a; text-decoration: line-through; background: repeating-linear-gradient(135deg, #f4eee7 0 4px, #fff 4px 8px); }
+			.cal-day.in-range { background: var(--lux-cream-dark); }
+			.cal-day.selected { background: var(--lux-brown-700) !important; color: #faf7f2; text-decoration: none; }
+			.cal-legend { display: flex; flex-wrap: wrap; gap: 18px; font-size: 12px; color: var(--lux-text-muted); margin-top: 16px; }
+			.cal-legend span { display: inline-flex; align-items: center; gap: 6px; }
+			.cal-swatch { width: 14px; height: 14px; border: 1px solid var(--lux-brown-100); display: inline-block; }
+
+			.amenity-item { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--lux-brown-100); font-size: 14px; color: var(--lux-brown-700); }
+			.review-item { padding: 22px 0; border-bottom: 1px solid var(--lux-brown-100); }
+			.review-item:last-child { border-bottom: none; }
 		</style>
 	</head>
 	<body>
 		<header class="sticky top-0 z-20" id="header"></header>
 
 		<main style="background: var(--lux-cream)">
-			<!-- Back link -->
-			<div style="padding: 20px 48px 0; max-width: 1200px; margin: 0 auto">
-				<a
-					href="./browserooms.html"
-					style="
-						font-family: &quot;Outfit&quot;, sans-serif;
-						font-size: 11px;
-						letter-spacing: 0.22em;
-						text-transform: uppercase;
-						color: var(--lux-brown-500);
-						text-decoration: none;
-					">
-					← Back to Rooms
+			<div class="max-w-7xl mx-auto px-4 md:px-12 pt-6 pb-24">
+				<a id="back-link" href="./browserooms.html" class="kicker inline-flex items-center gap-2 py-2" style="font-size: 11px; text-decoration: none">
+					<span data-icon="arrow" style="display:inline-flex; transform: rotate(180deg)"></span>
+					Back to rooms
 				</a>
-			</div>
 
-			<!-- Hero split -->
-			<div
-				style="
-					display: grid;
-					grid-template-columns: 1fr 1fr;
-					max-width: 1200px;
-					margin: 24px auto 0;
-					padding: 0 48px;
-					gap: 64px;
-					align-items: start;
-				">
-				<!-- Left image -->
-				<div style="overflow: hidden">
-					<img
-						id="room-image"
-						src=""
-						alt="Room"
-						style="
-							width: 100%;
-							height: 480px;
-							object-fit: cover;
-							display: block;
-						" />
-				</div>
+				<div class="room-layout mt-4" id="room-content" aria-busy="true">
+					<!-- Left column: gallery, details, calendar, amenities, reviews -->
+					<div>
+						<div class="gallery-main skeleton" id="gallery-main">
+							<img id="room-image" src="" alt="" hidden />
+						</div>
+						<div class="gallery-thumbs" id="gallery-thumbs"></div>
 
-				<!-- Right details -->
-				<div style="padding-top: 8px">
-					<p id="room-floor-label" class="kicker mb-3"></p>
+						<section class="mt-12">
+							<p id="room-floor-label" class="kicker mb-2">&nbsp;</p>
+							<h1 id="room-name" class="font-serif" style="font-size: clamp(44px, 6vw, 64px); color: var(--lux-brown-800); line-height: 1.05">&nbsp;</h1>
+							<p id="room-type" class="mt-1" style="color: var(--lux-text-muted)"></p>
+							<div id="room-meta" class="room-card-meta mt-5" style="font-size: 14px"></div>
+							<p id="room-description" class="mt-6" style="font-size: 15px; color: var(--lux-brown-600); line-height: 1.8; max-width: 62ch"></p>
+						</section>
 
-					<h1
-						id="room-name"
-						class="font-serif"
-						style="
-							font-size: 64px;
-							color: var(--lux-brown-800);
-							font-weight: 400;
-							line-height: 1.05;
-							margin-bottom: 24px;
-						"></h1>
+						<section class="mt-14" aria-labelledby="cal-title">
+							<p class="kicker mb-2">Availability</p>
+							<h2 id="cal-title" class="font-serif text-3xl md:text-4xl mb-2" style="color: var(--lux-brown-800)">Pick your nights</h2>
+							<p class="mb-6 text-sm" style="color: var(--lux-text-muted)">
+								Tap your arrival day, then your departure day. Struck-through nights are already taken.
+							</p>
+							<div class="bg-white p-5 md:p-7" style="border: 1px solid var(--lux-brown-100)">
+								<div class="cal-head">
+									<button type="button" class="cal-nav prev" id="cal-prev" aria-label="Previous month"><span data-icon="arrow"></span></button>
+									<p class="text-sm" style="color: var(--lux-text-muted)" id="cal-status" aria-live="polite"></p>
+									<button type="button" class="cal-nav" id="cal-next" aria-label="Next month"><span data-icon="arrow"></span></button>
+								</div>
+								<div class="cal-wrap" id="calendar"></div>
+								<div class="cal-legend">
+									<span><i class="cal-swatch" style="background: #fff"></i> Free</span>
+									<span><i class="cal-swatch" style="background: repeating-linear-gradient(135deg, #f4eee7 0 4px, #fff 4px 8px)"></i> Taken</span>
+									<span><i class="cal-swatch" style="background: var(--lux-brown-700)"></i> Your stay</span>
+								</div>
+							</div>
+						</section>
 
-					<div
-						style="
-							border-top: 1px solid var(--lux-brown-100);
-							margin-bottom: 20px;
-						"></div>
+						<section class="mt-14">
+							<p class="kicker mb-2">Amenities</p>
+							<h2 class="font-serif text-3xl md:text-4xl mb-6" style="color: var(--lux-brown-800)">Every detail, considered.</h2>
+							<div id="amenities-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-x-10"></div>
+						</section>
 
-					<div class="flex gap-8 mb-6" style="color: var(--lux-brown-500)">
-						<p
-							id="room-guests"
-							style="
-								font-family: &quot;Outfit&quot;, sans-serif;
-								font-size: 13px;
-							"></p>
-						<p
-							id="room-sqm"
-							style="
-								font-family: &quot;Outfit&quot;, sans-serif;
-								font-size: 13px;
-							"></p>
+						<section class="mt-14" aria-labelledby="reviews-title">
+							<p class="kicker mb-2">Guest voices</p>
+							<div class="flex flex-wrap items-end justify-between gap-4 mb-4">
+								<h2 id="reviews-title" class="font-serif text-3xl md:text-4xl" style="color: var(--lux-brown-800)">What guests have said</h2>
+								<p id="reviews-summary" class="text-sm" style="color: var(--lux-text-muted)"></p>
+							</div>
+							<div id="reviews-list"></div>
+						</section>
 					</div>
 
-					<div
-						style="
-							border-top: 1px solid var(--lux-brown-100);
-							margin-bottom: 20px;
-						"></div>
+					<!-- Right column: booking panel -->
+					<aside class="book-panel" aria-labelledby="panel-price">
+						<div class="flex items-baseline gap-2">
+							<p id="panel-price" class="font-serif" style="font-size: 40px; color: var(--lux-brown-800); line-height: 1">&nbsp;</p>
+							<p class="text-sm" style="color: var(--lux-text-soft)">per night</p>
+						</div>
+						<p id="panel-rating" class="text-sm mt-2 mb-6" style="color: var(--lux-text-muted)"></p>
 
-					<p
-						id="room-description"
-						style="
-							font-family: &quot;Outfit&quot;, sans-serif;
-							font-size: 14px;
-							color: var(--lux-brown-600);
-							line-height: 1.8;
-							margin-bottom: 32px;
-						"></p>
+						<form id="book-form" novalidate>
+							<div class="book-fields">
+								<div class="field">
+									<label for="checkIn">Check in</label>
+									<input type="date" id="checkIn" />
+								</div>
+								<div class="field">
+									<label for="checkOut">Check out</label>
+									<input type="date" id="checkOut" />
+								</div>
+								<div class="field full">
+									<label for="guests">Guests</label>
+									<select id="guests"></select>
+								</div>
+							</div>
 
-					<div class="flex items-baseline gap-3 mb-8">
-						<p
-							id="room-price"
-							class="font-serif"
-							style="
-								font-size: 52px;
-								color: var(--lux-brown-800);
-								line-height: 1;
-							"></p>
-						<p
-							style="
-								font-family: &quot;Outfit&quot;, sans-serif;
-								font-size: 13px;
-								color: var(--lux-brown-500);
-							">
-							per night
-						</p>
-					</div>
+							<div id="price-breakdown" class="mt-5" hidden>
+								<div class="price-row"><span id="pb-line"></span><strong id="pb-sub"></strong></div>
+								<div class="price-row"><span>Taxes &amp; fees</span><strong>$30</strong></div>
+								<div class="price-row mt-2 pt-3" style="border-top: 1px solid var(--lux-brown-100)">
+									<span class="kicker" style="font-size: 11px">Total</span>
+									<strong id="pb-total" class="font-serif" style="font-size: 26px"></strong>
+								</div>
+							</div>
 
-					<a
-						id="reserve-btn"
-						href="#"
-						style="
-							display: block;
-							width: 100%;
-							background: var(--lux-brown-800);
-							color: var(--lux-cream);
-							font-family: &quot;Outfit&quot;, sans-serif;
-							font-size: 11px;
-							font-weight: 600;
-							letter-spacing: 0.22em;
-							text-transform: uppercase;
-							padding: 18px;
-							text-align: center;
-							text-decoration: none;
-							transition: background 0.3s;
-						">
-						Reserve This Room
-					</a>
-				</div>
-			</div>
+							<p id="avail-note" class="avail-note" role="status" hidden></p>
 
-			<!-- Amenities + Reviews -->
-			<div
-				style="
-					display: grid;
-					grid-template-columns: 1fr 1fr;
-					max-width: 1200px;
-					margin: 80px auto 96px;
-					padding: 0 48px;
-					gap: 80px;
-				">
-				<div>
-					<p class="kicker mb-3">Amenities</p>
-					<h2
-						class="font-serif text-4xl font-normal mb-8"
-						style="color: var(--lux-brown-800)">
-						Every detail, considered.
-					</h2>
-					<div
-						id="amenities-grid"
-						style="
-							display: grid;
-							grid-template-columns: 1fr 1fr;
-							gap: 0 40px;
-						"></div>
+							<button type="submit" class="btn-primary w-full mt-6" id="reserve-btn">Reserve this room</button>
+							<p class="text-xs text-center mt-3" style="color: var(--lux-text-muted)">You won't be charged until you confirm payment.</p>
+						</form>
+
+						<div class="mt-6 pt-5 text-sm" style="border-top: 1px solid var(--lux-brown-100); color: var(--lux-text-muted); line-height: 1.8">
+							<p class="flex items-center gap-2"><span data-icon="clock"></span> Check-in from 3pm, check-out by 11am</p>
+							<p class="flex items-center gap-2"><span data-icon="check"></span> Free cancellation until the day before</p>
+						</div>
+					</aside>
 				</div>
 
-				<div>
-					<p class="kicker mb-3">Guest Voices</p>
-					<h2
-						class="font-serif text-4xl font-normal mb-8"
-						style="color: var(--lux-brown-800)">
-						What others have said.
-					</h2>
-					<div id="reviews-list"></div>
-				</div>
+				<section class="mt-20" id="similar-section" hidden>
+					<p class="kicker mb-2">You might also like</p>
+					<h2 class="font-serif text-3xl md:text-4xl mb-8" style="color: var(--lux-brown-800)">Similar rooms</h2>
+					<div id="similar-rooms" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+				</section>
 			</div>
 		</main>
 

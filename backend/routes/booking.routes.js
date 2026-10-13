@@ -8,7 +8,7 @@ router.post("/", authenticate, requireRole("customer"), ctrl.create);
 router.patch(
 	"/:id",
 	authenticate,
-	requireRole("staff", "manager"),
+	requireRole("customer", "staff", "manager"), // customers: their own only
 	ctrl.updateStatus,
 );
 

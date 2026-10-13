@@ -1,16 +1,36 @@
 const roomRepo = require("../repositories/room.repository");
 const rooms = require("../services/room.service");
+const availability = require("../services/availability.service");
 
 // Fields a manager or staff member may change on a room. Status is worked
 // out from check-ins, and the id never changes.
 const EDITABLE_FIELDS = ["type", "price", "description", "image"];
 
+// Optional filters: floor, type, status, guests. With checkIn and checkOut
+// (YYYY-MM-DD) every room also says whether it is free for that whole stay
+// and what the stay would cost.
 function getAll(req, res) {
-	const { floor, type, status } = req.query;
+	const { floor, type, status, guests, checkIn, checkOut } = req.query;
 	let list = rooms.getRooms();
 	if (floor) list = list.filter((r) => r.floor == floor);
 	if (type) list = list.filter((r) => r.type === type);
 	if (status) list = list.filter((r) => r.status === status);
+	if (guests) list = list.filter((r) => r.maxGuests >= Number(guests));
+
+	if (checkIn || checkOut) {
+		const invalid = availability.validateStay(checkIn, checkOut);
+		if (invalid) return res.status(400).json({ error: invalid });
+		const free = new Set(
+			availability.findAvailableRooms({ checkIn, checkOut }).map((r) => r.id),
+		);
+		const nights = availability.nightsBetween(checkIn, checkOut);
+		list = list.map((r) => ({
+			...r,
+			freeForStay: free.has(r.id),
+			nights,
+			stayTotal: nights * r.price,
+		}));
+	}
 	res.json(list);
 }
 

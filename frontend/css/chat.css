@@ -7,7 +7,7 @@
 	--ai-ink: #2c241b;
 	--ai-ink-soft: #4a3b32;
 	--ai-text: #6b5743;
-	--ai-muted: #8b7355;
+	--ai-muted: #7a654b;
 	--ai-line: #e6dfd7;
 	--ai-cream: #faf7f2;
 	--ai-white: #ffffff;
@@ -71,7 +71,7 @@
 	line-height: 1.1;
 }
 .ai-header-sub {
-	font-size: 10px;
+	font-size: 11px;
 	letter-spacing: 0.18em;
 	text-transform: uppercase;
 	color: var(--ai-accent);
@@ -151,7 +151,7 @@
 .ai-btn {
 	padding: 8px 14px;
 	font-family: inherit;
-	font-size: 10px;
+	font-size: 11px;
 	font-weight: 600;
 	letter-spacing: 0.14em;
 	text-transform: uppercase;

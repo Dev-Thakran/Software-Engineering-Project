@@ -6,6 +6,12 @@
     <title>Our Story – La Extravaganza</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/main.css" />
+
+    <link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+
+    <meta name="description" content="The story behind La Extravaganza, a boutique hotel on Auckland's harbour." />
+
+    <script src="../js/ui.js"></script>
     <style>
       /* Hero */
       .hero-about {
@@ -42,16 +48,33 @@
       }
       .stat-label {
         font-family: "Outfit", sans-serif;
-        font-size: 10px;
+        font-size: 11px;
         font-weight: 500;
         letter-spacing: 0.22em;
         text-transform: uppercase;
-        color: #8b7355;
+        color: #7a654b;
         margin-top: 8px;
       }
     </style>
     <script src="../js/footer.js"></script>
     <script src="../js/header.js"></script>
+    <script>
+      // Live room count and guest rating
+      document.addEventListener("DOMContentLoaded", async () => {
+        try {
+          const [rooms, reviews] = await Promise.all([
+            fetch("/rooms").then((r) => r.json()),
+            fetch("/reviews").then((r) => r.json()),
+          ]);
+          document.getElementById("about-rooms").textContent = rooms.length;
+          if (reviews.length) {
+            const avg = reviews.reduce((s, r) => s + r.rating, 0) / reviews.length;
+            document.getElementById("about-rating").textContent = avg.toFixed(1);
+            document.getElementById("about-rating-label").textContent = "Guest rating · " + reviews.length + " reviews";
+          }
+        } catch {}
+      });
+    </script>
   </head>
   <body style="background: #faf7f2">
     <header class="sticky top-0 z-20" id="header"></header>
@@ -95,9 +118,7 @@
           <p
             class="font-sans"
             style="
-              font-size: 14px;
-              color: #6b5743;
-              line-height: 1.9;
+              font-size: 16px; color: #6b5743; line-height: 1.85;
               margin-bottom: 24px;
             "
           >
@@ -110,9 +131,7 @@
           <p
             class="font-sans"
             style="
-              font-size: 14px;
-              color: #6b5743;
-              line-height: 1.9;
+              font-size: 16px; color: #6b5743; line-height: 1.85;
               margin-bottom: 24px;
             "
           >
@@ -123,7 +142,7 @@
 
           <p
             class="font-sans"
-            style="font-size: 14px; color: #6b5743; line-height: 1.9"
+            style="font-size: 16px; color: #6b5743; line-height: 1.85"
           >
             We are not the largest hotel in the city. We do not intend to be. We
             are simply a place that has been considered, from the weight of the
@@ -142,23 +161,57 @@
       "
     >
       <div class="container">
-        <div
-          class="grid grid-cols-1 sm:grid-cols-3"
-          style="max-width: 680px; margin: 0 auto; gap: 48px"
-        >
+        <div class="grid grid-cols-2 md:grid-cols-4" style="max-width: 880px; margin: 0 auto; gap: 40px">
           <div>
             <p class="stat-number">2014</p>
-            <p class="stat-label">Doors Opened</p>
+            <p class="stat-label">Doors opened</p>
+          </div>
+          <div>
+            <p class="stat-number" id="about-rooms">24</p>
+            <p class="stat-label">Rooms &amp; suites</p>
           </div>
           <div>
             <p class="stat-number">52</p>
-            <p class="stat-label">Team Members</p>
+            <p class="stat-label">Team members</p>
           </div>
           <div>
-            <p class="stat-number">4.9</p>
-            <p class="stat-label">Guest Rating</p>
+            <p class="stat-number" id="about-rating">-</p>
+            <p class="stat-label" id="about-rating-label">Guest rating</p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- The four floors -->
+    <section class="max-w-6xl mx-auto px-4 md:px-12 py-20">
+      <p class="kicker mb-2">Four chapters</p>
+      <h2 class="font-serif mb-10" style="font-size: clamp(30px, 4vw, 44px); color: #2c241b">One building, four ways to stay</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="about-floors">
+        <a href="./browserooms.html?floor=1" class="room-card" data-reveal>
+          <div class="room-card-photo"><img src="/images/tiers/floor-1/a.jpg" alt="" loading="lazy" /></div>
+          <div class="room-card-body"><p class="kicker" style="font-size: 11px">Floor 1</p><h3 class="font-serif text-2xl" style="color: #2c241b">Garden</h3><p class="text-sm mt-1 mb-4" style="color: var(--lux-text-muted)">Calm single rooms by the courtyard.</p><span class="room-card-cta mt-auto">See rooms <span data-icon="arrow"></span></span></div>
+        </a>
+        <a href="./browserooms.html?floor=2" class="room-card" data-reveal data-reveal-delay="100">
+          <div class="room-card-photo"><img src="/images/tiers/floor-2/a.jpg" alt="" loading="lazy" /></div>
+          <div class="room-card-body"><p class="kicker" style="font-size: 11px">Floor 2</p><h3 class="font-serif text-2xl" style="color: #2c241b">Classic</h3><p class="text-sm mt-1 mb-4" style="color: var(--lux-text-muted)">Light-filled doubles over the city.</p><span class="room-card-cta mt-auto">See rooms <span data-icon="arrow"></span></span></div>
+        </a>
+        <a href="./browserooms.html?floor=3" class="room-card" data-reveal data-reveal-delay="200">
+          <div class="room-card-photo"><img src="/images/tiers/floor-3/a.jpg" alt="" loading="lazy" /></div>
+          <div class="room-card-body"><p class="kicker" style="font-size: 11px">Floor 3</p><h3 class="font-serif text-2xl" style="color: #2c241b">Executive</h3><p class="text-sm mt-1 mb-4" style="color: var(--lux-text-muted)">King beds and a quiet corner to work.</p><span class="room-card-cta mt-auto">See rooms <span data-icon="arrow"></span></span></div>
+        </a>
+        <a href="./browserooms.html?floor=4" class="room-card" data-reveal data-reveal-delay="300">
+          <div class="room-card-photo"><img src="/images/tiers/floor-4/a.jpg" alt="" loading="lazy" /></div>
+          <div class="room-card-body"><p class="kicker" style="font-size: 11px">Floor 4</p><h3 class="font-serif text-2xl" style="color: #2c241b">Penthouse</h3><p class="text-sm mt-1 mb-4" style="color: var(--lux-text-muted)">Suites with terraces and butler service.</p><span class="room-card-cta mt-auto">See rooms <span data-icon="arrow"></span></span></div>
+        </a>
+      </div>
+    </section>
+
+    <!-- Closing invitation -->
+    <section style="background: #2c241b">
+      <div class="max-w-4xl mx-auto px-4 md:px-12 py-20 text-center" data-reveal>
+        <p class="kicker mb-3" style="color: #c9a961">Come and stay</p>
+        <h2 class="font-serif text-white mb-6" style="font-size: clamp(32px, 4.5vw, 52px); line-height: 1.15">The best way to know us is to spend a night.</h2>
+        <a href="./browserooms.html" class="btn-primary" style="background: #faf7f2; color: #2c241b">Find your room</a>
       </div>
     </section>
 

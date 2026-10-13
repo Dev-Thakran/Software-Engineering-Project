@@ -2,6 +2,7 @@ const express = require("express");
 const ctrl = require("../controllers/room.controller");
 const referenceRepo = require("../repositories/reference.repository");
 const availability = require("../services/availability.service");
+const bookingRepo = require("../repositories/booking.repository");
 const { authenticate, requireRole } = require("../middleware/auth.middleware");
 const router = express.Router();
 
@@ -18,6 +19,24 @@ router.get("/:id/availability", (req, res) => {
 	res.json({
 		available: availability.isRoomFree(req.params.id, checkIn, checkOut),
 	});
+});
+
+// Date ranges a room is already taken, from today on - for the calendar on
+// the room page. Only dates are returned, never who booked.
+router.get("/:id/booked", (req, res) => {
+	const today = availability.today();
+	res.json(
+		bookingRepo
+			.getAll()
+			.filter(
+				(b) =>
+					b.roomId === req.params.id &&
+					availability.ACTIVE_STATUSES.includes(b.status) &&
+					b.checkOut > today,
+			)
+			.map((b) => ({ checkIn: b.checkIn, checkOut: b.checkOut }))
+			.sort((a, b) => a.checkIn.localeCompare(b.checkIn)),
+	);
 });
 
 router.get("/", ctrl.getAll); // public

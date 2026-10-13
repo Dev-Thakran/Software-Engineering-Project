@@ -10,7 +10,7 @@ const shiftRoutes = require("./routes/shift.routes");
 const checkinRoutes = require("./routes/checkin.routes");
 const managerRoutes = require("./routes/manager.routes");
 const aiRoutes = require("./routes/ai.routes");
-const referenceRepo = require("./repositories/reference.repository");
+const reviewRoutes = require("./routes/review.routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -27,18 +27,19 @@ app.use("/shifts", shiftRoutes);
 app.use("/checkins", checkinRoutes);
 app.use("/manager", managerRoutes);
 app.use("/ai", aiRoutes);
-
-// Public reviews endpoint — before static so it isn't intercepted
-app.get("/reviews", (req, res) => {
-	res.json(referenceRepo.getReviews());
-});
+app.use("/reviews", reviewRoutes); // public list, customers post their own
 
 // - Static files — serves frontend HTML/CSS/JS --------
 app.use(express.static(path.join(__dirname, "../frontend")));
+// Chart.js for the manager dashboard, served locally so it loads fast and offline
+app.use("/vendor/chart.js", express.static(path.join(__dirname, "../node_modules/chart.js/dist")));
 
-// - Fallback — any unmatched route serves index.html -----
-app.get("/{*path}", (req, res) => {
+// - Home page at the site root, a friendly 404 page for anything else -----
+app.get("/", (req, res) => {
 	res.sendFile(path.join(__dirname, "../frontend/pages/index.html"));
+});
+app.use((req, res) => {
+	res.status(404).sendFile(path.join(__dirname, "../frontend/pages/404.html"));
 });
 
 // Only start listening when this file is run directly (npm run dev)

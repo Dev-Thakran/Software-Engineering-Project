@@ -11,6 +11,15 @@ function escapeHtml(value) {
 
 document.addEventListener("DOMContentLoaded", function () {
 	const token = localStorage.getItem("token");
+	// Staff and managers only - guests go back to the main site
+	if (!token) {
+		window.location.href = `/pages/Login.html?redirect=${encodeURIComponent(location.pathname)}`;
+		return;
+	}
+	if (!["staff", "manager"].includes(localStorage.getItem("role"))) {
+		window.location.href = "/pages/index.html";
+		return;
+	}
 	const staffName = localStorage.getItem("name") || "Staff";
 
 	// Staff name
@@ -185,6 +194,27 @@ document.addEventListener("DOMContentLoaded", function () {
 		}
 	}
 
+	// Today's date at the hotel (New Zealand), whatever the computer's timezone
+	const hotelToday = () => new Date().toLocaleDateString("en-CA", { timeZone: "Pacific/Auckland" });
+	const prettyDate = (ymd) => UI.dates.pretty(ymd);
+
+	let queue = []; // bookings awaiting check-in
+	let residents = []; // guests currently staying
+	let residenceFilter = "all";
+
+	const rowSkeleton = UI.skeleton(
+		3,
+		`<div class="guest-row" aria-hidden="true">
+			<div><div class="skeleton skeleton-line" style="width:40%"></div><div class="skeleton skeleton-line" style="width:70%;height:18px"></div></div>
+			<div><div class="skeleton skeleton-line" style="width:80%"></div><div class="skeleton skeleton-line" style="width:60%"></div></div>
+			<div></div><div></div>
+		</div>`,
+	);
+	document.getElementById("queue-list").innerHTML = rowSkeleton;
+	document.getElementById("residence-list").innerHTML = rowSkeleton;
+
+	const emptyRow = (text) => `<div class="empty-state" style="padding:28px">${text}</div>`;
+
 	// Queue - guests awaiting check-in
 	async function loadQueue() {
 		if (!token) return;
@@ -194,140 +224,195 @@ document.addEventListener("DOMContentLoaded", function () {
 			});
 			const data = await res.json();
 			document.getElementById("queue-count").textContent = data.count;
-
-			const list = document.getElementById("queue-list");
-			if (data.bookings.length === 0) {
-				list.innerHTML = `<p class="text-sm" style="color:#8B7355;">No guests awaiting check-in.</p>`;
-				return;
-			}
-
-			list.innerHTML = data.bookings
-				.map(
-					(b) => `
-            <div class="guest-row">
-                <div>
-                    <p class="meta-label">${escapeHtml(b.id)} · ${escapeHtml(b.userName)}</p>
-                    <p class="font-serif text-xl" style="color:var(--lux-brown-800);">${escapeHtml(b.userName)}</p>
-                </div>
-                <div>
-                    <p class="meta-label">Room</p>
-                    <p class="meta-value">Room ${b.roomId} · Floor ${b.floor}</p>
-                    <p class="meta-label mt-2">Stay</p>
-                    <p class="meta-value">${escapeHtml(b.checkIn)} - ${escapeHtml(b.checkOut)}</p>
-                    <p class="meta-label mt-2">Paid</p>
-                    <p class="meta-value">$${b.total} ✓</p>
-                </div>
-                <div class="text-right">
-                    <button onclick="checkIn('${b.id}')" class="btn-primary" style="padding:10px 20px; font-size:10px;">
-                        Check In
-                    </button>
-                </div>
-            </div>
-        `,
-				)
-				.join("");
+			queue = data.bookings;
+			renderQueue();
 		} catch {
-			document.getElementById("queue-list").innerHTML =
-				`<p class="text-sm" style="color:#8B7355;">Could not load queue.</p>`;
+			document.getElementById("queue-list").innerHTML = emptyRow(
+				`Couldn't load the arrivals. <button type="button" class="btn-ghost" onclick="location.reload()">Try again</button>`,
+			);
 		}
 	}
 
-	// Currently in residence
+	function renderQueue() {
+		const list = document.getElementById("queue-list");
+		const term = document.getElementById("queue-search").value.trim().toLowerCase();
+		const shown = queue.filter((b) =>
+			!term || [b.userName, b.roomId, b.id, b.guestEmail].some((v) => String(v || "").toLowerCase().includes(term)),
+		);
+		document.getElementById("queue-search-count").textContent = term ? `${shown.length} of ${queue.length}` : "";
+
+		if (!queue.length) {
+			list.innerHTML = emptyRow("Everyone due today has arrived. Nice work.");
+			return;
+		}
+		if (!shown.length) {
+			list.innerHTML = emptyRow(`No arrivals match "${escapeHtml(term)}".`);
+			return;
+		}
+		list.innerHTML = shown
+			.map(
+				(b) => `
+            <div class="guest-row">
+                <div>
+                    <p class="meta-label">${escapeHtml(b.id)}</p>
+                    <p class="font-serif text-xl" style="color:var(--lux-brown-800);">${escapeHtml(b.userName)}</p>
+                    ${b.guestEmail ? `<p class="meta-value" style="color:var(--lux-text-muted)">${escapeHtml(b.guestEmail)}</p>` : ""}
+                </div>
+                <div>
+                    <p class="meta-label">Room</p>
+                    <p class="meta-value">Room ${escapeHtml(b.roomId)} · Floor ${b.floor}</p>
+                </div>
+                <div>
+                    <p class="meta-label">Stay</p>
+                    <p class="meta-value">${prettyDate(b.checkIn)} – ${prettyDate(b.checkOut)} · ${b.nights} ${b.nights === 1 ? "night" : "nights"}</p>
+                    <p class="meta-value" style="color:var(--lux-success)">Paid ${UI.money(b.total)}</p>
+                </div>
+                <div class="md:text-right">
+                    <button onclick="checkIn('${escapeHtml(b.id)}')" class="btn-primary" style="padding:12px 22px;">
+                        Check in
+                    </button>
+                </div>
+            </div>`,
+			)
+			.join("");
+	}
+
+	document.getElementById("queue-search").addEventListener("input", renderQueue);
+
+	// Currently in residence, with today's departures first
 	async function loadResidence() {
 		if (!token) return;
 		try {
 			const res = await fetch("/checkins/residence", {
 				headers: { Authorization: "Bearer " + token },
 			});
-			const checkins = await res.json();
-			const list = document.getElementById("residence-list");
+			residents = await res.json();
+			renderResidence();
+		} catch {
+			document.getElementById("residence-list").innerHTML = emptyRow(
+				`Couldn't load the guests in residence. <button type="button" class="btn-ghost" onclick="location.reload()">Try again</button>`,
+			);
+		}
+	}
 
-			if (checkins.length === 0) {
-				list.innerHTML = `<p class="text-sm" style="color:#8B7355;">No guests currently in residence.</p>`;
-				return;
-			}
+	function renderResidence() {
+		const list = document.getElementById("residence-list");
+		const today = hotelToday();
+		const leaving = (c) => c.checkOutDate <= today;
+		const departures = residents.filter(leaving);
+		document.getElementById("departures-count").textContent = departures.length;
+		document.querySelectorAll("#residence-filter [data-filter]").forEach((chip) =>
+			chip.setAttribute("aria-pressed", String(chip.dataset.filter === residenceFilter)),
+		);
 
-			list.innerHTML = checkins
-				.map(
-					(c) => `
+		const shown = (residenceFilter === "leaving" ? departures : residents)
+			.slice()
+			.sort((a, b) => a.checkOutDate.localeCompare(b.checkOutDate));
+
+		if (!shown.length) {
+			list.innerHTML = emptyRow(residenceFilter === "leaving" ? "Nobody is due to check out today." : "No guests are staying right now.");
+			return;
+		}
+
+		list.innerHTML = shown
+			.map(
+				(c) => `
             <div class="residence-row">
                 <div>
                     <p class="meta-label">Room ${escapeHtml(c.roomId)} · ${escapeHtml(c.roomType)}</p>
                     <p class="font-serif text-xl" style="color:var(--lux-brown-800);">${escapeHtml(c.guestName)}</p>
+                    ${leaving(c) ? `<span class="badge" style="background:#2c241b;color:#faf7f2;margin-top:6px">Departing today</span>` : ""}
                 </div>
-                <div class="grid grid-cols-2 gap-4">
+                <div class="grid grid-cols-3 gap-4">
                     <div>
                         <p class="meta-label">Checked in</p>
-                        <p class="meta-value">${c.checkInTime.split("T")[0]}</p>
+                        <p class="meta-value">${prettyDate(c.checkInTime.split("T")[0])}</p>
                     </div>
                     <div>
-                        <p class="meta-label">Depart</p>
-                        <p class="meta-value">${escapeHtml(c.checkOutDate)}</p>
+                        <p class="meta-label">Departs</p>
+                        <p class="meta-value">${prettyDate(c.checkOutDate)}</p>
                     </div>
                     <div>
                         <p class="meta-label">Attending</p>
                         <p class="meta-value">${escapeHtml(c.attendingStaff || "-")}</p>
                     </div>
                 </div>
-                <div class="text-right">
-                    <button onclick="checkOut('${c.id}')" class="btn-secondary" style="padding:10px 20px; font-size:10px;">
-                        Check Out
+                <div class="md:text-right">
+                    <button onclick="checkOut('${escapeHtml(c.id)}')" class="${leaving(c) ? "btn-primary" : "btn-secondary"}" style="padding:12px 22px;">
+                        Check out
                     </button>
                 </div>
-            </div>
-        `,
-				)
-				.join("");
-		} catch {
-			document.getElementById("residence-list").innerHTML =
-				`<p class="text-sm" style="color:#8B7355;">Could not load residence.</p>`;
-		}
+            </div>`,
+			)
+			.join("");
 	}
 
-	// Check in and check out action
+	document.getElementById("residence-filter").addEventListener("click", (e) => {
+		const chip = e.target.closest("[data-filter]");
+		if (!chip) return;
+		residenceFilter = chip.dataset.filter;
+		renderResidence();
+	});
+
+	function refreshAll() {
+		loadQueue();
+		loadCheckIns();
+		loadResidence();
+	}
+
+	// Sends a check-in or check-out; returns the error message, or "" when it worked
+	async function postAction(url) {
+		const res = await fetch(url, {
+			method: "POST",
+			headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+		});
+		if (res.ok) return "";
+		const data = await res.json().catch(() => ({}));
+		if (data.offShift) {
+			showShiftPopup(data.offShift, data.error);
+			return null; // the shift popup explains it
+		}
+		return data.error || "Something went wrong. Please try again.";
+	}
+
+	// Check in and check out actions
 	async function checkIn(bookingId) {
 		if (blockedByShift()) return;
-		if (!confirm("Confirm check-in for this guest?")) return;
-		try {
-			const res = await fetch(`/checkins/checkin/${bookingId}`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: "Bearer " + token,
-				},
-			});
-			if (!res.ok) {
-				const data = await res.json().catch(() => ({}));
-				if (data.offShift) return showShiftPopup(data.offShift, data.error);
-				throw new Error();
-			}
-			loadQueue();
-			loadCheckIns();
-			loadResidence();
-		} catch {
-			alert("Could not complete check-in.");
+		const b = queue.find((x) => x.id === bookingId);
+		const ok = await UI.dialog({
+			title: `Check in ${b ? b.userName : "this guest"}?`,
+			body: b
+				? `<p style="color:var(--lux-brown-600);line-height:1.7">Room ${escapeHtml(b.roomId)}, staying until ${prettyDate(b.checkOut)}. The room will show as occupied.</p>`
+				: "",
+			confirmLabel: "Check in",
+			onConfirm: async () => {
+				const problem = await postAction(`/checkins/checkin/${encodeURIComponent(bookingId)}`);
+				if (problem === null) return "shift";
+				if (problem) throw new Error(problem);
+			},
+		});
+		if (ok === true) {
+			UI.toast(`${b ? b.userName : "Guest"} checked in to Room ${b ? b.roomId : ""}`);
+			refreshAll();
 		}
 	}
 
 	async function checkOut(checkinId) {
 		if (blockedByShift()) return;
-		if (!confirm("Confirm check-out for this guest?")) return;
-		try {
-			const res = await fetch(`/checkins/checkout/${checkinId}`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: "Bearer " + token,
-				},
-			});
-			if (!res.ok) {
-				const data = await res.json().catch(() => ({}));
-				if (data.offShift) return showShiftPopup(data.offShift, data.error);
-				throw new Error();
-			}
-			loadResidence();
-		} catch {
-			alert("Could not complete check-out.");
+		const c = residents.find((x) => x.id === checkinId);
+		const ok = await UI.dialog({
+			title: `Check out ${c ? c.guestName : "this guest"}?`,
+			body: c ? `<p style="color:var(--lux-brown-600);line-height:1.7">Room ${escapeHtml(c.roomId)} will be released for housekeeping.</p>` : "",
+			confirmLabel: "Check out",
+			onConfirm: async () => {
+				const problem = await postAction(`/checkins/checkout/${encodeURIComponent(checkinId)}`);
+				if (problem === null) return "shift";
+				if (problem) throw new Error(problem);
+			},
+		});
+		if (ok === true) {
+			UI.toast(`${c ? c.guestName : "Guest"} checked out of Room ${c ? c.roomId : ""}`);
+			refreshAll();
 		}
 	}
 

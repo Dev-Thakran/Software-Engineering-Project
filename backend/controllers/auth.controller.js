@@ -8,13 +8,19 @@ async function register(req, res) {
 	const { name, email, password } = req.body;
 	if (!name || !email || !password)
 		return res.status(400).json({ error: "All fields required" });
+	if (typeof name !== "string" || name.trim().length < 2 || name.length > 80)
+		return res.status(400).json({ error: "Please enter your full name" });
+	if (typeof email !== "string" || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))
+		return res.status(400).json({ error: "Please enter a valid email address" });
+	if (typeof password !== "string" || password.length < 8)
+		return res.status(400).json({ error: "Password must be at least 8 characters" });
 	if (userRepo.findByEmail(email))
 		return res.status(409).json({ error: "Email already registered" });
 	const hashed = await bcrypt.hash(password, 10);
 	const user = {
 		id: "u" + Date.now(),
-		name,
-		email,
+		name: name.trim(),
+		email: email.trim(),
 		password: hashed,
 		role: "customer",
 	};

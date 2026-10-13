@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Page not found – La Extravaganza</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="stylesheet" href="/css/main.css" />
+		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+		<meta name="description" content="This page doesn't exist at La Extravaganza." />
+		<script src="/js/ui.js"></script>
+		<script src="/js/header.js"></script>
+		<script src="/js/footer.js"></script>
+		<style>
+			.lost {
+				min-height: 70vh;
+				display: grid;
+				place-items: center;
+				padding: 80px 24px;
+				background:
+					linear-gradient(rgba(250, 247, 242, 0.9), rgba(250, 247, 242, 0.96)),
+					url("/images/concierge-editorial.jpg") center / cover no-repeat;
+			}
+			.lost-number {
+				font-size: clamp(96px, 18vw, 180px);
+				line-height: 1;
+				color: var(--lux-brown-200, #d4c4b0);
+			}
+		</style>
+	</head>
+	<body>
+		<header class="sticky top-0 z-20" id="header"></header>
+
+		<main class="lost">
+			<div class="text-center max-w-xl">
+				<p class="font-serif italic lost-number" aria-hidden="true">404</p>
+				<p class="kicker mb-3">Page not found</p>
+				<h1 class="font-serif text-4xl md:text-5xl mb-5" style="color: var(--lux-brown-800)">
+					This door doesn't lead anywhere.
+				</h1>
+				<p class="mb-10" style="color: var(--lux-text-muted); line-height: 1.7">
+					The page may have moved, or the link has a typo. Let us show you back
+					to somewhere comfortable.
+				</p>
+				<div class="flex flex-col sm:flex-row gap-3 justify-center">
+					<a href="/pages/browserooms.html" class="btn-primary">Browse rooms</a>
+					<a href="/pages/index.html" class="btn-secondary">Back to home</a>
+				</div>
+			</div>
+		</main>
+
+		<footer id="footer"></footer>
+	</body>
+</html>

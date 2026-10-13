@@ -1,451 +1,344 @@
 // ============================================================
 //  booking.js - Booking form logic
-//  Handles: room data loading, date/guest inputs, step switching,
-//           card display, payment submission, booking creation
+//  Step 1 dates and guests, step 2 mock payment, step 3 a
+//  confirmation with the booking reference and "add to calendar"
 // ============================================================
 
-//  Room metadata (matches browserooms.js)
-const FLOOR_NAMES = {
-	1: "Garden",
-	2: "Classic",
-	3: "Executive",
-	4: "Penthouse",
-};
-const ROOM_META = {
-	"Standard Single": { guests: 1 },
-	"Deluxe Double": { guests: 2 },
-	"Executive Double": { guests: 2 },
-	"Penthouse Suite": { guests: 4 },
-};
+const FLOOR_NAMES = { 1: "Garden", 2: "Classic", 3: "Executive", 4: "Penthouse" };
 const TAX = 30; // Fixed tax amount
+const HOTEL = {
+	address: "La Extravaganza, 42 Harbour Avenue, Auckland Central 1010, New Zealand",
+	phone: "+64 9 123 4567",
+	checkInTime: "15:00",
+	checkOutTime: "11:00",
+};
 
-let room = null; // Loaded room object from backend
-let nights = 0; // Calculated nights
+let room = null; // Loaded room object from the server
+let nights = 0;
 let total = 0; // Total amount including tax
 
-//  On page load -
+const $ = (id) => document.getElementById(id);
+
 document.addEventListener("DOMContentLoaded", async function () {
-	// Redirect to login if not logged in - booking requires auth
+	// Booking needs an account - come back here after signing in
 	const token = localStorage.getItem("token");
 	if (!token) {
-		window.location.href = `/pages/Login.html?redirect=${encodeURIComponent(window.location.href)}`;
+		location.href = `/pages/Login.html?redirect=${encodeURIComponent(location.pathname + location.search)}`;
 		return;
 	}
 
-	// Only customers can book - redirect staff/manager to their dashboards
+	// Only customers can book - staff and managers go to their dashboards
 	const role = localStorage.getItem("role");
-	if (role === "staff") {
-		window.location.href = "/pages/staff.html";
-		return;
-	}
-	if (role === "manager") {
-		window.location.href = "/pages/manager.html";
+	if (role === "staff" || role === "manager") {
+		location.href = `/pages/${role}.html`;
 		return;
 	}
 
-	// Get room ID from URL - supports ?room=101 or ?roomId=101
-	const params = new URLSearchParams(window.location.search);
+	const params = new URLSearchParams(location.search);
 	const roomId = params.get("room") || params.get("roomId");
-
 	if (!roomId) {
-		window.location.href = "/pages/browserooms.html";
+		location.href = "/pages/browserooms.html";
 		return;
 	}
 
-	// Fetch room data from backend
 	try {
-		const res = await fetch(`/rooms/${roomId}`);
+		const res = await fetch(`/rooms/${encodeURIComponent(roomId)}`);
 		if (!res.ok) throw new Error("Room not found");
 		room = await res.json();
-	} catch (err) {
-		window.location.href = "/pages/browserooms.html";
+	} catch {
+		location.href = "/pages/browserooms.html";
 		return;
 	}
 
-	// Populate summary panel with room data
 	populateSummary();
 
-	// Pre-fill dates if passed from the browse/floor map page
-	const checkIn = params.get("checkIn");
-	const checkOut = params.get("checkOut");
-	if (checkIn) {
-		document.getElementById("checkin").value = checkIn;
-	}
-	if (checkOut) {
-		document.getElementById("checkout").value = checkOut;
-	}
-	const guestsParam = params.get("guests");
-	if (guestsParam) document.getElementById("guestinput").value = guestsParam;
-	if (checkIn && checkOut) calculateNights();
+	// Dates and guests passed from the room page
+	const today = UI.dates.today();
+	$("checkin").min = today;
+	$("checkout").min = UI.dates.addDays(today, 1);
+	if (UI.dates.valid(params.get("checkIn")) && params.get("checkIn") >= today) $("checkin").value = params.get("checkIn");
+	if (UI.dates.valid(params.get("checkOut"))) $("checkout").value = params.get("checkOut");
+	const guests = Number(params.get("guests"));
+	if (guests >= 1 && guests <= room.maxGuests) $("guestinput").value = String(guests);
+	calculateNights();
 
-	// Set minimum date on check-in to today
-	const today = new Date().toLocaleDateString("en-CA");
-	document.getElementById("checkin").setAttribute("min", today);
+	$("checkin").addEventListener("change", onCheckinChange);
+	$("checkout").addEventListener("change", calculateNights);
+	$("guestinput").addEventListener("change", updateSummaryPricing);
+	$("step-dates").addEventListener("submit", (e) => {
+		e.preventDefault();
+		goToStep(2);
+	});
+	$("back-to-dates").addEventListener("click", () => goToStep(1));
+	$("step-payment").addEventListener("submit", (e) => {
+		e.preventDefault();
+		submitPayment();
+	});
 
-	// Wire up date and guest input events
-	document
-		.getElementById("checkin")
-		.addEventListener("change", onCheckinChange);
-	document
-		.getElementById("checkout")
-		.addEventListener("change", onCheckoutChange);
-	document
-		.getElementById("guestinput")
-		.addEventListener("input", onGuestChange);
-
-	// Wire up card field live preview events
-	document
-		.getElementById("cardname")
-		.addEventListener("input", updateCardDisplay);
-	document
-		.getElementById("cardno")
-		.addEventListener("input", onCardNumberInput);
-	document.getElementById("cardexp").addEventListener("input", onCardExpInput);
+	// Live card preview and formatting
+	$("cardname").addEventListener("input", updateCardDisplay);
+	$("cardno").addEventListener("input", onCardNumberInput);
+	$("cardexp").addEventListener("input", onCardExpInput);
+	$("cardcvv").addEventListener("input", (e) => (e.target.value = e.target.value.replace(/\D/g, "")));
+	// Check each card field when the guest leaves it
+	["cardname", "cardno", "cardexp", "cardcvv"].forEach((id) => {
+		$(id).addEventListener("blur", () => {
+			if ($(id).value) validateField(id);
+		});
+	});
 });
 
-//  Summary panel population -
+//  Summary panel
 function populateSummary() {
-	if (!room) return;
-
-	const imgPath = room.image
-		? room.image.trim().replace("../frontend/", "/")
-		: "";
-
-	const img = document.getElementById("summary-img");
-	img.src = imgPath;
+	const img = $("summary-img");
+	img.src = room.image ? room.image.trim().replace("../frontend/", "/") : "";
+	img.hidden = !room.image;
 	img.alt = `Room ${room.id}`;
-	img.style.display = "block";
+	$("summary-tier").textContent = `Floor ${room.floor} · ${FLOOR_NAMES[room.floor] || ""}`;
+	$("summary-room-name").textContent = `Room ${room.id}`;
 
-	// Hide the placeholder - it sits right after the img element
-	const placeholder = img.nextElementSibling;
-	if (placeholder) placeholder.style.display = "none";
-	// Tier and room name
-	const tier = `Floor ${room.floor} - ${FLOOR_NAMES[room.floor] || "Floor " + room.floor}`;
-	const name = `Room ${room.id}`;
-	document.getElementById("summary-tier").textContent = tier;
-	document.getElementById("summary-room-name").textContent = name;
-
-	// Max guests from room type metadata
-	const meta = ROOM_META[room.type] || { guests: 2 };
-	document.getElementById("max-guests-label").textContent = meta.guests;
-	document.getElementById("guestinput").max = meta.guests;
-
-	// Update price line
+	$("max-guests-label").textContent = room.maxGuests;
+	$("guestinput").innerHTML = Array.from({ length: room.maxGuests }, (_, i) =>
+		`<option value="${i + 1}">${i + 1} ${i ? "guests" : "guest"}</option>`).join("");
+	$("guestinput").value = String(Math.min(2, room.maxGuests));
 	updateSummaryPricing();
 }
 
-//  Update summary pricing rows -
 function updateSummaryPricing() {
-	if (!room) return;
-
-	const checkin = document.getElementById("checkin").value;
-	const checkout = document.getElementById("checkout").value;
-	const guests = document.getElementById("guestinput").value || 1;
-
-	document.getElementById("s-checkin").textContent = checkin || "-";
-	document.getElementById("s-checkout").textContent = checkout || "-";
-	document.getElementById("s-guests").textContent = guests;
+	const checkin = $("checkin").value;
+	const checkout = $("checkout").value;
+	$("s-checkin").textContent = checkin ? UI.dates.pretty(checkin, true) : "-";
+	$("s-checkout").textContent = checkout ? UI.dates.pretty(checkout, true) : "-";
+	$("s-guests").textContent = $("guestinput").value || "-";
 
 	if (nights > 0) {
 		const subtotal = room.price * nights;
 		total = subtotal + TAX;
-
-		document.getElementById("s-nights").textContent = nights;
-		document.getElementById("s-price-line").textContent =
-			`$${room.price} × ${nights} nights`;
-		document.getElementById("s-subtotal").textContent = `$${subtotal}`;
-		document.getElementById("s-total").textContent = `$${total}`;
-		document.getElementById("pay-btn-total").textContent = `$${total}`;
+		$("s-nights").textContent = nights;
+		$("s-price-line").textContent = `${UI.money(room.price)} × ${nights} ${nights === 1 ? "night" : "nights"}`;
+		$("s-subtotal").textContent = UI.money(subtotal);
+		$("s-total").textContent = UI.money(total);
+		$("pay-btn-total").textContent = UI.money(total);
 	} else {
-		document.getElementById("s-nights").textContent = "-";
-		document.getElementById("s-price-line").textContent =
-			`$${room.price} × - nights`;
-		document.getElementById("s-subtotal").textContent = "$-";
-		document.getElementById("s-total").textContent = "-";
-		document.getElementById("pay-btn-total").textContent = "-";
+		total = 0;
+		$("s-nights").textContent = "-";
+		$("s-price-line").textContent = `${UI.money(room.price)} a night`;
+		$("s-subtotal").textContent = "-";
+		$("s-total").textContent = "-";
+		$("pay-btn-total").textContent = "";
 	}
 }
 
-//  Date change handlers
 function onCheckinChange() {
-	const val = document.getElementById("checkin").value;
-	// Checkout must be after check-in
-	document.getElementById("checkout").min = val;
-	// Clear checkout if it's now before check-in
-	const checkout = document.getElementById("checkout").value;
-	if (checkout && checkout <= val) {
-		document.getElementById("checkout").value = "";
-		nights = 0;
+	const checkin = $("checkin").value;
+	if (checkin) {
+		const earliest = UI.dates.addDays(checkin, 1);
+		$("checkout").min = earliest;
+		if (!$("checkout").value || $("checkout").value < earliest) $("checkout").value = earliest;
 	}
-	calculateNights();
-}
-
-function onCheckoutChange() {
 	calculateNights();
 }
 
 function calculateNights() {
-	const checkin = document.getElementById("checkin").value;
-	const checkout = document.getElementById("checkout").value;
-
-	if (checkin && checkout && checkout > checkin) {
-		const diff = new Date(checkout) - new Date(checkin);
-		nights = Math.round(diff / (1000 * 60 * 60 * 24));
-	} else {
-		nights = 0;
-	}
+	const checkin = $("checkin").value;
+	const checkout = $("checkout").value;
+	nights = checkin && checkout && checkout > checkin ? UI.dates.nights(checkin, checkout) : 0;
+	setDatesError("");
 	updateSummaryPricing();
 }
 
-//  Guest change handler
-function onGuestChange() {
-	const meta = ROOM_META[room?.type] || { guests: 2 };
-	const val = parseInt(document.getElementById("guestinput").value);
-	const err = document.getElementById("guest-error");
-
-	if (isNaN(val) || val < 1 || val > meta.guests) {
-		err.style.display = "block";
-	} else {
-		err.style.display = "none";
-	}
-	updateSummaryPricing();
+function setDatesError(message) {
+	$("dates-error").textContent = message;
+	$("checkin").setAttribute("aria-invalid", String(Boolean(message)));
+	$("checkout").setAttribute("aria-invalid", String(Boolean(message)));
 }
 
-//  Card field live display -
+//  Steps
+async function goToStep(step) {
+	if (step === 2) {
+		const checkin = $("checkin").value;
+		const checkout = $("checkout").value;
+		if (!checkin || !checkout) return setDatesError("Choose both a check-in and a check-out date.");
+		if (checkin < UI.dates.today()) return setDatesError("Check-in can't be in the past.");
+		if (nights < 1) return setDatesError("Check-out needs to be at least one night after check-in.");
+
+		// Make sure nobody else has the room for these dates
+		const btn = $("continuepaybtn");
+		btn.disabled = true;
+		btn.textContent = "Checking availability…";
+		try {
+			const res = await fetch(`/rooms/${room.id}/availability?checkIn=${checkin}&checkOut=${checkout}`);
+			const data = await res.json();
+			if (!res.ok || !data.available) {
+				return setDatesError(res.ok ? "Sorry - this room is already booked for some of those nights. Try other dates." : data.error);
+			}
+		} catch {
+			return setDatesError("We couldn't check availability. Check your connection and try again.");
+		} finally {
+			btn.disabled = false;
+			btn.textContent = "Continue to payment";
+		}
+	}
+
+	$("step-dates").hidden = step !== 1;
+	$("step-payment").hidden = step !== 2;
+	$("step-label-1").classList.toggle("done", step > 1);
+	[1, 2].forEach((n) => {
+		if (n === step) $(`step-label-${n}`).setAttribute("aria-current", "step");
+		else $(`step-label-${n}`).removeAttribute("aria-current");
+	});
+	(step === 2 ? $("cardname") : $("checkin")).focus();
+}
+
+//  Card fields
 function updateCardDisplay() {
-	const name = document.getElementById("cardname").value.toUpperCase();
-	document.getElementById("card-display-name").textContent =
-		name || "NAME ON CARD";
+	$("card-display-name").textContent = $("cardname").value.toUpperCase() || "NAME ON CARD";
 }
 
 function onCardNumberInput() {
-	// Auto-format card number with spaces every 4 digits
-	let val = document
-		.getElementById("cardno")
-		.value.replace(/\D/g, "")
-		.slice(0, 16);
-	const formatted = val.replace(/(.{4})/g, "$1 ").trim();
-	document.getElementById("cardno").value = formatted;
-
-	// Update mock card display - mask all but last 4
-	const display =
-		val.length > 0
-			? "•••• &nbsp;•••• &nbsp;•••• &nbsp;" + (val.slice(-4) || "••••")
-			: "•••• &nbsp;•••• &nbsp;•••• &nbsp;••••";
-	document.getElementById("card-display-number").innerHTML = display;
+	const digits = $("cardno").value.replace(/\D/g, "").slice(0, 16);
+	$("cardno").value = digits.replace(/(.{4})/g, "$1 ").trim();
+	$("card-display-number").textContent = digits
+		? "•••• •••• •••• " + digits.slice(-4).padStart(4, "•")
+		: "•••• •••• •••• ••••";
 }
 
-function onCardExpInput() {
-	// Auto-format MM/YY
-	let val = document
-		.getElementById("cardexp")
-		.value.replace(/\D/g, "")
-		.slice(0, 4);
+function onCardExpInput(e) {
+	let val = $("cardexp").value.replace(/\D/g, "").slice(0, 4);
+	// "4" becomes "04" so the month is clear as soon as it's typed
+	if (val.length === 1 && Number(val) > 1) val = "0" + val;
 	if (val.length >= 3) val = val.slice(0, 2) + "/" + val.slice(2);
-	document.getElementById("cardexp").value = val;
-	document.getElementById("card-display-exp").textContent = val || "MM/YY";
+	// Let backspace remove the slash
+	if (e?.inputType === "deleteContentBackward" && val.length === 3) val = val.slice(0, 2);
+	$("cardexp").value = val;
+	$("card-display-exp").textContent = val || "MM/YY";
 }
 
-//  Step switching
-async function goToStep(step) {
-	if (step === 2) {
-    const checkin  = document.getElementById("checkin").value;
-    const checkout = document.getElementById("checkout").value;
-    const err      = document.getElementById("dates-error");
-
-    if (!checkin || !checkout || nights < 1) {
-        err.textContent = "Please select valid check-in and check-out dates.";
-        err.style.display = "block";
-        return;
-    }
-    err.style.display = "none";
-
-    // Validate guests
-    const val  = parseInt(document.getElementById("guestinput").value);
-    const meta = ROOM_META[room?.type] || { guests: 2 };
-    if (isNaN(val) || val < 1 || val > meta.guests) {
-        document.getElementById("guest-error").style.display = "block";
-        return;
-    }
-    document.getElementById("guest-error").style.display = "none";
-
-    // Make sure nobody else has the room for these dates
-    try {
-        const res = await fetch(
-            `/rooms/${room.id}/availability?checkIn=${checkin}&checkOut=${checkout}`,
-        );
-        const data = await res.json();
-        if (!res.ok || !data.available) {
-            err.textContent = res.ok
-                ? "Sorry, this room is already booked for those dates."
-                : data.error;
-            err.style.display = "block";
-            return;
-        }
-    } catch {
-        err.textContent = "Could not check availability. Is the server running?";
-        err.style.display = "block";
-        return;
-    }
+function expiryProblem(value) {
+	if (!/^\d{2}\/\d{2}$/.test(value)) return "Enter the expiry as MM/YY.";
+	const [month, year] = value.split("/").map(Number);
+	if (month < 1 || month > 12) return "The month should be between 01 and 12.";
+	const now = new Date();
+	const thisYear = now.getFullYear() % 100;
+	if (year < thisYear || (year === thisYear && month < now.getMonth() + 1)) return "This card has expired.";
+	return "";
 }
 
-	const dateStep = document.getElementById("step-dates");
-	const payStep = document.getElementById("step-payment");
-	const tabDates = document.getElementById("tab-dates");
-	const tabPayment = document.getElementById("tab-payment");
+const CARD_RULES = {
+	cardname: (v) => (v.trim().length >= 2 ? "" : "Enter the name as it appears on the card."),
+	cardno: (v) => (/^\d{16}$/.test(v.replace(/\s/g, "")) ? "" : "The card number should be 16 digits."),
+	cardexp: (v) => expiryProblem(v.trim()),
+	cardcvv: (v) => (/^\d{3,4}$/.test(v.trim()) ? "" : "The security code is the 3 or 4 digits on the back."),
+};
 
-	if (step === 1) {
-		dateStep.classList.remove("slide-hidden");
-		payStep.classList.add("slide-hidden");
-		tabDates.classList.add("active");
-		tabPayment.classList.remove("active");
-	} else {
-		dateStep.classList.add("slide-hidden");
-		payStep.classList.remove("slide-hidden");
-		tabDates.classList.remove("active");
-		tabPayment.classList.add("active");
-		// Update pay button total when switching to payment step
-		document.getElementById("pay-btn-total").textContent =
-			total > 0 ? `$${total}` : "-";
-	}
+function validateField(id) {
+	const problem = CARD_RULES[id]($(id).value);
+	$(`${id}-error`).textContent = problem;
+	$(id).setAttribute("aria-invalid", String(Boolean(problem)));
+	return !problem;
 }
 
-//  Payment submission
+//  Payment and booking
 async function submitPayment() {
 	const token = localStorage.getItem("token");
-	const errEl = document.getElementById("pay-error");
-	const sucEl = document.getElementById("pay-success");
-	const payBtn = document.getElementById("pay-btn");
+	const payBtn = $("pay-btn");
+	$("pay-error").hidden = true;
 
-	errEl.style.display = "none";
-	sucEl.style.display = "none";
+	const fields = Object.keys(CARD_RULES);
+	const results = fields.map(validateField);
+	const firstBad = fields[results.indexOf(false)];
+	if (firstBad) {
+		$(firstBad).focus();
+		return;
+	}
+	if (nights < 1 || total < 1) return showPayError("Go back and choose your dates first.");
 
-	// Collect values
-	const cardName = document.getElementById("cardname").value.trim();
-	const cardNo = document.getElementById("cardno").value.replace(/\s/g, "");
-	const cardExp = document.getElementById("cardexp").value.trim();
-	const cardCvv = document.getElementById("cardcvv").value.trim();
-
-	// Client-side validation
-	if (!cardName) {
-		showPayError("Please enter the cardholder name.");
-		return;
-	}
-	if (!/^\d{16}$/.test(cardNo)) {
-		showPayError("Card number must be 16 digits.");
-		return;
-	}
-	if (!/^\d{2}\/\d{2}$/.test(cardExp)) {
-		showPayError("Expiry must be in MM/YY format.");
-		return;
-	}
-	if (!/^\d{3,4}$/.test(cardCvv)) {
-		showPayError("CVV must be 3 or 4 digits.");
-		return;
-	}
-	if (nights < 1 || total < 1) {
-		showPayError("Please go back and select valid dates.");
-		return;
-	}
-
-	// Disable button while processing
 	payBtn.disabled = true;
 	payBtn.textContent = "Processing…";
+	const resetButton = () => {
+		payBtn.disabled = false;
+		payBtn.innerHTML = `Pay <span id="pay-btn-total">${UI.money(total)}</span>`;
+	};
 
 	try {
-		// Step 1 - Process mock payment
 		const payRes = await fetch("/payment/process", {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: "Bearer " + token,
-			},
+			headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
 			body: JSON.stringify({
-				cardNumber: cardNo,
-				expiry: cardExp,
-				cvv: cardCvv,
+				cardNumber: $("cardno").value.replace(/\s/g, ""),
+				expiry: $("cardexp").value.trim(),
+				cvv: $("cardcvv").value.trim(),
 				amount: total,
 			}),
 		});
-
 		const payData = await payRes.json();
-
 		if (!payRes.ok) {
-			showPayError(
-				payData.error || "Payment failed. Please check your card details.",
-			);
-			payBtn.disabled = false;
-			payBtn.textContent = `Pay $${total}`;
-			return;
+			resetButton();
+			return showPayError(payData.error || "The payment didn't go through. Check the card details.");
 		}
 
-		// Step 2 - Create booking
-		const checkin = document.getElementById("checkin").value;
-		const checkout = document.getElementById("checkout").value;
-		const guests = parseInt(document.getElementById("guestinput").value) || 1;
-
+		const guests = Number($("guestinput").value) || 1;
 		const bookRes = await fetch("/bookings", {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-				Authorization: "Bearer " + token,
-			},
-			body: JSON.stringify({
-				roomId: room.id,
-				checkIn: checkin,
-				checkOut: checkout,
-				guests: guests,
-			}),
+			headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
+			body: JSON.stringify({ roomId: room.id, checkIn: $("checkin").value, checkOut: $("checkout").value, guests }),
 		});
-
-		const bookData = await bookRes.json();
-
-		if (!bookRes.ok) {
-			showPayError(
-				bookData.error || "Booking could not be created. Please try again.",
-			);
-			payBtn.disabled = false;
-			payBtn.textContent = `Pay $${total}`;
+		const booking = await bookRes.json();
+		if (bookRes.status === 401) {
+			localStorage.clear();
+			location.href = `/pages/Login.html?redirect=${encodeURIComponent(location.pathname + location.search)}`;
 			return;
 		}
+		if (!bookRes.ok) {
+			resetButton();
+			return showPayError(booking.error || "We couldn't complete the booking. Please try again.");
+		}
 
-		// Step 3 - Success - redirect to my bookings
-		sucEl.textContent = `Booking confirmed! Reference: ${bookData.id}. Redirecting…`;
-		sucEl.style.display = "block";
-		payBtn.textContent = "Booking confirmed ✓";
-
-		setTimeout(() => {
-			window.location.href = "/pages/mybooking.html";
-		}, 2000);
-	} catch (err) {
-		showPayError("Network error. Is the server running?");
-		payBtn.disabled = false;
-		payBtn.textContent = `Pay $${total}`;
+		showConfirmation(booking, guests);
+	} catch {
+		resetButton();
+		showPayError("Connection problem - nothing was booked. Please try again.");
 	}
 }
 
 function showPayError(msg) {
-	const el = document.getElementById("pay-error");
-	el.textContent = msg;
-	el.style.display = "block";
+	$("pay-error").textContent = msg;
+	$("pay-error").hidden = false;
 }
 
-function onCardExpInput() {
-	let val = document
-		.getElementById("cardexp")
-		.value.replace(/\D/g, "")
-		.slice(0, 4);
+//  Confirmation
+function showConfirmation(booking, guests) {
+	const paid = booking.total + TAX;
+	const section = $("confirmation");
+	section.innerHTML = `
+		<div class="confirm-badge">${UI.icon("check")}</div>
+		<p class="kicker mb-2">Booking confirmed</p>
+		<h1 id="confirm-title" class="font-serif mb-3" style="font-size:clamp(32px,5vw,44px); color:var(--lux-brown-800); line-height:1.1">
+			You're staying with us, ${UI.escape((localStorage.getItem("name") || "").split(" ")[0] || "friend")}.
+		</h1>
+		<p class="mb-8" style="color:var(--lux-text-muted)">
+			Your reference is <strong style="color:var(--lux-brown-800)">${UI.escape(booking.id)}</strong>. It's saved in My Stays.
+		</p>
 
-	if (val.length >= 2 && parseInt(val.slice(0, 2)) > 12) {
-		val = "12" + val.slice(2);
-	}
+		<div class="confirm-grid py-6 mb-8" style="border-top:1px solid var(--lux-brown-100); border-bottom:1px solid var(--lux-brown-100)">
+			<div><p class="meta-label mb-1">Room</p><p class="meta-value" style="font-size:15px">Room ${UI.escape(booking.roomId)} · ${UI.escape(booking.roomType)}</p></div>
+			<div><p class="meta-label mb-1">Guests</p><p class="meta-value" style="font-size:15px">${guests}</p></div>
+			<div><p class="meta-label mb-1">Arrive</p><p class="meta-value" style="font-size:15px">${UI.dates.pretty(booking.checkIn, true)} · from 3pm</p></div>
+			<div><p class="meta-label mb-1">Depart</p><p class="meta-value" style="font-size:15px">${UI.dates.pretty(booking.checkOut, true)} · by 11am</p></div>
+			<div><p class="meta-label mb-1">Paid</p><p class="meta-value" style="font-size:15px">${UI.money(paid)} for ${booking.nights} ${booking.nights === 1 ? "night" : "nights"}, incl. $30 taxes</p></div>
+			<div><p class="meta-label mb-1">Find us</p><p class="meta-value" style="font-size:15px">42 Harbour Avenue · ${HOTEL.phone}</p></div>
+		</div>
 
-	if (val.length === 4 && parseInt(val.slice(2)) < 26) {
-		val = val.slice(0, 2) + "26";
-	}
+		<div class="flex flex-col sm:flex-row gap-3">
+			<a href="/pages/mybooking.html" class="btn-primary text-center">View my stays</a>
+			<button type="button" class="btn-secondary inline-flex items-center justify-center gap-2" id="add-calendar">${UI.icon("calendar")} Add to calendar</button>
+			<a href="/pages/browserooms.html" class="btn-ghost self-center py-3">Keep browsing</a>
+		</div>`;
 
-	if (val.length >= 3) val = val.slice(0, 2) + "/" + val.slice(2);
-
-	document.getElementById("cardexp").value = val;
-	document.getElementById("card-display-exp").textContent = val || "MM/YY";
+	$("booking-flow").hidden = true;
+	section.hidden = false;
+	section.focus();
+	window.scrollTo({ top: 0, behavior: "smooth" });
+	$("add-calendar").addEventListener("click", () => UI.downloadStay(booking));
+	UI.toast("Booking confirmed");
 }

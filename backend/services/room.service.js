@@ -1,5 +1,6 @@
 const roomRepo = require("../repositories/room.repository");
 const checkinRepo = require("../repositories/checkin.repository");
+const { MAX_GUESTS } = require("./availability.service");
 
 // A room's status isn't stored - it is "occupied" exactly when a guest is
 // checked in to it, so it can never drift out of step with the check-ins.
@@ -13,7 +14,11 @@ function occupiedRoomIds() {
 }
 
 function withStatus(room, occupied = occupiedRoomIds()) {
-	return { ...room, status: occupied.has(room.id) ? "occupied" : "available" };
+	return {
+		...room,
+		maxGuests: MAX_GUESTS[room.type] || 2,
+		status: occupied.has(room.id) ? "occupied" : "available",
+	};
 }
 
 function getRooms() {

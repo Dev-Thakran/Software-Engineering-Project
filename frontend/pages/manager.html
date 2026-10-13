@@ -6,11 +6,14 @@
 		<title>Manager Dashboard</title>
 		<script src="https://cdn.tailwindcss.com"></script>
 		<!-- Chart.js library used by manager.js to render all four charts -->
-		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+		<script src="/vendor/chart.js/chart.umd.js"></script>
 		<link rel="stylesheet" href="../css/main.css" />
+
+		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+
+		<meta name="description" content="Manager dashboard for La Extravaganza." />
+
+		<script src="../js/ui.js"></script>
 		<script src="../js/footer.js"></script>
 		<script src="../js/header.js"></script>
 		<!-- manager.js contains all the data fetching and chart rendering logic -->
@@ -48,16 +51,40 @@
 				}
 			}
 
-			/* Live-update indicator */
+			/* Live-update indicator: a small pill on its own line under the date */
 			.live-status {
-				display: inline-flex;
+				display: flex;
 				align-items: center;
-				gap: 6px;
-				margin-top: 6px;
-				font-size: 10px;
-				letter-spacing: 0.14em;
+				gap: 8px;
+				width: fit-content;
+				margin-top: 10px;
+				padding: 5px 12px 5px 10px;
+				background: #fff;
+				border: 1px solid var(--lux-brown-100);
+				border-radius: 999px;
+				font-size: 11px;
+				color: #7a654b;
+				white-space: nowrap;
+			}
+			@media (min-width: 768px) {
+				.live-status {
+					margin-left: auto; /* line up under the right-aligned date */
+				}
+			}
+			.live-label {
+				font-weight: 600;
+				font-size: 11px;
+				letter-spacing: 0.16em;
 				text-transform: uppercase;
-				color: var(--lux-brown-500);
+				color: #4f8a5b;
+			}
+			.live-status.offline .live-label {
+				color: #766658;
+			}
+			.live-time:not(:empty)::before {
+				content: "·";
+				margin-right: 8px;
+				color: var(--lux-brown-200);
 			}
 			.live-dot {
 				width: 7px;
@@ -79,6 +106,20 @@
 			@media (prefers-reduced-motion: reduce) {
 				.live-dot { animation: none; }
 			}
+		
+			.kpi-grid .stat-card + .stat-card { border-left: 0; }
+			@media (max-width: 1023px) { .kpi-grid .stat-card:nth-child(odd) { border-left: 1px solid #e6dfd7; } .kpi-grid .stat-card { border-top: 0; } .kpi-grid .stat-card:nth-child(-n+2) { border-top: 1px solid #e6dfd7; } }
+			.kpi-value { color: var(--lux-brown-800); font-variant-numeric: tabular-nums; }
+			.delta { font-size: 12px; display: inline-flex; align-items: center; gap: 4px; color: var(--lux-text-muted); }
+			.delta.up { color: var(--lux-success); }
+			.delta.down { color: var(--lux-danger); }
+			.chart-data { margin-top: 14px; font-size: 13px; }
+			.chart-data summary { cursor: pointer; color: var(--lux-text-soft); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; padding: 6px 0; }
+			.chart-data table { width: 100%; margin-top: 8px; border-collapse: collapse; font-variant-numeric: tabular-nums; }
+			.chart-data th, .chart-data td { text-align: left; padding: 6px 8px; border-bottom: 1px solid #e6dfd7; }
+			.chart-data th { font-weight: 600; color: var(--lux-text-soft); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; }
+			.chart-data td:last-child, .chart-data th:last-child { text-align: right; }
+			.chart-data div { max-height: 260px; overflow: auto; }
 		</style>
 	</head>
 	<body>
@@ -107,141 +148,86 @@
 					<!-- JS: manager.js shows whether the live updates are connected -->
 					<p id="live-status" class="live-status offline">
 						<span class="live-dot"></span>
-						<span data-live-text>Connecting…</span>
+						<span class="live-label" data-live-label>Connecting…</span>
+						<span class="live-time" data-live-text></span>
 					</p>
 				</div>
 			</div>
 
-			<!-- KPI stat cards - 2 col mobile, 4 col desktop -->
-			<div class="grid grid-cols-2 md:grid-cols-4 mb-8">
+			<!-- Period switch and export -->
+			<div class="flex flex-wrap items-center justify-between gap-4 mb-5">
+				<div class="chip-row" id="range-switch" role="group" aria-label="Period">
+					<button type="button" class="chip" data-days="7" aria-pressed="false">Last 7 days</button>
+					<button type="button" class="chip" data-days="30" aria-pressed="true">Last 30 days</button>
+					<button type="button" class="chip" data-days="90" aria-pressed="false">Last 90 days</button>
+				</div>
+				<button type="button" class="btn-secondary inline-flex items-center gap-2" id="export-csv" style="padding: 11px 18px">
+					<span data-icon="download"></span> Export bookings (CSV)
+				</button>
+			</div>
+			<p class="text-sm mb-4" style="color: var(--lux-text-muted)" id="range-note" aria-live="polite"></p>
+
+			<!-- KPI cards: manager.js fills these from GET /manager/period -->
+			<div class="grid grid-cols-2 lg:grid-cols-5 mb-8 kpi-grid" aria-busy="true" id="kpis">
 				<div class="stat-card">
-					<p class="kicker mb-2">
-						<i class="fa fa-line-chart"></i>
-						Total Revenue
-					</p>
-					<!-- JS: manager.js sets this to the sum of all booking totals
-                     fetched from GET /manager/stats formatted as "$2,277" -->
-					<p
-						id="stat-revenue"
-						class="font-serif text-3xl md:text-4xl mb-1"
-						style="color: var(--lux-brown-800)">
-						-
-					</p>
-					<p class="meta-label">All bookings</p>
+					<p class="kicker mb-2"><span data-icon="chart"></span> Revenue earned</p>
+					<p id="stat-revenue" class="font-serif text-3xl md:text-4xl mb-1 kpi-value">-</p>
+					<p class="delta" id="delta-revenue"></p>
 				</div>
-
-				<div class="stat-card md:border-l-0">
-					<p class="kicker mb-2">
-						<i class="fa fa-building"></i>
-						Occupancy Now
-					</p>
-					<!-- JS: manager.js sets this to the current occupancy percentage
-                     calculated as occupied rooms divided by total rooms -->
-					<p
-						id="stat-occupancy"
-						class="font-serif text-3xl md:text-4xl mb-1"
-						style="color: var(--lux-brown-800)">
-						-
-					</p>
-					<!-- JS: manager.js sets this to show total room count
-                     e.g. "Of 24 rooms" -->
-					<p id="stat-rooms" class="meta-label">Of - rooms</p>
+				<div class="stat-card">
+					<p class="kicker mb-2"><span data-icon="calendar"></span> Booked ahead</p>
+					<p id="stat-ahead" class="font-serif text-3xl md:text-4xl mb-1 kpi-value">-</p>
+					<p class="meta-label" id="stat-ahead-note">Next - days</p>
 				</div>
-
-				<div class="stat-card md:border-l-0">
-					<p class="kicker mb-2">
-						<i class="fa fa-star"></i>
-						Avg. Rating
-					</p>
-					<!-- JS: manager.js sets this to the average star rating
-                     calculated from all reviews in reviews.json -->
-					<p
-						id="stat-rating"
-						class="font-serif text-3xl md:text-4xl mb-1"
-						style="color: var(--lux-brown-800)">
-						-
-					</p>
-					<!-- JS: manager.js sets this to show total review count
-                     e.g. "6 reviews" -->
-					<p id="stat-reviews" class="meta-label">- reviews</p>
+				<div class="stat-card">
+					<p class="kicker mb-2"><span data-icon="building"></span> Occupancy</p>
+					<p id="stat-occupancy" class="font-serif text-3xl md:text-4xl mb-1 kpi-value">-</p>
+					<p class="delta" id="delta-occupancy"></p>
+					<p id="stat-rooms" class="meta-label mt-1">Tonight: -</p>
 				</div>
-
-				<div class="stat-card md:border-l-0">
-					<p class="kicker mb-2">
-						<i class="fa fa-calendar"></i>
-						Total Bookings
-					</p>
-					<!-- JS: manager.js sets this to the total number of bookings
-                     which is simply the length of the bookings array -->
-					<p
-						id="stat-bookings"
-						class="font-serif text-3xl md:text-4xl mb-1"
-						style="color: var(--lux-brown-800)">
-						-
-					</p>
-					<p class="meta-label">Lifetime</p>
+				<div class="stat-card">
+					<p class="kicker mb-2"><span data-icon="bed"></span> Avg nightly rate</p>
+					<p id="stat-rate" class="font-serif text-3xl md:text-4xl mb-1 kpi-value">-</p>
+					<p class="delta" id="delta-rate"></p>
+				</div>
+				<div class="stat-card">
+					<p class="kicker mb-2"><span data-icon="star"></span> Guest rating</p>
+					<p id="stat-rating" class="font-serif text-3xl md:text-4xl mb-1 kpi-value">-</p>
+					<p class="delta" id="delta-rating"></p>
+					<p id="stat-reviews" class="meta-label mt-1">- reviews</p>
 				</div>
 			</div>
 
-			<!-- Charts row 1 - stacks on mobile -->
+			<!-- Charts row 1 -->
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-0 mb-8">
 				<div class="chart-card md:col-span-2 md:border-r-0">
-					<p class="kicker mb-1">Top-selling rooms</p>
-					<h2
-						class="font-serif text-2xl md:text-3xl mb-4"
-						style="color: var(--lux-brown-800)">
-						Guest favourites
-					</h2>
-					<!-- JS: manager.js renders a Chart.js bar chart into this canvas
-                     showing the most booked rooms fetched from GET /manager/top-rooms
-                     each bar represents one room and its booking count -->
-					<canvas id="chart-top-rooms" height="120"></canvas>
+					<p class="kicker mb-1" data-range-label>Last 30 days</p>
+					<h2 class="font-serif text-2xl md:text-3xl mb-4" style="color: var(--lux-brown-800)">Revenue earned each night</h2>
+					<canvas id="chart-trend" height="120" role="img" aria-label="Revenue earned each night, bar chart. The table below has the figures."></canvas>
+					<details class="chart-data"><summary>Show as a table</summary><div id="table-trend"></div></details>
 				</div>
-
 				<div class="chart-card">
-					<p class="kicker mb-1">By tier</p>
-					<h2
-						class="font-serif text-2xl md:text-3xl mb-4"
-						style="color: var(--lux-brown-800)">
-						Booking mix
-					</h2>
-					<!-- JS: manager.js renders a Chart.js doughnut chart into this canvas
-                     showing booking distribution by room type
-                     fetched from GET /manager/booking-mix -->
-					<canvas id="chart-mix" height="180"></canvas>
-					<!-- JS: manager.js builds a custom colour legend here
-                     one coloured square and label per room type
-                     because Chart.js default legend doesn't match the design -->
-					<div id="mix-legend" class="mt-4 flex flex-wrap gap-2"></div>
+					<p class="kicker mb-1">Nights sold by tier</p>
+					<h2 class="font-serif text-2xl md:text-3xl mb-4" style="color: var(--lux-brown-800)">Booking mix</h2>
+					<canvas id="chart-mix" height="180" role="img" aria-label="Nights sold by room type, doughnut chart. The table below has the figures."></canvas>
+					<div id="mix-legend" class="mt-4 flex flex-wrap gap-x-3 gap-y-1"></div>
+					<details class="chart-data"><summary>Show as a table</summary><div id="table-mix"></div></details>
 				</div>
 			</div>
 
-			<!-- Charts row 2 - stacks on mobile -->
+			<!-- Charts row 2 -->
 			<div class="grid grid-cols-1 md:grid-cols-2 gap-0 mb-12">
 				<div class="chart-card md:border-r-0">
-					<p class="kicker mb-1">Last 14 days</p>
-					<h2
-						class="font-serif text-2xl md:text-3xl mb-4"
-						style="color: var(--lux-brown-800)">
-						Booking trend
-					</h2>
-					<!-- JS: manager.js renders a Chart.js line chart into this canvas
-                     showing daily booking counts for the last 14 days
-                     fetched from GET /manager/trend -->
-					<canvas id="chart-trend" height="120"></canvas>
+					<p class="kicker mb-1">Nights sold</p>
+					<h2 class="font-serif text-2xl md:text-3xl mb-4" style="color: var(--lux-brown-800)">Guest favourites</h2>
+					<canvas id="chart-top-rooms" height="140" role="img" aria-label="Most-booked rooms by nights sold, bar chart. The table below has the figures."></canvas>
+					<details class="chart-data"><summary>Show as a table</summary><div id="table-top-rooms"></div></details>
 				</div>
-
 				<div class="chart-card">
-					<p class="kicker mb-1">Revenue</p>
-					<h2
-						class="font-serif text-2xl md:text-3xl mb-4"
-						style="color: var(--lux-brown-800)">
-						By floor
-					</h2>
-					<!-- JS: manager.js renders a Chart.js bar chart into this canvas
-                     showing total revenue per floor fetched from GET /manager/revenue-by-floor
-                     Y axis is formatted as currency e.g. "$1,200" -->
-					<canvas id="chart-floor" height="120"></canvas>
+					<p class="kicker mb-1">Revenue earned</p>
+					<h2 class="font-serif text-2xl md:text-3xl mb-4" style="color: var(--lux-brown-800)">By floor</h2>
+					<canvas id="chart-floor" height="140" role="img" aria-label="Revenue earned by floor, bar chart. The table below has the figures."></canvas>
+					<details class="chart-data"><summary>Show as a table</summary><div id="table-floor"></div></details>
 				</div>
 			</div>
 

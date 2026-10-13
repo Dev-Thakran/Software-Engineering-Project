@@ -6,30 +6,19 @@
 		<title>Floor Map – La Extravaganza</title>
 		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="../css/main.css" />
-		<script src="../js/footer.js"></script>
+		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+		<meta name="description" content="See every floor of La Extravaganza at a glance and pick your room." />
+		<script src="../js/ui.js"></script>
 		<script src="../js/header.js"></script>
-		<script src="../js/floormap.js"></script>
+		<script src="../js/footer.js"></script>
+		<script src="../js/floormap.js" defer></script>
 		<style>
-			.floor-map-wrap {
-				border: 1px solid #e6dfd7;
-				background: #fff;
-				padding: 0;
-				overflow: hidden;
-			}
-			.map-top-bar {
-				background: #2c241b;
-				height: 18px;
-			}
-			.floor-row {
-				display: grid;
-				grid-template-columns: 140px 1fr;
-				border-bottom: 1px solid #e6dfd7;
-			}
-			.floor-row:last-child {
-				border-bottom: none;
-			}
+			.floor-map-wrap { border: 1px solid #e6dfd7; background: #fff; overflow: hidden; }
+			.map-top-bar { background: #2c241b; height: 14px; }
+			.floor-row { display: grid; grid-template-columns: 150px 1fr; border-bottom: 1px solid #e6dfd7; }
+			.floor-row:last-child { border-bottom: none; }
 			.floor-label {
-				padding: 20px 16px;
+				padding: 18px 16px;
 				text-align: right;
 				border-right: 1px solid #e6dfd7;
 				background: #faf7f2;
@@ -37,145 +26,121 @@
 				flex-direction: column;
 				justify-content: center;
 			}
-			.floor-rooms {
-				display: grid;
-				grid-template-columns: repeat(6, 1fr);
-			}
+			.floor-rooms { display: grid; grid-template-columns: repeat(6, 1fr); }
 			.room-cell {
-				border-right: 1px solid #e6dfd7;
-				border-bottom: 1px solid #e6dfd7;
-				padding: 18px 8px;
-				text-align: center;
-				cursor: pointer;
-				transition: all 0.2s;
-				font-family: "Outfit", sans-serif;
-				font-size: 12px;
-				letter-spacing: 0.08em;
-				color: #6b5743;
-				position: relative;
-			}
-			.room-cell:last-child {
-				border-right: none;
-			}
-			.room-cell.available {
-				background: #fff;
-			}
-			.room-cell.available:hover {
-				background: #f2ebe1;
-			}
-			.room-cell.occupied {
-				background: #d4c4b0;
-				color: #6b5743;
-			}
-			.room-cell.pending {
-				background: #e6dfd7;
-				color: #6b5743;
-			}
-			.room-cell.selected {
-				background: #4a3b32;
-				color: #faf7f2;
-			}
-
-			.legend-box {
-				border: 1px solid #e6dfd7;
-				background: #fff;
-				padding: 24px;
-			}
-			.legend-item {
 				display: flex;
+				flex-direction: column;
 				align-items: center;
-				gap: 10px;
-				margin-bottom: 10px;
-				font-size: 13px;
-				color: #6b5743;
-				font-family: "Outfit", sans-serif;
-			}
-			.legend-swatch {
-				width: 20px;
-				height: 20px;
-				border: 1px solid #e6dfd7;
-				flex-shrink: 0;
-			}
-			.preview-card {
-				border: 1px solid #e6dfd7;
+				justify-content: center;
+				gap: 2px;
+				min-height: 72px;
+				border: none;
+				border-right: 1px solid #e6dfd7;
 				background: #fff;
-				padding: 24px;
-				margin-top: 16px;
+				cursor: pointer;
+				font-size: 14px;
+				font-variant-numeric: tabular-nums;
+				color: #2c241b;
+				transition: background 0.2s, color 0.2s;
 			}
-			.preview-empty {
-				font-family: "Cormorant Garamond", serif;
-				font-style: italic;
-				color: #b89f89;
-				font-size: 15px;
-			}
+			.room-cell:last-child { border-right: none; }
+			.room-cell small { font-size: 11px; color: var(--lux-text-soft); }
+			.room-cell.free:hover, .room-cell.free:focus-visible { background: #f2ebe1; }
+			.room-cell.taken { background: repeating-linear-gradient(135deg, #efe7dc 0 6px, #f8f3ed 6px 12px); color: #8a7868; }
+			.room-cell.taken small { color: #8a7868; }
+			.room-cell.small { opacity: 0.45; }
+			.room-cell[aria-pressed="true"] { background: #4a3b32 !important; color: #faf7f2; opacity: 1; }
+			.room-cell[aria-pressed="true"] small { color: #e6dfd7; }
+			.room-cell:focus-visible { outline-offset: -3px; }
 
-			/* Mobile: shrink floor label and room cells */
+			.legend-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 13px; color: #6b5743; }
+			.legend-swatch { width: 20px; height: 20px; border: 1px solid #e6dfd7; flex-shrink: 0; }
+			.side-card { border: 1px solid #e6dfd7; background: #fff; padding: 24px; }
+			.preview-sticky { position: sticky; top: 96px; }
+			.preview-photo { aspect-ratio: 16 / 10; background: #efe8df; margin: -24px -24px 18px; overflow: hidden; }
+			.preview-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+			.map-dates { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px; margin-bottom: 20px; }
+			.map-dates .field { gap: 6px; }
+			.map-dates label { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; color: var(--lux-text-soft); }
+			.map-dates input, .map-dates select { border: 1px solid var(--lux-brown-200); background: #fff; padding: 9px 10px; min-height: 42px; font-size: 14px; color: #2c241b; }
+
 			@media (max-width: 640px) {
-				.floor-row {
-					grid-template-columns: 80px 1fr;
-				}
-				.floor-label {
-					padding: 12px 8px;
-				}
-				.room-cell {
-					padding: 12px 4px;
-					font-size: 10px;
-				}
+				.floor-row { grid-template-columns: 1fr; }
+				.floor-label { flex-direction: row; justify-content: space-between; align-items: baseline; text-align: left; border-right: none; border-bottom: 1px solid #e6dfd7; padding: 10px 14px; }
+				.floor-label p { text-align: left !important; }
+				.floor-rooms { grid-template-columns: repeat(3, 1fr); }
+				.room-cell { min-height: 60px; border-bottom: 1px solid #e6dfd7; }
+				.room-cell:nth-child(3n) { border-right: none; }
 			}
 		</style>
 	</head>
 	<body>
 		<header class="sticky top-0 z-20" id="header"></header>
 
-		<section class="mx-auto py-8 md:py-12 max-w-6xl px-4 md:px-6">
-			<!-- Page header -->
-			<p class="kicker">The Building</p>
-			<h1 class="font-serif text-4xl md:text-6xl mb-3" style="color: #2c241b">
-				Floor Map
-			</h1>
-			<p class="text-base mb-8 md:mb-10" style="color: #8b7355">
-				A cross-section of our sanctuary. Ascend for more space, finer finishes,
-				wider views.
+		<main class="mx-auto py-8 md:py-12 max-w-6xl px-4 md:px-6">
+			<p class="kicker">The building</p>
+			<h1 class="font-serif text-4xl md:text-6xl mb-3" style="color: #2c241b">Floor map</h1>
+			<p class="text-base mb-8" style="color: var(--lux-text-muted); max-width: 60ch">
+				Every room, floor by floor. Choose your dates to see what's free, then pick a room to preview it.
 			</p>
 
-			<!-- Main layout - stacks on mobile, side by side on desktop -->
+			<form id="map-dates" class="map-dates" novalidate>
+				<div class="field">
+					<label for="map-checkin">Check in</label>
+					<input type="date" id="map-checkin" />
+				</div>
+				<div class="field">
+					<label for="map-checkout">Check out</label>
+					<input type="date" id="map-checkout" />
+				</div>
+				<div class="field">
+					<label for="map-guests">Guests</label>
+					<select id="map-guests">
+						<option value="1">1 guest</option>
+						<option value="2" selected>2 guests</option>
+						<option value="3">3 guests</option>
+						<option value="4">4 guests</option>
+					</select>
+				</div>
+				<p id="map-summary" class="text-sm pb-3" style="color: var(--lux-text-muted)" aria-live="polite"></p>
+				<p id="map-error" class="field-error w-full" role="alert" hidden></p>
+			</form>
+
 			<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-				<!-- Floor map - full width on mobile, 2/3 on desktop -->
 				<div class="md:col-span-2">
 					<div class="floor-map-wrap">
 						<div class="map-top-bar"></div>
-						<div id="floor-map"></div>
+						<div id="floor-map" aria-busy="true">
+							<div class="skeleton" style="height: 360px"></div>
+						</div>
 						<div class="map-top-bar"></div>
 					</div>
+					<p class="text-xs mt-3" style="color: var(--lux-text-muted)">
+						Tip: use the arrow keys to move between rooms, and Enter to choose one.
+					</p>
 				</div>
 
-				<!-- Sidebar - below map on mobile, right column on desktop -->
 				<div class="md:col-span-1">
-					<!-- Legend -->
-					<div class="legend-box">
-						<p class="kicker mb-4">Legend</p>
-						<div class="legend-item">
-							<div class="legend-swatch" style="background: #fff"></div>
-							Available - click to view
+					<div class="preview-sticky">
+						<div class="side-card mb-4">
+							<p class="kicker mb-4">Key</p>
+							<div class="legend-item"><div class="legend-swatch" style="background: #fff"></div> Free for your dates</div>
+							<div class="legend-item"><div class="legend-swatch" style="background: repeating-linear-gradient(135deg, #efe7dc 0 6px, #f8f3ed 6px 12px)"></div> Booked for your dates</div>
+							<div class="legend-item"><div class="legend-swatch" style="background: #fff; opacity: 0.45"></div> Too small for your party</div>
+							<div class="legend-item" style="margin-bottom: 0"><div class="legend-swatch" style="background: #4a3b32"></div> Your choice</div>
 						</div>
-						<div class="legend-item">
-							<div
-								class="legend-swatch"
-								style="background: #d4c4b0; border-color: #d4c4b0"></div>
-							Occupied today - can still be booked for other dates
-						</div>
-					</div>
 
-					<!-- Room preview -->
-					<div class="preview-card">
-						<p class="kicker mb-3">Room Preview</p>
-						<div id="preview-content">
-							<p class="preview-empty">Hover over a room to preview.</p>
+						<div class="side-card" aria-live="polite">
+							<div id="preview-content">
+								<p class="kicker mb-3">Room preview</p>
+								<p class="font-serif italic" style="color: var(--lux-text-muted); font-size: 17px">Pick a room on the map to see it here.</p>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</section>
+		</main>
 
 		<footer id="footer"></footer>
 	</body>

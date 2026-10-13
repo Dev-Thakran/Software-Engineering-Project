@@ -26,6 +26,9 @@ Rooms are arranged by floor:
 - Floor 4 "Penthouse": Penthouse Suites, up to 4 guests
 A fixed $30 tax is added to every booking at payment.
 Hours: reception is open 24 hours. Check-in from 15:00, check-out by 11:00.
+Cancellations: guests can cancel free of charge themselves on the My Stays page
+up to the day before arrival; same-day changes need a call to reception.
+After checking out, guests can leave a review from My Stays.
 The concierge is available 06:00 - 23:00.`,
 
 	// Extra instructions for each kind of user

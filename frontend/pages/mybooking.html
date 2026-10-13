@@ -6,229 +6,82 @@
 		<title>My Stays – La Extravaganza</title>
 		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="../css/main.css" />
+		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+		<meta name="description" content="Your upcoming and past stays at La Extravaganza." />
+		<script src="../js/ui.js"></script>
 		<script src="../js/header.js"></script>
 		<script src="../js/footer.js"></script>
+		<script src="../js/mybooking.js" defer></script>
 		<style>
-			.booking-card {
-				background: #fff;
-				border: 1px solid var(--lux-brown-100);
-				padding: 24px 28px;
-			}
-			.booking-row {
-				display: flex;
-				justify-content: space-between;
-				align-items: baseline;
-				padding: 6px 0;
-				border-bottom: 1px solid var(--lux-brown-100);
-				font-family: "Outfit", sans-serif;
-				font-size: 13px;
-			}
-			.booking-row:last-child {
-				border-bottom: none;
-			}
-			.booking-row span:first-child {
-				color: var(--lux-brown-500);
-			}
-			.booking-row span:last-child {
-				color: var(--lux-brown-800);
-			}
-			.status-badge {
-				font-family: "Outfit", sans-serif;
-				font-size: 9px;
-				font-weight: 600;
-				letter-spacing: 0.18em;
-				text-transform: uppercase;
-				padding: 5px 12px;
-				background: var(--lux-brown-100);
-				color: var(--lux-brown-700);
-			}
-			.status-badge.arriving {
-				background: var(--lux-brown-100);
-				color: var(--lux-brown-700);
-			}
-			.status-badge.confirmed {
-				background: #f0fdf4;
-				color: #166534;
-				border: 1px solid #bbf7d0;
-			}
-			.status-badge.pending {
-				background: #fffbeb;
-				color: #92400e;
-				border: 1px solid #fde68a;
-			}
-			.status-badge.cancelled {
-				background: #fef2f2;
-				color: #b91c1c;
-				border: 1px solid #fecaca;
-			}
+			.stay-hero { display: grid; grid-template-columns: 1.1fr 1fr; background: #fff; border: 1px solid var(--lux-brown-100); overflow: hidden; }
+			.stay-hero-photo { position: relative; min-height: 320px; background: #efe8df; }
+			.stay-hero-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+			.countdown { position: absolute; left: 20px; bottom: 20px; background: rgba(26, 20, 15, 0.82); color: #faf7f2; padding: 10px 16px; font-size: 13px; letter-spacing: 0.06em; }
+			.countdown strong { font-family: "Cormorant Garamond", serif; font-size: 24px; font-weight: 400; margin-right: 6px; }
+			@media (max-width: 860px) { .stay-hero { grid-template-columns: 1fr; } .stay-hero-photo { min-height: 220px; } }
+
+			.booking-card { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--lux-brown-100); }
+			.booking-card-body { padding: 22px 24px; display: flex; flex-direction: column; flex: 1; }
+			.booking-row { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--lux-brown-100); font-size: 14px; }
+			.booking-row:last-of-type { border-bottom: none; }
+			.booking-row span:first-child { color: var(--lux-text-soft); }
+			.booking-row span:last-child { color: var(--lux-brown-800); text-align: right; }
+			.card-actions { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: auto; padding-top: 16px; }
+			.text-action { display: inline-flex; align-items: center; gap: 6px; min-height: 40px; background: none; border: none; padding: 0; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--lux-brown-700); cursor: pointer; text-decoration: none; }
+			.text-action:hover { color: var(--lux-brown-900); text-decoration: underline; text-underline-offset: 4px; }
+			.text-action.danger { color: var(--lux-danger); }
+
+			.status-badge { font-size: 11px; font-weight: 600; letter-spacing: 0.16em; text-transform: uppercase; padding: 5px 10px; white-space: nowrap; }
+			.status-badge.booked { background: #eaf3ec; color: #2f5e3b; }
+			.status-badge.today { background: #2c241b; color: #faf7f2; }
+			.status-badge.staying { background: #c9a961; color: #2c241b; }
+			.status-badge.done { background: var(--lux-cream-dark); color: var(--lux-brown-700); }
+			.status-badge.cancelled { background: #fbf0ee; color: var(--lux-danger); }
+
+			/* Star picker in the review dialog */
+			.star-picker { display: flex; gap: 4px; }
+			.star-picker label { font-size: 32px; line-height: 1; color: #d9cbb9; cursor: pointer; transition: color 0.15s, transform 0.15s; }
+			.star-picker input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+			.star-picker label.lit { color: var(--lux-gold); }
+			.star-picker input:focus-visible + label { outline: 2px solid var(--lux-focus); outline-offset: 2px; }
+			.ui-dialog textarea, .ui-dialog input[type="text"] { width: 100%; border: 1px solid var(--lux-brown-200); padding: 10px 12px; font-size: 15px; background: #fff; }
+			.ui-dialog textarea { min-height: 110px; resize: vertical; }
 		</style>
 	</head>
 	<body style="background: var(--lux-cream)">
 		<header class="sticky top-0 z-20" id="header"></header>
 
-		<main class="mx-auto px-6 md:px-12 py-16 pb-24" style="max-width: 1100px">
-			<!-- Page header -->
-			<p class="kicker mb-4" id="welcome-kicker">Welcome back</p>
-			<h1
-				class="font-serif font-normal mb-12"
-				style="font-size: 64px; color: var(--lux-brown-800); line-height: 1.05">
-				My stays
-			</h1>
-
-			<!-- Upcoming & current -->
-			<h2
-				class="font-serif font-normal mb-6"
-				style="font-size: 36px; color: var(--lux-brown-800)">
-				Upcoming &amp; current
-			</h2>
-			<div
-				id="upcoming-grid"
-				class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-16">
-				<p class="text-sm" style="color: var(--lux-brown-400)">Loading...</p>
+		<main class="mx-auto px-4 md:px-12 py-14 pb-24" style="max-width: 1120px">
+			<p class="kicker mb-3" id="welcome-kicker">Welcome back</p>
+			<div class="flex flex-wrap items-end justify-between gap-4 mb-10">
+				<h1 class="font-serif" style="font-size: clamp(44px, 7vw, 64px); color: var(--lux-brown-800); line-height: 1.05">My stays</h1>
+				<a href="./browserooms.html" class="btn-secondary">Book another stay</a>
 			</div>
 
-			<!-- Past stays -->
-			<h2
-				class="font-serif font-normal mb-6"
-				style="font-size: 36px; color: var(--lux-brown-800)">
-				Past stays
-			</h2>
-			<div id="past-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-				<p class="text-sm" style="color: var(--lux-brown-400)">Loading...</p>
-			</div>
+			<!-- mybooking.js fills these in -->
+			<section id="next-stay" class="mb-14" aria-label="Your next stay" aria-busy="true">
+				<div class="skeleton" style="height: 320px"></div>
+			</section>
+
+			<section id="upcoming-section" class="mb-14" hidden>
+				<h2 class="font-serif mb-6" style="font-size: 32px; color: var(--lux-brown-800)">Also coming up</h2>
+				<div id="upcoming-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+			</section>
+
+			<section class="mb-14">
+				<h2 class="font-serif mb-6" style="font-size: 32px; color: var(--lux-brown-800)">Past stays</h2>
+				<div id="past-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+					<div class="skeleton" style="height: 220px"></div>
+					<div class="skeleton" style="height: 220px"></div>
+				</div>
+			</section>
+
+			<details id="cancelled-section" hidden>
+				<summary class="kicker" style="cursor: pointer; padding: 8px 0">Cancelled bookings (<span id="cancelled-count">0</span>)</summary>
+				<div id="cancelled-grid" class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-4"></div>
+			</details>
 		</main>
 
 		<footer id="footer"></footer>
-
-		<script>
-			document.addEventListener("DOMContentLoaded", async function () {
-				const token = localStorage.getItem("token");
-				const name = localStorage.getItem("name");
-				const role = localStorage.getItem("role");
-
-				// Redirect if not logged in or not a customer
-				if (!token) {
-					window.location.href = "/pages/Login.html";
-					return;
-				}
-				if (role === "staff") {
-					window.location.href = "/pages/staff.html";
-					return;
-				}
-				if (role === "manager") {
-					window.location.href = "/pages/manager.html";
-					return;
-				}
-
-				// Update welcome kicker with customer name
-				if (name) {
-					document.getElementById("welcome-kicker").textContent =
-						`Welcome back, ${name}`;
-				}
-
-				const FLOOR_NAMES = {
-					1: "Garden",
-					2: "Classic",
-					3: "Executive",
-					4: "Penthouse",
-				};
-
-				function getStatusBadge(booking) {
-					const today = new Date().toLocaleDateString("en-CA");
-					const isToday = booking.checkIn === today;
-
-					if (booking.status === "staying")
-						return { label: "Staying", cls: "confirmed" };
-					if (booking.status === "completed")
-						return { label: "Completed", cls: "cancelled" };
-					if (booking.status === "cancelled")
-						return { label: "Cancelled", cls: "cancelled" };
-					// The stay ended without the guest ever checking in
-					if (booking.checkOut <= today)
-						return { label: "No-show", cls: "cancelled" };
-					if (isToday) return { label: "Arriving", cls: "arriving" };
-					return { label: "Booked", cls: "confirmed" };
-				}
-
-				function buildCard(b) {
-					const floorName = FLOOR_NAMES[b.floor] || "Floor " + b.floor;
-					const badge = getStatusBadge(b);
-					return `
-                <div class="booking-card">
-                    <div class="flex justify-between items-start mb-1">
-                        <p class="kicker" style="font-size:10px;">
-                            Floor ${b.floor} - ${floorName}
-                        </p>
-                        <span class="status-badge ${badge.cls}">${badge.label}</span>
-                    </div>
-                    <p class="font-serif font-normal mb-5"
-                       style="font-size:42px; color:var(--lux-brown-800); line-height:1.1;">
-                        Room ${b.roomId}
-                    </p>
-                    <div class="booking-row">
-                        <span>Check-in</span><span>${b.checkIn}</span>
-                    </div>
-                    <div class="booking-row">
-                        <span>Check-out</span><span>${b.checkOut}</span>
-                    </div>
-                    <div class="booking-row">
-                        <span>Reference</span>
-                        <span style="font-size:11px; letter-spacing:0.05em;">${b.id}</span>
-                    </div>
-                    <div class="booking-row">
-                        <span>Total</span><span>$${b.total}</span>
-                    </div>
-                </div>`;
-				}
-
-				try {
-					const res = await fetch("/bookings", {
-						headers: { Authorization: "Bearer " + token },
-					});
-					const bookings = await res.json();
-
-					const today = new Date().toLocaleDateString("en-CA");
-
-					// Split into upcoming/current and past
-					// Upcoming: staying now, or booked and the stay hasn't ended yet
-					const isUpcoming = (b) =>
-						b.status === "staying" ||
-						(b.status === "booked" && b.checkOut > today);
-					const upcoming = bookings.filter(isUpcoming);
-					const past = bookings.filter((b) => !isUpcoming(b));
-
-					// Render upcoming
-					const upcomingGrid = document.getElementById("upcoming-grid");
-					if (upcoming.length === 0) {
-						upcomingGrid.innerHTML = `
-                    <div class="booking-card md:col-span-2">
-                        <p class="font-serif italic" style="font-size:18px; color:var(--lux-brown-400);">
-                            No upcoming stays - <a href="./browserooms.html" style="color:var(--lux-brown-600); text-decoration:underline;">browse rooms</a>
-                        </p>
-                    </div>`;
-					} else {
-						upcomingGrid.innerHTML = upcoming.map(buildCard).join("");
-					}
-
-					// Render past
-					const pastGrid = document.getElementById("past-grid");
-					if (past.length === 0) {
-						pastGrid.innerHTML = `
-                    <div class="booking-card md:col-span-2">
-                        <p class="font-serif italic" style="font-size:18px; color:var(--lux-brown-400);">
-                            No past stays yet.
-                        </p>
-                    </div>`;
-					} else {
-						pastGrid.innerHTML = past.map(buildCard).join("");
-					}
-				} catch (err) {
-					console.error(err);
-					const msg = `<p class="text-sm" style="color:var(--lux-brown-400);">Could not load bookings.</p>`;
-					document.getElementById("upcoming-grid").innerHTML = msg;
-					document.getElementById("past-grid").innerHTML = msg;
-				}
-			});
-		</script>
 	</body>
 </html>

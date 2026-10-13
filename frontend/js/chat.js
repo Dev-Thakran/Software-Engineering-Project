@@ -155,7 +155,26 @@
 		return el;
 	}
 
+	// Guest suggestions that fit the page being viewed, e.g. on a room page
+	// "Is Room 301 free next weekend?"
+	function pageSuggestions() {
+		const role = localStorage.getItem("role");
+		if (role === "staff" || role === "manager") return [];
+		const page = location.pathname.toLowerCase();
+		const room = new URLSearchParams(location.search).get("room");
+		if (page.endsWith("/room.html") && room)
+			return [`Is Room ${room} free next weekend?`, `What's included in Room ${room}?`];
+		if (page.endsWith("/browserooms.html")) return ["Which rooms are free this weekend for two?", "What's the difference between the floors?"];
+		if (page.endsWith("/floormap.html")) return ["Which floor is quietest?", "What's free tonight?"];
+		if (page.endsWith("/mybooking.html")) return ["When is my next stay?", "How do I cancel a booking?"];
+		if (page.endsWith("/bookingform.html")) return ["What's the cancellation policy?", "What time can I check in?"];
+		if (page.endsWith("/contact.html")) return ["Where is the hotel?", "When is reception open?"];
+		return [];
+	}
+
 	function addChips(suggestions) {
+		// Page-specific ideas first, topped up with the usual ones
+		suggestions = [...new Set([...pageSuggestions(), ...(suggestions || [])])].slice(0, 3);
 		if (!suggestions?.length) return;
 		const wrap = document.createElement("div");
 		wrap.className = "ai-chips";

@@ -5,6 +5,7 @@ const userRepo = require("../repositories/user.repository");
 const referenceRepo = require("../repositories/reference.repository");
 const { today } = require("./availability.service");
 const shiftService = require("./shift.service");
+const { addDays } = require("../config/hotel-time");
 
 // Bookings that count towards revenue and booking counts
 function countedBookings() {
@@ -123,6 +124,115 @@ function getRecentReviews(limit = 6) {
 	return referenceRepo.getReviews().slice(-limit).reverse();
 }
 
+// ---------- One period (the last 7, 30 or 90 days) ----------
+// Revenue is spread evenly across the nights of each stay, so a period
+// "earns" only the nights that fall inside it. Nights still to come are
+// "booked ahead".
+
+// Each night of a booking as { date, revenue }
+function nightsOf(b) {
+	const nights = [];
+	const perNight = b.nights ? (b.total || 0) / b.nights : 0;
+	for (let d = b.checkIn; d < b.checkOut; d = addDays(d, 1)) nights.push({ date: d, revenue: perNight });
+	return nights;
+}
+
+const round2 = (n) => Math.round(n * 100) / 100;
+
+function summarise(from, to, bookings, roomCount, reviews) {
+	const days = Math.round((Date.parse(to) - Date.parse(from)) / 86400000) + 1;
+	let revenue = 0;
+	let nights = 0;
+	bookings.forEach((b) =>
+		nightsOf(b).forEach((n) => {
+			if (n.date >= from && n.date <= to) {
+				revenue += n.revenue;
+				nights++;
+			}
+		}),
+	);
+	const made = bookings.filter((b) => {
+		const day = b.createdAt && new Date(b.createdAt).toLocaleDateString("en-CA");
+		return day >= from && day <= to;
+	}).length;
+	const inPeriod = reviews.filter((r) => r.date >= from && r.date <= to);
+	return {
+		from,
+		to,
+		revenue: round2(revenue),
+		nights,
+		occupancyPct: roomCount ? Math.round((nights / (roomCount * days)) * 100) : 0,
+		avgNightlyRate: nights ? Math.round(revenue / nights) : 0,
+		bookingsMade: made,
+		reviews: inPeriod.length,
+		avgRating: inPeriod.length ? round2(inPeriod.reduce((s, r) => s + r.rating, 0) / inPeriod.length) : null,
+	};
+}
+
+function getPeriod(days = 30) {
+	const date = today();
+	const from = addDays(date, -(days - 1));
+	const bookings = countedBookings();
+	const allRooms = rooms.getRooms();
+	const reviews = referenceRepo.getReviews();
+
+	const current = summarise(from, date, bookings, allRooms.length, reviews);
+	const previous = summarise(addDays(from, -days), addDays(from, -1), bookings, allRooms.length, reviews);
+
+	// Nights after today, over the same number of days ahead
+	const aheadTo = addDays(date, days);
+	let aheadRevenue = 0;
+	let aheadNights = 0;
+	bookings
+		.filter((b) => b.status === "booked" || b.status === "staying")
+		.forEach((b) =>
+			nightsOf(b).forEach((n) => {
+				if (n.date > date && n.date <= aheadTo) {
+					aheadRevenue += n.revenue;
+					aheadNights++;
+				}
+			}),
+		);
+
+	// Day-by-day and breakdowns for the charts
+	const trend = [];
+	for (let d = from; d <= date; d = addDays(d, 1)) trend.push({ date: d, bookings: 0, revenue: 0 });
+	const byDay = Object.fromEntries(trend.map((t) => [t.date, t]));
+	const byFloor = {};
+	const byRoom = {};
+	const byType = {};
+	allRooms.forEach((r) => (byFloor["F" + r.floor] = 0));
+	bookings.forEach((b) => {
+		const madeOn = b.createdAt && new Date(b.createdAt).toLocaleDateString("en-CA");
+		if (byDay[madeOn]) byDay[madeOn].bookings++;
+		nightsOf(b).forEach((n) => {
+			if (!byDay[n.date]) return;
+			byDay[n.date].revenue += n.revenue;
+			byFloor["F" + b.floor] = (byFloor["F" + b.floor] || 0) + n.revenue;
+			byRoom[b.roomId] = (byRoom[b.roomId] || 0) + 1;
+			byType[b.roomType] = (byType[b.roomType] || 0) + 1;
+		});
+	});
+	trend.forEach((t) => (t.revenue = round2(t.revenue)));
+
+	return {
+		days,
+		current,
+		previous,
+		occupancyNow: getOverview().occupancyPct,
+		bookedAhead: { to: aheadTo, revenue: round2(aheadRevenue), nights: aheadNights },
+		trend,
+		revenueByFloor: Object.entries(byFloor)
+			.sort(([a], [b]) => a.localeCompare(b))
+			.map(([floor, revenue]) => ({ floor, revenue: round2(revenue) })),
+		topRooms: Object.entries(byRoom)
+			.map(([roomId, nights]) => ({ roomId, nights }))
+			.sort((a, b) => b.nights - a.nights)
+			.slice(0, 8),
+		mix: Object.entries(byType).map(([type, nights]) => ({ type, nights })),
+	};
+}
+
 module.exports = {
 	getOverview,
 	getTopRooms,
@@ -131,4 +241,5 @@ module.exports = {
 	getBookingMix,
 	getStaff,
 	getRecentReviews,
+	getPeriod,
 };
