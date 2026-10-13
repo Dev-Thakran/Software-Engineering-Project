@@ -21,7 +21,9 @@
     "test": "jest",
     "start": "node --env-file-if-exists=.env backend/server.js",
     "dev": "nodemon --exec \"node --env-file-if-exists=.env\" backend/server.js",
-    "setup:ai": "node scripts/setup-ai.js"
+    "setup:ai": "node scripts/setup-ai.js",
+    "seed:demo": "node --env-file-if-exists=.env scripts/seed-demo.js",
+    "check:stats": "node scripts/check-stats.js"
   },
   "repository": {
     "type": "git",

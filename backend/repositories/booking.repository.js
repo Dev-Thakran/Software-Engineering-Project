@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { dataFile } = require("../config/paths");
+const { dataChanged } = require("../services/events.service");
 const FILE = dataFile("bookings.json");
 
 function getAll() {
@@ -16,6 +17,7 @@ function save(booking) {
 	const bookings = getAll();
 	bookings.push(booking);
 	fs.writeFileSync(FILE, JSON.stringify(bookings, null, 2));
+	dataChanged("bookings");
 	return booking;
 }
 
@@ -25,6 +27,7 @@ function update(id, changes) {
 	if (idx === -1) return null;
 	bookings[idx] = { ...bookings[idx], ...changes };
 	fs.writeFileSync(FILE, JSON.stringify(bookings, null, 2));
+	dataChanged("bookings");
 	return bookings[idx];
 }
 

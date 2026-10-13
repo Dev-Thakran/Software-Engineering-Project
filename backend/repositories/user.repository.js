@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { dataFile } = require("../config/paths");
+const { dataChanged } = require("../services/events.service");
 const FILE = dataFile("users.json");
 
 function getAll() {
@@ -16,6 +17,7 @@ function save(user) {
 	const users = getAll();
 	users.push(user);
 	fs.writeFileSync(FILE, JSON.stringify(users, null, 2));
+	dataChanged("users");
 }
 
 module.exports = { getAll, findByEmail, findById, save };

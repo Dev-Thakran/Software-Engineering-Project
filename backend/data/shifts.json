@@ -1,11 +1,44 @@
 [
-	{
-		"id": "sh001",
-		"staffId": "u002",
-		"staffName": "Mike Tane",
-		"days": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-		"shiftStart": "07:00",
-		"shiftEnd": "15:00",
-		"shiftType": "Morning"
-	}
+  {
+    "id": "sh001",
+    "staffId": "u002",
+    "staffName": "Mike Tane",
+    "days": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "shiftStart": "07:00",
+    "shiftEnd": "15:00",
+    "shiftType": "Morning"
+  },
+  {
+    "id": "sh002",
+    "staffId": "u004",
+    "staffName": "Aroha Ngata",
+    "days": [
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday"
+    ],
+    "shiftStart": "15:00",
+    "shiftEnd": "23:00",
+    "shiftType": "Afternoon"
+  },
+  {
+    "id": "sh003",
+    "staffId": "u005",
+    "staffName": "Liam Chen",
+    "days": [
+      "Saturday",
+      "Sunday"
+    ],
+    "shiftStart": "08:00",
+    "shiftEnd": "20:00",
+    "shiftType": "Weekend"
+  }
 ]

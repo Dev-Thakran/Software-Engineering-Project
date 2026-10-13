@@ -70,6 +70,23 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Parse and return the JSON response body
 	}
 
+	// - Charts ---------------------------
+	// Each chart is drawn once; later refreshes swap in the new numbers and
+	// animate the change instead of drawing a second chart on top
+	const charts = {};
+	function drawChart(canvasId, config) {
+		const chart = charts[canvasId];
+		if (!chart) {
+			charts[canvasId] = new Chart(document.getElementById(canvasId), config);
+			return;
+		}
+		chart.data.labels = config.data.labels;
+		chart.data.datasets.forEach((dataset, i) => {
+			dataset.data = config.data.datasets[i].data;
+		});
+		chart.update();
+	}
+
 	// - KPI Stats -----------------------
 	async function loadStats() {
 		// Fetch the four headline numbers from the backend
@@ -104,7 +121,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Fetch the most booked rooms - backend counts bookings per roomId
 		const data = await get("/manager/top-rooms");
 
-		new Chart(document.getElementById("chart-top-rooms"), {
+		drawChart("chart-top-rooms", {
 			type: "bar",
 			data: {
 				// X axis labels - e.g. "Room 103", "Room 202"
@@ -150,7 +167,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// e.g. Standard Single: 2, Deluxe Double: 3
 		const data = await get("/manager/booking-mix");
 
-		new Chart(document.getElementById("chart-mix"), {
+		drawChart("chart-mix", {
 			type: "doughnut",
 			data: {
 				labels: data.map((d) => d.type), // Room type names
@@ -171,6 +188,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 		// Build a custom legend manually because Chart.js legend doesn't match the design
 		const legend = document.getElementById("mix-legend");
+		legend.innerHTML = ""; // rebuilt on every refresh
 		data.forEach((d, i) => {
 			// For each room type, create a coloured square and label
 			legend.innerHTML += `
@@ -187,7 +205,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Backend loops through dates and counts bookings created on each day
 		const data = await get("/manager/trend");
 
-		new Chart(document.getElementById("chart-trend"), {
+		drawChart("chart-trend", {
 			type: "line",
 			data: {
 				labels: data.map((d) => d.date), // Dates on X axis e.g. "05-04"
@@ -223,7 +241,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		// Backend sums booking totals per floor number
 		const data = await get("/manager/revenue-by-floor");
 
-		new Chart(document.getElementById("chart-floor"), {
+		drawChart("chart-floor", {
 			type: "bar",
 			data: {
 				labels: data.map((d) => d.floor), // Floor labels e.g. "F1", "F2"
@@ -325,14 +343,69 @@ document.addEventListener("DOMContentLoaded", function () {
 			.join("");
 	}
 
-	// - Load everything on page open --------------
-	// All functions are called simultaneously using individual async calls
-	// They don't depend on each other so they can all run at the same time
-	loadStats();
-	loadTopRooms();
-	loadMix();
-	loadTrend();
-	loadFloorRevenue();
-	loadStaff();
-	loadReviews();
+	// - Load everything ---------------------------
+	// All sections load at the same time; none depends on another
+	async function refreshAll() {
+		await Promise.allSettled([
+			loadStats(),
+			loadTopRooms(),
+			loadMix(),
+			loadTrend(),
+			loadFloorRevenue(),
+			loadStaff(),
+			loadReviews(),
+		]);
+		setLiveStatus(true, "updated " + new Date().toLocaleTimeString("en-NZ", { hour: "numeric", minute: "2-digit", second: "2-digit" }));
+	}
+
+	// - Live updates ------------------------------
+	// Keeps a connection open to the server, which says "change" whenever a
+	// booking, cancellation, check-in or check-out happens anywhere. The page
+	// then refreshes its numbers - no reload needed.
+	function setLiveStatus(live, text) {
+		const el = document.getElementById("live-status");
+		if (!el) return;
+		el.classList.toggle("offline", !live);
+		el.querySelector("[data-live-text]").textContent = live ? "Live · " + text : text;
+	}
+
+	let refreshQueued = false;
+	async function queueRefresh() {
+		if (refreshQueued) return;
+		refreshQueued = true;
+		await refreshAll();
+		refreshQueued = false;
+	}
+
+	async function listenForChanges(retryDelay = 2000) {
+		try {
+			const res = await fetch("/manager/live", {
+				headers: { Authorization: "Bearer " + token },
+			});
+			if (!res.ok) throw new Error("not allowed");
+			const reader = res.body.pipeThrough(new TextDecoderStream()).getReader();
+			let buffer = "";
+			retryDelay = 2000;
+			while (true) {
+				const { value, done } = await reader.read();
+				if (done) break;
+				buffer += value;
+				const messages = buffer.replace(/\r/g, "").split("\n\n");
+				buffer = messages.pop();
+				if (messages.some((m) => m.startsWith("event: change"))) queueRefresh();
+			}
+		} catch {
+			/* reconnect below */
+		}
+		// Connection dropped (e.g. the server restarted): try again, a little
+		// slower each time, and catch up on anything missed
+		setLiveStatus(false, "Reconnecting…");
+		setTimeout(async () => {
+			await refreshAll();
+			listenForChanges(Math.min(retryDelay * 2, 30000));
+		}, retryDelay);
+	}
+
+	refreshAll();
+	listenForChanges();
 });

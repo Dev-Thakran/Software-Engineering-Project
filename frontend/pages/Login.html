@@ -52,7 +52,7 @@
 			}
 			.cred-row {
 				display: grid;
-				grid-template-columns: 75px 1fr auto;
+				grid-template-columns: 112px 1fr auto;
 				align-items: center;
 				gap: 8px;
 				padding: 9px 12px;
@@ -165,28 +165,46 @@
 					</button>
 
 					<p class="kicker mb-3">Demo Credentials - Click to Autofill</p>
+					<!-- Every demo account uses the password "password" -->
 					<div
 						class="cred-row"
 						onclick="autofill('jane@email.com', 'password', 'customer')">
-						<span style="color: #8b7355">Customer</span>
+						<span style="color: #8b7355">Customer · Jane</span>
 						<span style="color: #6b5743">jane@email.com</span>
 						<span class="cred-password" style="color: #8b7355">password →</span>
 					</div>
 					<div
 						class="cred-row"
-						onclick="
-							autofill('staff@email.co.nz', 'password', 'staff')
-						">
-						<span style="color: #8b7355">Staff</span>
+						onclick="autofill('lily.evans@example.com', 'password', 'customer')">
+						<span style="color: #8b7355">Customer · Lily</span>
+						<span style="color: #6b5743">lily.evans@example.com</span>
+						<span class="cred-password" style="color: #8b7355">password →</span>
+					</div>
+					<div
+						class="cred-row"
+						onclick="autofill('staff@email.co.nz', 'password', 'staff')">
+						<span style="color: #8b7355">Staff · Mike</span>
 						<span style="color: #6b5743">staff@email.co.nz</span>
 						<span class="cred-password" style="color: #8b7355">password →</span>
 					</div>
 					<div
 						class="cred-row"
-						onclick="
-							autofill('manager@email.co.nz', 'password', 'manager')
-						">
-						<span style="color: #8b7355">Manager</span>
+						onclick="autofill('aroha.ngata@example.com', 'password', 'staff')">
+						<span style="color: #8b7355">Staff · Aroha</span>
+						<span style="color: #6b5743">aroha.ngata@example.com</span>
+						<span class="cred-password" style="color: #8b7355">password →</span>
+					</div>
+					<div
+						class="cred-row"
+						onclick="autofill('liam.chen@example.com', 'password', 'staff')">
+						<span style="color: #8b7355">Staff · Liam</span>
+						<span style="color: #6b5743">liam.chen@example.com</span>
+						<span class="cred-password" style="color: #8b7355">password →</span>
+					</div>
+					<div
+						class="cred-row"
+						onclick="autofill('manager@email.co.nz', 'password', 'manager')">
+						<span style="color: #8b7355">Manager · Sarah</span>
 						<span style="color: #6b5743">manager@email.co.nz</span>
 						<span class="cred-password" style="color: #8b7355">password →</span>
 					</div>

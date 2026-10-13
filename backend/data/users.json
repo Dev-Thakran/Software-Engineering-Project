@@ -1,86 +1,380 @@
 [
-	{
-		"id": "u001",
-		"name": "Jane Thompson",
-		"email": "jane@email.com",
-		"password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-		"role": "customer"
-	},
-	{
-		"id": "u002",
-		"name": "Mike Tane",
-		"email": "staff@email.co.nz",
-		"password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-		"role": "staff"
-	},
-	{
-		"id": "u003",
-		"name": "Sarah Kim",
-		"email": "manager@email.co.nz",
-		"password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
-		"role": "manager"
-	},
-	{
-		"id": "u1778992419881",
-		"name": "Dev Thakran",
-		"email": "devthakran27@gmail.com",
-		"password": "$2b$10$dD.qmc6yqJWl6ra4fy84xOQivW/AEviwZGEqN0rbcitJ0eYPMQjuS",
-		"role": "customer"
-	},
-	{
-		"id": "u1779003455079",
-		"name": "Devvrat Thakran",
-		"email": "devthakran217@gmail.com",
-		"password": "$2b$10$XaLy5AlzCHb3Vo.YTSHgtOPbJ/xErTFleVkNRj9ahMF0M/dXi5x6u",
-		"role": "customer"
-	},
-	{
-		"id": "u1779020905926",
-		"name": "Dustin Diaz",
-		"email": "dustin@gmail.com",
-		"password": "$2b$10$.zV9IW.zrLn/NVEkNTDNQ.LfXOYRWQWaUeOSj4ZPYHuelxz4Vyb/y",
-		"role": "customer"
-	},
-	{
-		"id": "u1779061416594",
-		"name": "Nihal Panithy",
-		"email": "panithynihal@gmail.com",
-		"password": "$2b$10$lxwkBIc2EyxIsUQ4YEsCeekkDFhHvmQPstI2tEVLZf0wW1HDh1ojq",
-		"role": "customer"
-	},
-	{
-		"id": "u1779401867216",
-		"name": "Bob Johns",
-		"email": "bibjohns@gmail.com",
-		"password": "$2b$10$lEaLkj8kONVxndfeNYgyH.prGEBmOfWzZP.XtRdc6uOFa16wFiJhq",
-		"role": "customer"
-	},
-	{
-		"id": "u1780007193725",
-		"name": "Test User",
-		"email": "inttest_1780007193577@email.com",
-		"password": "$2b$10$4yKLbV8ZRtazTJMXp9fOCOfqxTvuJCJ6BwEs1XtojgfV/wbFIKk/e",
-		"role": "customer"
-	},
-	{
-		"id": "u1780007302069",
-		"name": "Test User",
-		"email": "inttest_1780007301922@email.com",
-		"password": "$2b$10$q57PYGIYjrF.l4cuv37VVevN5SDEBaRFZ08ScD.ANfBCI1QGbs/jS",
-		"role": "customer"
-	},
-	{
-		"id": "u1780007450859",
-		"name": "Test User",
-		"email": "inttest_1780007450714@email.com",
-		"password": "$2b$10$qi96e.RUi1UbVLPylVBspuoKkPprcLG3vioONWjlNmQpj5MP7ky2q",
-		"role": "customer"
-	},
-	{
-		"id": "u1780007790469",
-		"name": "Test User",
-		"email": "inttest_1780007790330@email.com",
-		"password": "$2b$10$gDif.hybmbTFOG72FOxwMuWORMFe3vyL80p/iiBKyzFQ9OyDlc4qa",
-		"role": "customer"
-	}
+  {
+    "id": "u001",
+    "name": "Jane Thompson",
+    "email": "jane@email.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "u002",
+    "name": "Mike Tane",
+    "email": "staff@email.co.nz",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "staff"
+  },
+  {
+    "id": "u003",
+    "name": "Sarah Kim",
+    "email": "manager@email.co.nz",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "manager"
+  },
+  {
+    "id": "u1778992419881",
+    "name": "Dev Thakran",
+    "email": "devthakran27@gmail.com",
+    "password": "$2b$10$dD.qmc6yqJWl6ra4fy84xOQivW/AEviwZGEqN0rbcitJ0eYPMQjuS",
+    "role": "customer"
+  },
+  {
+    "id": "u1779003455079",
+    "name": "Devvrat Thakran",
+    "email": "devthakran217@gmail.com",
+    "password": "$2b$10$XaLy5AlzCHb3Vo.YTSHgtOPbJ/xErTFleVkNRj9ahMF0M/dXi5x6u",
+    "role": "customer"
+  },
+  {
+    "id": "u1779020905926",
+    "name": "Dustin Diaz",
+    "email": "dustin@gmail.com",
+    "password": "$2b$10$.zV9IW.zrLn/NVEkNTDNQ.LfXOYRWQWaUeOSj4ZPYHuelxz4Vyb/y",
+    "role": "customer"
+  },
+  {
+    "id": "u1779061416594",
+    "name": "Nihal Panithy",
+    "email": "panithynihal@gmail.com",
+    "password": "$2b$10$lxwkBIc2EyxIsUQ4YEsCeekkDFhHvmQPstI2tEVLZf0wW1HDh1ojq",
+    "role": "customer"
+  },
+  {
+    "id": "u1779401867216",
+    "name": "Bob Johns",
+    "email": "bibjohns@gmail.com",
+    "password": "$2b$10$lEaLkj8kONVxndfeNYgyH.prGEBmOfWzZP.XtRdc6uOFa16wFiJhq",
+    "role": "customer"
+  },
+  {
+    "id": "u1780007193725",
+    "name": "Test User",
+    "email": "inttest_1780007193577@email.com",
+    "password": "$2b$10$4yKLbV8ZRtazTJMXp9fOCOfqxTvuJCJ6BwEs1XtojgfV/wbFIKk/e",
+    "role": "customer"
+  },
+  {
+    "id": "u1780007302069",
+    "name": "Test User",
+    "email": "inttest_1780007301922@email.com",
+    "password": "$2b$10$q57PYGIYjrF.l4cuv37VVevN5SDEBaRFZ08ScD.ANfBCI1QGbs/jS",
+    "role": "customer"
+  },
+  {
+    "id": "u1780007450859",
+    "name": "Test User",
+    "email": "inttest_1780007450714@email.com",
+    "password": "$2b$10$qi96e.RUi1UbVLPylVBspuoKkPprcLG3vioONWjlNmQpj5MP7ky2q",
+    "role": "customer"
+  },
+  {
+    "id": "u1780007790469",
+    "name": "Test User",
+    "email": "inttest_1780007790330@email.com",
+    "password": "$2b$10$gDif.hybmbTFOG72FOxwMuWORMFe3vyL80p/iiBKyzFQ9OyDlc4qa",
+    "role": "customer"
+  },
+  {
+    "id": "u004",
+    "name": "Aroha Ngata",
+    "email": "aroha.ngata@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "staff"
+  },
+  {
+    "id": "u005",
+    "name": "Liam Chen",
+    "email": "liam.chen@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "staff"
+  },
+  {
+    "id": "ug001",
+    "name": "Aroha Tipene",
+    "email": "aroha.tipene@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug002",
+    "name": "Liam Walker",
+    "email": "liam.walker@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug003",
+    "name": "Sophie Turner",
+    "email": "sophie.turner@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug004",
+    "name": "Hemi Parata",
+    "email": "hemi.parata@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug005",
+    "name": "Olivia Chen",
+    "email": "olivia.chen@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug006",
+    "name": "James Wilson",
+    "email": "james.wilson@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug007",
+    "name": "Mere Kingi",
+    "email": "mere.kingi@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug008",
+    "name": "Noah Patel",
+    "email": "noah.patel@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug009",
+    "name": "Isla Morrison",
+    "email": "isla.morrison@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug010",
+    "name": "Tama Rangi",
+    "email": "tama.rangi@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug011",
+    "name": "Charlotte Brown",
+    "email": "charlotte.brown@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug012",
+    "name": "Lucas Martin",
+    "email": "lucas.martin@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug013",
+    "name": "Amelia Scott",
+    "email": "amelia.scott@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug014",
+    "name": "Wiremu Tane",
+    "email": "wiremu.tane@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug015",
+    "name": "Ella Thompson",
+    "email": "ella.thompson@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug016",
+    "name": "Jack Robinson",
+    "email": "jack.robinson@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug017",
+    "name": "Grace Kim",
+    "email": "grace.kim@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug018",
+    "name": "Mason Lee",
+    "email": "mason.lee@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug019",
+    "name": "Ruby Clarke",
+    "email": "ruby.clarke@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug020",
+    "name": "Ethan Singh",
+    "email": "ethan.singh@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug021",
+    "name": "Hana Ngata",
+    "email": "hana.ngata@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug022",
+    "name": "Oliver Smith",
+    "email": "oliver.smith@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug023",
+    "name": "Zoe Campbell",
+    "email": "zoe.campbell@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug024",
+    "name": "Ari Te Huia",
+    "email": "ari.te.huia@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug025",
+    "name": "Mia Johnson",
+    "email": "mia.johnson@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug026",
+    "name": "Leo Nguyen",
+    "email": "leo.nguyen@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug027",
+    "name": "Emily Davies",
+    "email": "emily.davies@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug028",
+    "name": "Kauri Hohaia",
+    "email": "kauri.hohaia@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug029",
+    "name": "Chloe Anderson",
+    "email": "chloe.anderson@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug030",
+    "name": "Daniel Fraser",
+    "email": "daniel.fraser@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug031",
+    "name": "Anika Sharma",
+    "email": "anika.sharma@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug032",
+    "name": "Ben Harris",
+    "email": "ben.harris@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug033",
+    "name": "Lily Evans",
+    "email": "lily.evans@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug034",
+    "name": "Rawiri Paki",
+    "email": "rawiri.paki@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug035",
+    "name": "Hannah Murphy",
+    "email": "hannah.murphy@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug036",
+    "name": "Sam O'Brien",
+    "email": "sam.obrien@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug037",
+    "name": "Yuki Tanaka",
+    "email": "yuki.tanaka@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug038",
+    "name": "Freya Jensen",
+    "email": "freya.jensen@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug039",
+    "name": "Mateo Garcia",
+    "email": "mateo.garcia@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  },
+  {
+    "id": "ug040",
+    "name": "Priya Nair",
+    "email": "priya.nair@example.com",
+    "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
+    "role": "customer"
+  }
 ]

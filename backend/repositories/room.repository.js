@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { dataFile } = require("../config/paths");
+const { dataChanged } = require("../services/events.service");
 const FILE = dataFile("rooms.json");
 
 function getAll() {
@@ -15,6 +16,7 @@ function update(id, changes) {
 	if (idx === -1) return null;
 	rooms[idx] = { ...rooms[idx], ...changes };
 	fs.writeFileSync(FILE, JSON.stringify(rooms, null, 2));
+	dataChanged("rooms");
 	return rooms[idx];
 }
 
@@ -22,12 +24,14 @@ function add(room) {
 	const rooms = getAll();
 	rooms.push(room);
 	fs.writeFileSync(FILE, JSON.stringify(rooms, null, 2));
+	dataChanged("rooms");
 	return room;
 }
 
 function remove(id) {
 	const rooms = getAll().filter((r) => r.id !== id);
 	fs.writeFileSync(FILE, JSON.stringify(rooms, null, 2));
+	dataChanged("rooms");
 }
 
 module.exports = { getAll, findById, update, add, remove };

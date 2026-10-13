@@ -27,7 +27,7 @@ live booking data.
   Google Gemini keys, or the paid Claude API - see [AI Assistant](#ai-assistant).
 - **Date-based availability**: a room can be booked for any dates that don't overlap
   an existing stay; "occupied" means someone is in the room today.
-- **58 automated tests** (Jest) covering auth, booking calculations, availability,
+- **75 automated tests** (Jest) covering auth, booking calculations, availability,
   payments, the AI assistant, and an end-to-end integration flow.
 
 ## Screenshots
@@ -42,7 +42,7 @@ live booking data.
 - **Frontend**: Vanilla HTML/CSS/JS, [Chart.js](https://www.chartjs.org/) for the
   manager analytics dashboard
 - **Data**: JSON files as a lightweight datastore (see [Data](#data) below)
-- **Testing**: Jest (58 tests across auth, booking, availability, payment, AI, and integration)
+- **Testing**: Jest (75 tests across auth, booking, availability, payment, AI, and integration)
 - **Tooling**: ESLint, Nodemon
 
 ## Architecture
@@ -127,6 +127,18 @@ the API directly.
 
 ## Data
 
+**Demo data.** `npm run seed:demo` fills the hotel with about three months of realistic
+history and a month of upcoming bookings (around 560 bookings with check-ins, reviews,
+cancellations, no-shows and a staff rota). Existing accounts are kept; made-up guests use
+`@example.com` addresses and the password `password`. The current files are backed up to
+your temp folder first. `npm run check:stats` then recalculates every manager-dashboard
+number straight from the data files and confirms the dashboard reports the same.
+
+**Live dashboard.** The manager dashboard keeps a connection open to the server and
+refreshes itself ("Live · updated …") whenever a booking, cancellation, check-in or
+check-out happens, without reloading the page.
+
+
 This project uses JSON files in `backend/data/` (rooms, bookings, users, shifts,
 check-ins, reviews) as a lightweight datastore for development and testing, accessed
 through a repository layer. This keeps the layer boundary in place, so swapping in a
@@ -139,7 +151,7 @@ routes and controllers wouldn't need to change.
 npm test
 ```
 
-58 Jest tests across seven suites: authentication, booking logic, date-based
+75 Jest tests across nine suites: authentication, booking logic, date-based
 availability and check-in/out, payment handling, the AI assistant, and an end-to-end
 integration flow. Tests run against a temporary copy of `backend/data/`, so they never
 change the real data files. The AI tests use a scripted fake model, so they need no API
