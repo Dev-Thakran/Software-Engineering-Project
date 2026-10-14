@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 			.then((res) => {
 				if (!res.ok) return localStorage.clear();
 				const role = localStorage.getItem("role");
-				location.href = role === "manager" || role === "staff" ? `/pages/${role}.html` : back || "/pages/browserooms.html";
+				location.href = role === "manager" || role === "staff" ? `/pages/${role}.html` : back || "/pages/index.html";
 			})
 			.catch(() => localStorage.clear());
 	}
@@ -99,7 +99,7 @@ async function handleRegister() {
 			localStorage.setItem("token", session.token);
 			localStorage.setItem("role", session.role);
 			localStorage.setItem("name", session.name);
-			location.href = redirectTo() || "/pages/browserooms.html";
+			location.href = redirectTo() || "/pages/index.html";
 		} else {
 			location.href = "./Login.html";
 		}

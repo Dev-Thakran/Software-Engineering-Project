@@ -1,10 +1,11 @@
 // Where to go after signing in: the page that sent the visitor here
-// (e.g. the booking form), otherwise the home page for their role
+// partway through a booking (e.g. the booking form), otherwise the home
+// page for their role
 function destinationFor(role) {
 	const back = UI.safeRedirect(new URLSearchParams(location.search).get("redirect"));
 	if (role === "manager") return "/pages/manager.html";
 	if (role === "staff") return "/pages/staff.html";
-	return back || "/pages/browserooms.html";
+	return back || "/pages/index.html";
 }
 
 document.addEventListener("DOMContentLoaded", function () {

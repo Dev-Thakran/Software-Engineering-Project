@@ -9,6 +9,14 @@ function escapeHtml(value) {
 	})[ch]);
 }
 
+// Staff work only from the staff console: any other page sends them straight
+// back to it, before the page shows. The sign-in page stays reachable so an
+// expired session can sign in again.
+const isStaff = localStorage.getItem("role") === "staff";
+if (isStaff && !/\/pages\/(staff|login)\.html$/i.test(location.pathname)) {
+	location.replace("/pages/staff.html");
+}
+
 // The header is fetched as soon as the page structure is ready (not after
 // every image has loaded), so the navigation appears straight away.
 document.addEventListener("DOMContentLoaded", async function () {
@@ -23,9 +31,13 @@ document.addEventListener("DOMContentLoaded", async function () {
 		return; // offline - the page still works without the header
 	}
 
-	markCurrentPage();
-	setUpMobileMenu();
-	setUpAuth();
+	if (isStaff) {
+		staffHeader();
+	} else {
+		markCurrentPage();
+		setUpMobileMenu();
+		setUpAuth();
+	}
 	document.dispatchEvent(new CustomEvent("header:ready"));
 });
 
@@ -140,6 +152,25 @@ function setUpAuth() {
 		if (desktop) desktop.style.display = "block";
 		if (mobile) mobile.style.display = "block";
 	}
+}
+
+// Staff see only the logo (back to their console), their name and Sign Out -
+// no links to the rest of the site
+function staffHeader() {
+	document.querySelector("#header .desktop-nav")?.remove();
+	document.getElementById("mobile-menu")?.remove();
+	document.getElementById("hamburger")?.remove();
+	const logo = document.querySelector("#header nav a.font-serif");
+	if (logo) logo.href = "/pages/staff.html";
+
+	const firstName = escapeHtml((localStorage.getItem("name") || "Staff").split(" ")[0]);
+	const authEl = document.getElementById("nav-auth");
+	if (!authEl) return;
+	// Plain inline styles so Sign Out stays visible on phones too
+	authEl.innerHTML = `
+		<span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#555;">${firstName}</span>
+		<button type="button" id="staff-logout" style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#7a654b;background:none;border:none;cursor:pointer;padding:8px 0;">Sign Out</button>`;
+	document.getElementById("staff-logout").addEventListener("click", handleLogout);
 }
 
 function handleLogout() {
