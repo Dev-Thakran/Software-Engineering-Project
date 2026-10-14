@@ -9,13 +9,23 @@ function escapeHtml(value) {
 	})[ch]);
 }
 
-// Staff work only from the staff console: any other page sends them straight
-// back to it, before the page shows. The sign-in page stays reachable so an
-// expired session can sign in again.
+// Staff work only from the staff console, and the manager only from the
+// dashboard pages: any other page sends them straight back, before the page
+// shows. The sign-in page stays reachable so an expired session can sign in.
 const isStaff = localStorage.getItem("role") === "staff";
+const isManager = localStorage.getItem("role") === "manager";
 if (isStaff && !/\/pages\/(staff|login)\.html$/i.test(location.pathname)) {
 	location.replace("/pages/staff.html");
 }
+if (isManager && !/\/pages\/(manager|manager-rooms|login)\.html$/i.test(location.pathname)) {
+	location.replace("/pages/manager.html");
+}
+
+// The manager dashboard's own pages
+const MANAGER_PAGES = [
+	{ href: "/pages/manager.html", label: "Overview" },
+	{ href: "/pages/manager-rooms.html", label: "Rooms & prices" },
+];
 
 // The header is fetched as soon as the page structure is ready (not after
 // every image has loaded), so the navigation appears straight away.
@@ -32,7 +42,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 	}
 
 	if (isStaff) {
-		staffHeader();
+		dashboardHeader("/pages/staff.html");
+	} else if (isManager) {
+		dashboardHeader("/pages/manager.html", MANAGER_PAGES);
 	} else {
 		markCurrentPage();
 		setUpMobileMenu();
@@ -154,14 +166,26 @@ function setUpAuth() {
 	}
 }
 
-// Staff see only the logo (back to their console), their name and Sign Out -
-// no links to the rest of the site
-function staffHeader() {
+// Staff and the manager see the logo (back to their home page), their own
+// pages if they have more than one, their name and Sign Out - no links to the
+// rest of the site
+function dashboardHeader(home, pages = []) {
 	document.querySelector("#header .desktop-nav")?.remove();
 	document.getElementById("mobile-menu")?.remove();
 	document.getElementById("hamburger")?.remove();
 	const logo = document.querySelector("#header nav a.font-serif");
-	if (logo) logo.href = "/pages/staff.html";
+	if (logo) logo.href = home;
+
+	if (pages.length) {
+		const here = location.pathname.toLowerCase();
+		const bar = document.createElement("div");
+		bar.className = "dash-nav";
+		bar.setAttribute("aria-label", "Dashboard");
+		bar.innerHTML = pages
+			.map((p) => `<a href="${p.href}"${p.href.toLowerCase() === here ? ' aria-current="page"' : ""}>${p.label}</a>`)
+			.join("");
+		document.querySelector("#header nav")?.appendChild(bar);
+	}
 
 	const firstName = escapeHtml((localStorage.getItem("name") || "Staff").split(" ")[0]);
 	const authEl = document.getElementById("nav-auth");
@@ -169,8 +193,8 @@ function staffHeader() {
 	// Plain inline styles so Sign Out stays visible on phones too
 	authEl.innerHTML = `
 		<span style="font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:#555;">${firstName}</span>
-		<button type="button" id="staff-logout" style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#7a654b;background:none;border:none;cursor:pointer;padding:8px 0;">Sign Out</button>`;
-	document.getElementById("staff-logout").addEventListener("click", handleLogout);
+		<button type="button" id="dash-logout" style="font-size:11px;letter-spacing:0.22em;text-transform:uppercase;color:#7a654b;background:none;border:none;cursor:pointer;padding:8px 0;">Sign Out</button>`;
+	document.getElementById("dash-logout").addEventListener("click", handleLogout);
 }
 
 function handleLogout() {

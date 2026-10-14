@@ -11,12 +11,12 @@ function escapeHtml(value) {
 
 document.addEventListener("DOMContentLoaded", function () {
 	const token = localStorage.getItem("token");
-	// Staff and managers only - guests go back to the main site
+	// Staff only - everyone else goes back to the main site
 	if (!token) {
 		window.location.href = `/pages/Login.html?redirect=${encodeURIComponent(location.pathname)}`;
 		return;
 	}
-	if (!["staff", "manager"].includes(localStorage.getItem("role"))) {
+	if (localStorage.getItem("role") !== "staff") {
 		window.location.href = "/pages/index.html";
 		return;
 	}
@@ -57,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function () {
 	let shift = { state: "none", messages: {} };
 	let clockOffset = 0; // server clock minus this computer's clock
 	let shiftTimer = null;
-	const isManager = localStorage.getItem("role") === "manager";
 
 	const pad = (n) => String(n).padStart(2, "0");
 	function formatDuration(ms) {
@@ -170,10 +169,9 @@ document.addEventListener("DOMContentLoaded", function () {
 		overlay.querySelector("button").focus();
 	}
 
-	// Staff can only check guests in or out during their shift (managers
-	// don't work shifts). The server enforces this too.
+	// Staff can only check guests in or out during their shift. The server
+	// enforces this too.
 	function blockedByShift() {
-		if (isManager) return false;
 		const state = shiftState();
 		if (state === "on") return false;
 		showShiftPopup(state, shift.messages[state]);

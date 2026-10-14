@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Rooms & Prices – La Extravaganza</title>
+		<script src="https://cdn.tailwindcss.com"></script>
+		<link rel="stylesheet" href="../css/main.css" />
+		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+		<meta name="description" content="Manager tool for changing room prices at La Extravaganza." />
+		<script src="../js/ui.js"></script>
+		<script src="../js/header.js"></script>
+		<script src="../js/footer.js"></script>
+		<script src="../js/manager-rooms.js" defer></script>
+		<style>
+			.floor-card { background: #fff; border: 1px solid var(--lux-brown-100); margin-bottom: 28px; }
+			.floor-head {
+				display: flex;
+				flex-wrap: wrap;
+				align-items: flex-end;
+				justify-content: space-between;
+				gap: 16px 32px;
+				padding: 22px 24px;
+				border-bottom: 1px solid var(--lux-brown-100);
+				background: var(--lux-cream);
+			}
+			.floor-set { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 14px; color: var(--lux-brown-600); }
+			.price-input {
+				display: inline-flex;
+				align-items: center;
+				border: 1px solid var(--lux-brown-200);
+				background: #fff;
+				min-height: 42px;
+				padding: 0 10px;
+			}
+			.price-input:focus-within { border-color: var(--lux-brown-700); box-shadow: 0 0 0 1px var(--lux-brown-700); }
+			.price-input span { color: var(--lux-text-soft); margin-right: 4px; }
+			.price-input input { width: 84px; border: none; background: transparent; font-size: 15px; color: #2c241b; font-variant-numeric: tabular-nums; outline: none; }
+			.price-input.invalid { border-color: var(--lux-danger); }
+			.small-btn { padding: 11px 18px !important; }
+			.small-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+			.room-row {
+				display: grid;
+				grid-template-columns: 110px minmax(0, 1fr) 110px auto;
+				align-items: center;
+				gap: 16px;
+				padding: 14px 24px;
+				border-bottom: 1px solid var(--lux-brown-100);
+			}
+			.room-row:last-child { border-bottom: none; }
+			.room-row.head { padding-top: 10px; padding-bottom: 10px; }
+			.room-row .now { font-family: "Cormorant Garamond", serif; font-size: 24px; color: #2c241b; font-variant-numeric: tabular-nums; }
+			.room-edit { display: flex; align-items: center; gap: 10px; justify-content: flex-end; }
+			.changed { font-size: 12px; color: var(--lux-success); white-space: nowrap; }
+			.row-error { grid-column: 1 / -1; margin-top: -6px; }
+			@media (max-width: 720px) {
+				.room-row { grid-template-columns: 1fr auto; gap: 8px 12px; padding: 16px 18px; }
+				.room-row.head { display: none; }
+				.room-row .type { grid-column: 1 / -1; order: 3; }
+				.room-edit { grid-column: 1 / -1; order: 4; justify-content: flex-start; }
+				.floor-head { padding: 18px; }
+			}
+		</style>
+	</head>
+	<body style="background: var(--lux-cream)">
+		<header class="sticky top-0 z-20" id="header"></header>
+
+		<main class="mx-auto py-8 md:py-12 max-w-6xl px-4 md:px-6">
+			<p class="kicker">Pricing</p>
+			<div class="flex flex-wrap items-end justify-between gap-4 mb-3">
+				<h1 class="font-serif text-3xl md:text-5xl" style="color: var(--lux-brown-800)">Rooms &amp; prices</h1>
+				<p id="price-summary" class="text-sm" style="color: var(--lux-text-muted)"></p>
+			</div>
+			<p class="mb-8 text-sm flex items-start gap-2" style="color: var(--lux-text-muted); max-width: 70ch; line-height: 1.7">
+				<span data-icon="clock" style="margin-top: 2px"></span>
+				<span>Changes apply to new bookings straight away. Existing bookings keep the price they were booked at.</span>
+			</p>
+
+			<!-- manager-rooms.js builds one card per floor here -->
+			<div id="floors" aria-busy="true">
+				<div class="skeleton mb-6" style="height: 260px"></div>
+				<div class="skeleton" style="height: 260px"></div>
+			</div>
+		</main>
+
+		<footer id="footer"></footer>
+	</body>
+</html>

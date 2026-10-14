@@ -42,12 +42,9 @@ router.get("/:id/booked", (req, res) => {
 router.get("/", ctrl.getAll); // public
 router.get("/:id", ctrl.getOne); // public - must come after the sub-resources
 router.post("/", authenticate, requireRole("manager"), ctrl.addRoom);
-router.patch(
-	"/:id",
-	authenticate,
-	requireRole("manager", "staff"),
-	ctrl.updateRoom,
-);
+// Only the manager changes room details and prices
+router.patch("/floors/:floor", authenticate, requireRole("manager"), ctrl.updateFloorPrice);
+router.patch("/:id", authenticate, requireRole("manager"), ctrl.updateRoom);
 router.delete("/:id", authenticate, requireRole("manager"), ctrl.deleteRoom);
 
 module.exports = router;

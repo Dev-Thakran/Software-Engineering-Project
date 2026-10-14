@@ -20,6 +20,22 @@ function update(id, changes) {
 	return rooms[idx];
 }
 
+// Applies the same changes to every room that matches, in one save
+function updateMany(matches, changes) {
+	const rooms = getAll();
+	const updated = [];
+	rooms.forEach((room, i) => {
+		if (!matches(room)) return;
+		rooms[i] = { ...room, ...changes };
+		updated.push(rooms[i]);
+	});
+	if (updated.length) {
+		fs.writeFileSync(FILE, JSON.stringify(rooms, null, 2));
+		dataChanged("rooms");
+	}
+	return updated;
+}
+
 function add(room) {
 	const rooms = getAll();
 	rooms.push(room);
@@ -34,4 +50,4 @@ function remove(id) {
 	dataChanged("rooms");
 }
 
-module.exports = { getAll, findById, update, add, remove };
+module.exports = { getAll, findById, update, updateMany, add, remove };
