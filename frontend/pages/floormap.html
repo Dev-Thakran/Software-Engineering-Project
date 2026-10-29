@@ -95,13 +95,12 @@
 					<input type="date" id="map-checkout" />
 				</div>
 				<div class="field">
-					<label for="map-guests">Guests</label>
-					<select id="map-guests">
-						<option value="1">1 guest</option>
-						<option value="2" selected>2 guests</option>
-						<option value="3">3 guests</option>
-						<option value="4">4 guests</option>
-					</select>
+					<label for="map-adults">Adults</label>
+					<select id="map-adults"></select>
+				</div>
+				<div class="field">
+					<label for="map-children">Children</label>
+					<select id="map-children"></select>
 				</div>
 				<p id="map-summary" class="text-sm pb-3" style="color: var(--lux-text-muted)" aria-live="polite"></p>
 				<p id="map-error" class="field-error w-full" role="alert" hidden></p>
@@ -128,7 +127,8 @@
 							<div class="legend-item"><div class="legend-swatch" style="background: #fff"></div> Free for your dates</div>
 							<div class="legend-item"><div class="legend-swatch" style="background: repeating-linear-gradient(135deg, #efe7dc 0 6px, #f8f3ed 6px 12px)"></div> Booked for your dates</div>
 							<div class="legend-item"><div class="legend-swatch" style="background: #fff; opacity: 0.45"></div> Too small for your party</div>
-							<div class="legend-item" style="margin-bottom: 0"><div class="legend-swatch" style="background: #4a3b32"></div> Your choice</div>
+							<div class="legend-item"><div class="legend-swatch" style="background: #4a3b32"></div> Your choice</div>
+							<div class="legend-item" style="margin-bottom: 0"><span data-icon="access" style="color: #1f3a56; width: 20px; display: inline-flex; justify-content: center"></span> Accessible room</div>
 						</div>
 
 						<div class="side-card" aria-live="polite">

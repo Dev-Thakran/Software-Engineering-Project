@@ -45,6 +45,7 @@
 		eyeOff: '<path d="M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.8 9.8 0 0 0 5.4-1.6"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>',
 		door: '<path d="M4 21h16M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17"/><circle cx="14.5" cy="12" r=".8"/>',
 		download: '<path d="M12 4v11M7 10l5 5 5-5M4 20h16"/>',
+		access: '<circle cx="12" cy="4.5" r="1.8"/><path d="M12 7.5v6h5l2.5 5.5"/><path d="M12 10.5H8"/><path d="M8.5 13.2a5.5 5.5 0 1 0 7.3 6.5"/>',
 	};
 	function icon(name, label) {
 		const a11y = label ? `role="img" aria-label="${escape(label)}"` : 'aria-hidden="true"';
@@ -74,7 +75,10 @@
 	// ---------- Dialogs ----------
 	// `body` is HTML (escape anything user-provided). `onConfirm(card)` may
 	// return a value (passed back) or throw an Error whose message is shown.
-	function dialog({ title, body = "", confirmLabel = "OK", cancelLabel = "Cancel", danger = false, onConfirm }) {
+	// `onOpen(card)` runs once the dialog is on screen (e.g. to wire up inputs).
+	// While onConfirm is saving, the dialog can't be dismissed, so the page
+	// always learns the result.
+	function dialog({ title, body = "", confirmLabel = "OK", cancelLabel = "Cancel", danger = false, onConfirm, onOpen }) {
 		return new Promise((resolve) => {
 			const previousFocus = document.activeElement;
 			const overlay = document.createElement("div");
@@ -93,7 +97,9 @@
 			const errorEl = overlay.querySelector(".ui-dialog-error");
 			const confirmBtn = overlay.querySelector("[data-confirm]");
 
+			let saving = false;
 			const close = (result) => {
+				if (saving && result === null) return; // wait for the save to finish
 				document.removeEventListener("keydown", onKey);
 				overlay.classList.add("closing");
 				setTimeout(() => overlay.remove(), 180);
@@ -116,10 +122,13 @@
 				errorEl.hidden = true;
 				if (!onConfirm) return close(true);
 				confirmBtn.disabled = true;
+				saving = true;
 				try {
 					const result = await onConfirm(card);
+					saving = false;
 					close(result === undefined ? true : result);
 				} catch (err) {
+					saving = false;
 					errorEl.textContent = err.message;
 					errorEl.hidden = false;
 					confirmBtn.disabled = false;
@@ -127,6 +136,7 @@
 			});
 			document.addEventListener("keydown", onKey);
 			document.body.appendChild(overlay);
+			onOpen?.(card);
 			(card.querySelector("input, textarea, select") || confirmBtn).focus();
 		});
 	}
@@ -242,5 +252,40 @@
 		setTimeout(() => URL.revokeObjectURL(link.href), 1000);
 	}
 
-	window.UI = { toast, dialog, confirm, skeleton, icon, escape, watchReveals, fillIcons, dates, money, passwordToggles, safeRedirect, downloadStay };
+	// ---------- Party size: adults + children (children count toward capacity) ----------
+	const party = {
+		// From the address bar: ?adults=2&children=1 (old ?guests=2 links read as adults)
+		fromParams(params, defaults = { adults: 2, children: 0 }) {
+			const n = (v) => (v !== null && /^\d+$/.test(v) ? Number(v) : null);
+			const adults = n(params.get("adults")) ?? n(params.get("guests")) ?? defaults.adults;
+			const children = n(params.get("children")) ?? defaults.children;
+			return { adults: Math.min(Math.max(adults, 0), 4), children: Math.min(Math.max(children, 0), 3) };
+		},
+		total: (p) => p.adults + p.children,
+		// "2 adults, 1 child"
+		label(p) {
+			const a = `${p.adults} ${p.adults === 1 ? "adult" : "adults"}`;
+			return p.children ? `${a}, ${p.children} ${p.children === 1 ? "child" : "children"}` : a;
+		},
+		// Writes adults/children into URLSearchParams (skipping the defaults)
+		toParams(params, p) {
+			params.delete("guests");
+			if (p.adults) params.set("adults", p.adults);
+			if (p.children) params.set("children", p.children);
+			else params.delete("children");
+			return params;
+		},
+		// Fills a pair of <select>s with the allowed ranges
+		fillSelects(adultsEl, childrenEl, p, { maxTotal = 4, anyAdults = false } = {}) {
+			adultsEl.innerHTML = (anyAdults ? ['<option value="0">Any</option>'] : [])
+				.concat([1, 2, 3, 4].filter((n) => n <= maxTotal).map((n) => `<option value="${n}">${n}</option>`)).join("");
+			childrenEl.innerHTML = [0, 1, 2, 3].filter((n) => n < maxTotal).map((n) => `<option value="${n}">${n}</option>`).join("");
+			adultsEl.value = String(Math.min(p.adults, maxTotal));
+			if (adultsEl.selectedIndex < 0) adultsEl.selectedIndex = anyAdults ? 0 : Math.min(1, adultsEl.options.length - 1);
+			childrenEl.value = String(Math.min(p.children, Math.max(maxTotal - 1, 0)));
+			if (childrenEl.selectedIndex < 0) childrenEl.selectedIndex = 0;
+		},
+	};
+
+	window.UI = { toast, dialog, confirm, skeleton, icon, escape, watchReveals, fillIcons, dates, money, passwordToggles, safeRedirect, downloadStay, party };
 })();

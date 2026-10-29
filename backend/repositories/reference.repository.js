@@ -13,8 +13,17 @@ function getAmenities(roomId) {
 	const found = read("amenities.json").find((a) => a.roomId === roomId);
 	return found ? found.amenities : [];
 }
+// Room content per floor (size, view, story, photos) plus the accessible
+// room features - see data/tiers.json
+function getTiers() {
+	try {
+		return read("tiers.json");
+	} catch {
+		return { floors: {}, accessibleFeatures: [] };
+	}
+}
 function getShifts() {
 	return read("shifts.json");
 }
 
-module.exports = { getReviews, getAmenities, getShifts };
+module.exports = { getReviews, getAmenities, getShifts, getTiers };

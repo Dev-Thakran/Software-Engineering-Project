@@ -376,5 +376,13 @@
     "email": "priya.nair@example.com",
     "password": "$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi",
     "role": "customer"
+  },
+  {
+    "id": "u1793139709466",
+    "name": "Grue",
+    "email": "grumaster0@gmail.com",
+    "password": "$2b$10$guSy6k7pMy2UxK5ARDQguO.93TzGkrvrxLW3kW4pbaQgx9pJNN/6q",
+    "role": "customer",
+    "termsAcceptedAt": "2026-10-27T22:21:49.466Z"
   }
 ]

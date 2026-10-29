@@ -10,12 +10,13 @@ const EDITABLE_FIELDS = ["type", "price", "description", "image"];
 // (YYYY-MM-DD) every room also says whether it is free for that whole stay
 // and what the stay would cost.
 function getAll(req, res) {
-	const { floor, type, status, guests, checkIn, checkOut } = req.query;
+	const { floor, type, status, guests, checkIn, checkOut, accessible } = req.query;
 	let list = rooms.getRooms();
 	if (floor) list = list.filter((r) => r.floor == floor);
 	if (type) list = list.filter((r) => r.type === type);
 	if (status) list = list.filter((r) => r.status === status);
 	if (guests) list = list.filter((r) => r.maxGuests >= Number(guests));
+	if (accessible === "1" || accessible === "true") list = list.filter((r) => r.accessible);
 
 	if (checkIn || checkOut) {
 		const invalid = availability.validateStay(checkIn, checkOut);

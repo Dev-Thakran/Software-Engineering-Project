@@ -5,19 +5,8 @@
 // ============================================================
 
 const FLOOR_NAMES = { 1: "Garden", 2: "Classic", 3: "Executive", 4: "Penthouse" };
-const ROOM_META = {
-	"Standard Single": { bed: "Queen bed", sqm: 28 },
-	"Deluxe Double": { bed: "Queen bed", sqm: 38 },
-	"Executive Double": { bed: "King bed", sqm: 48 },
-	"Penthouse Suite": { bed: "King bed", sqm: 80 },
-};
-const DESCRIPTIONS = {
-	"Standard Single": "A calm garden-level room for one, with a queen bed, rainfall shower and a desk by the window.",
-	"Deluxe Double": "A classic double on the second floor - a queen bed, a reading chair and city light through tall windows.",
-	"Executive Double": "A larger double with a king bed, separate lounge corner and the quietest outlook in the house.",
-	"Penthouse Suite": "Our top-floor suite: a king bed, living room, terrace and butler service, sleeping up to four.",
-};
 const TAX = 30;
+const ADVANCE_PERCENT = 10; // Advance purchase rate - matches backend/config/rate-plans.js
 
 const $ = (id) => document.getElementById(id);
 const { dates } = UI;
@@ -75,17 +64,24 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 //  DETAILS
 function renderDetails(room, amenities) {
-	const meta = ROOM_META[room.type] || { bed: "Queen bed", sqm: 36 };
+	const tier = room.tier || {};
 	document.title = `Room ${room.id} · ${room.type} – La Extravaganza`;
 	$("room-floor-label").textContent = `Floor ${room.floor} · ${FLOOR_NAMES[room.floor] || ""}`;
 	$("room-name").textContent = `Room ${room.id}`;
 	$("room-type").textContent = room.type;
 	$("room-meta").innerHTML = `
-		<span>${UI.icon("bed")}${meta.bed}</span>
+		${tier.bed ? `<span>${UI.icon("bed")}${UI.escape(tier.bed)}</span>` : ""}
 		<span>${UI.icon("guests")}Up to ${room.maxGuests} ${room.maxGuests === 1 ? "guest" : "guests"}</span>
-		<span>${UI.icon("area")}${meta.sqm} m²</span>`;
-	$("room-description").textContent = DESCRIPTIONS[room.type] || room.description;
+		${tier.sizeSqm ? `<span>${UI.icon("area")}${tier.sizeSqm} m²</span>` : ""}
+		${tier.view ? `<span>${UI.icon("eye")}${UI.escape(tier.view)}</span>` : ""}
+		${room.accessible ? `<span>${UI.icon("access")}Accessible room</span>` : ""}`;
+	// The floor's story, then what makes this particular room different
+	$("room-story").textContent = tier.story || "";
+	$("room-description").textContent = room.description || "";
+	$("room-highlights").innerHTML = (tier.highlights || []).map((h) => `<li>${UI.escape(h)}</li>`).join("");
 	$("panel-price").textContent = UI.money(room.price);
+	$("panel-advance").textContent = `or ${UI.money(Math.round(room.price * (1 - ADVANCE_PERCENT / 100)))}/night with Advance purchase (non-refundable)`;
+	renderAccessibility(room);
 
 	$("amenities-grid").innerHTML = amenities.length
 		? amenities.map((a) => `<div class="amenity-item">${UI.icon("check")}<span>${UI.escape(a)}</span></div>`).join("")
@@ -93,9 +89,30 @@ function renderDetails(room, amenities) {
 }
 
 //  GALLERY - the room's own photo first, then its floor's other photos
+// Accessible rooms list their features; other rooms point to the accessible
+// room on the same floor
+async function renderAccessibility(room) {
+	const box = $("room-access");
+	if (room.accessible) {
+		box.innerHTML = `
+			<p class="kicker mb-2">Accessibility</p>
+			<h2 class="font-serif text-3xl md:text-4xl mb-4" style="color: var(--lux-brown-800)">Designed for easy access</h2>
+			<ul class="access-list">${(room.accessibleFeatures || []).map((f) => `<li>${UI.icon("check")}<span>${UI.escape(f)}</span></li>`).join("")}</ul>
+			<p class="text-sm mt-4" style="color: var(--lux-text-muted)">More about access at the hotel in our <a href="/pages/accessibility.html" style="text-decoration:underline">accessibility statement</a>.</p>`;
+		box.hidden = false;
+		return;
+	}
+	const sameFloor = await fetch(`/rooms?floor=${room.floor}&accessible=1`).then((r) => (r.ok ? r.json() : [])).catch(() => []);
+	if (!sameFloor.length) return;
+	const params = new URLSearchParams(location.search);
+	params.set("room", sameFloor[0].id);
+	box.innerHTML = `<p class="access-note">${UI.icon("access")}<span>Need an accessible room? <a href="/pages/room.html?${params}">Room ${UI.escape(sameFloor[0].id)}</a> on this floor has a roll-in shower, grab rails and step-free access.</span></p>`;
+	box.hidden = false;
+}
+
 function renderGallery(room) {
 	const own = room.image ? room.image.trim().replace("../frontend/", "/") : "";
-	const floorPhotos = ["a", "b", "c"].map((x) => `/images/tiers/floor-${room.floor}/${x}.jpg`);
+	const floorPhotos = room.tier?.photos || [];
 	const photos = [...new Set([own, ...floorPhotos].filter(Boolean))];
 
 	const main = $("room-image");
@@ -193,11 +210,22 @@ function renderSimilar(room, rooms) {
 //  BOOKING PANEL
 function setUpPanel(params) {
 	const room = state.room;
-	const guests = $("guests");
-	guests.innerHTML = Array.from({ length: room.maxGuests }, (_, i) =>
-		`<option value="${i + 1}">${i + 1} ${i ? "guests" : "guest"}</option>`).join("");
-	const wanted = Math.min(Number(params.get("guests")) || Math.min(2, room.maxGuests), room.maxGuests);
-	guests.value = String(wanted);
+	const adults = $("adults");
+	const children = $("children");
+	const max = room.maxGuests;
+	const wanted = UI.party.fromParams(params, { adults: Math.min(2, max), children: 0 });
+	adults.innerHTML = Array.from({ length: max }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join("");
+	adults.value = String(Math.min(Math.max(wanted.adults, 1), max));
+	// Children count toward the room's limit, so offer only what still fits
+	const fillChildren = (keep) => {
+		const space = max - Number(adults.value);
+		children.innerHTML = Array.from({ length: space + 1 }, (_, i) => `<option value="${i}">${i}</option>`).join("");
+		children.value = String(Math.min(keep, space));
+		children.disabled = space === 0;
+	};
+	fillChildren(wanted.children);
+	adults.addEventListener("change", () => fillChildren(Number(children.value)));
+	const promo = /^[A-Za-z0-9]{1,20}$/.test(params.get("promo") || "") ? params.get("promo").toUpperCase() : "";
 
 	const today = dates.today();
 	$("checkIn").min = today;
@@ -227,9 +255,10 @@ function setUpPanel(params) {
 			room: room.id,
 			checkIn: state.checkIn,
 			checkOut: state.checkOut,
-			guests: guests.value,
 		});
-		location.href = `./bookingform.html?${next}`;
+		UI.party.toParams(next, { adults: Number(adults.value), children: Number(children.value) });
+		if (promo) next.set("promo", promo);
+		location.href = `/pages/bookingform.html?${next}`;
 	});
 }
 

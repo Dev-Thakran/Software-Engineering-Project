@@ -31,7 +31,8 @@ module.exports = [
 				},
 				floor: { type: "integer", description: "Floor 1-4" },
 				maxPrice: { type: "number", description: "Max price per night" },
-				guests: { type: "integer", description: "Number of guests" },
+				guests: { type: "integer", description: "Number of guests (adults + children)" },
+				accessible: { type: "boolean", description: "Only accessible rooms (roll-in shower, grab rails, step-free)" },
 			},
 			required: ["checkIn", "checkOut"],
 		},
@@ -45,7 +46,7 @@ module.exports = [
 				floor: input.floor,
 				maxPrice: input.maxPrice,
 				guests: input.guests,
-			});
+			}).filter((r) => !input.accessible || r.accessible);
 			return {
 				nights,
 				count: rooms.length,

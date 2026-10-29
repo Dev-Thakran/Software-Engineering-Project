@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Accessibility – La Extravaganza</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="../css/main.css" />
+	<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+	<meta name="description" content="Accessible rooms, getting around the building, and how this website works with assistive technology." />
+	<script src="../js/ui.js"></script>
+	<script src="../js/header.js"></script>
+	<script src="../js/footer.js"></script>
+	<style>
+		.terms-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 56px; align-items: start; }
+		.terms-nav { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 4px; border-left: 1px solid var(--lux-brown-100); padding-left: 16px; }
+		.terms-nav a { font-size: 14px; color: var(--lux-text-muted); text-decoration: none; padding: 6px 0; }
+		.terms-nav a:hover { color: var(--lux-brown-800); text-decoration: underline; text-underline-offset: 4px; }
+		.terms-body section { padding: 8px 0 32px; border-bottom: 1px solid var(--lux-brown-100); margin-bottom: 32px; scroll-margin-top: 100px; }
+		.terms-body section:last-child { border-bottom: none; }
+		.terms-body h2 { font-family: "Cormorant Garamond", Georgia, serif; font-size: 32px; color: var(--lux-brown-800); margin-bottom: 14px; line-height: 1.15; }
+		.terms-body p, .terms-body li { font-size: 15px; line-height: 1.8; color: var(--lux-brown-600); max-width: 68ch; }
+		.terms-body ul { list-style: disc; padding-left: 20px; margin: 8px 0 12px; }
+		.terms-body li { margin-bottom: 6px; }
+		.terms-body strong { color: var(--lux-brown-800); font-weight: 600; }
+		.terms-body a { color: var(--lux-brown-700); text-decoration: underline; text-underline-offset: 3px; }
+		.notice { background: #fff; border: 1px solid var(--lux-brown-100); border-left: 3px solid var(--lux-brown-700); padding: 16px 20px; font-size: 14px; color: var(--lux-brown-700); line-height: 1.7; }
+		@media (max-width: 860px) {
+			.terms-layout { grid-template-columns: 1fr; gap: 24px; }
+			.terms-nav { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px 16px; border-left: none; padding-left: 0; }
+		}
+	</style>
+</head>
+<body style="background: var(--lux-cream)">
+	<header class="sticky top-0 z-20" id="header"></header>
+
+	<main class="max-w-6xl mx-auto px-4 md:px-12 pt-14 pb-24">
+		<p class="kicker mb-3">Everyone welcome</p>
+		<h1 class="font-serif" style="font-size: clamp(38px, 5vw, 60px); color: var(--lux-brown-800); line-height: 1.08">Accessibility</h1>
+		<p class="mt-4 mb-6" style="color: var(--lux-text-muted); max-width: 62ch; line-height: 1.7">
+			What to expect when you stay with us, and how this website works with assistive technology. Last updated 28 October 2026.
+		</p>
+		<p class="notice mb-12">
+			<strong>Please note:</strong> La Extravaganza is a student software project built for the School of Digital
+			Technologies Tech Expo. It is not a real hotel. The building details below describe the demo hotel.
+		</p>
+
+		<div class="terms-layout">
+			<nav class="terms-nav" aria-label="On this page">
+				<a href="#rooms">Accessible rooms</a>
+				<a href="#building">The building</a>
+				<a href="#website">This website</a>
+				<a href="#help">Ask for help</a>
+			</nav>
+
+			<div class="terms-body">
+				<section id="rooms">
+					<h2>Accessible rooms</h2>
+					<p>There is one fully accessible room on every floor: <strong>rooms 106, 206, 306 and 406</strong>. Each one has:</p>
+					<ul>
+						<li>A roll-in shower with a fold-down seat</li>
+						<li>Grab rails by the toilet and shower</li>
+						<li>A lowered bed, light switches and wardrobe rail</li>
+						<li>90 cm wide doorways and step-free access by lift</li>
+						<li>A visual and vibrating fire alarm</li>
+						<li>A hearing loop, available on request</li>
+					</ul>
+					<p>To see only these rooms, turn on the <a href="/pages/browserooms.html?accessible=1">Accessible rooms</a> filter on the Rooms page. They're also marked on the <a href="/pages/floormap.html">floor map</a>.</p>
+				</section>
+
+				<section id="building">
+					<h2>The building</h2>
+					<ul>
+						<li>Step-free entrance from Harbour Avenue, with an automatic door.</li>
+						<li>A lift serves every floor, including the courtyard and the restaurant.</li>
+						<li>A hearing loop is fitted at reception.</li>
+						<li>Assistance animals are always welcome, at no extra charge.</li>
+						<li>Accessible parking spaces are next to the entrance; ask reception to reserve one.</li>
+					</ul>
+				</section>
+
+				<section id="website">
+					<h2>This website</h2>
+					<p>We aim to meet the Web Content Accessibility Guidelines (WCAG) 2.1 at level AA. In particular:</p>
+					<ul>
+						<li>Every page can be used with a keyboard alone, and a "Skip to content" link jumps past the menu.</li>
+						<li>Form fields have labels, and errors are explained in words, not colour alone.</li>
+						<li>The floor map can be explored with the arrow keys.</li>
+						<li>Text and controls are designed to meet contrast guidelines, and pages work when zoomed to 200%.</li>
+					</ul>
+					<p>Some parts are still being improved, such as descriptions of every room photo. If something gets in your way, please tell us.</p>
+				</section>
+
+				<section id="help">
+					<h2>Ask for help</h2>
+					<p>
+						If you need anything for your stay, or found a problem with this website, call reception on <strong>+64 9 123 4567</strong> (open 24 hours),
+						email <strong>reservations@laextravaganza.co.nz</strong>, or send a message from our <a href="/pages/contact.html">contact page</a>.
+					</p>
+				</section>
+			</div>
+		</div>
+	</main>
+
+	<footer id="footer"></footer>
+</body>
+</html>

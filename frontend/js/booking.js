@@ -16,8 +16,21 @@ const HOTEL = {
 let room = null; // Loaded room object from the server
 let nights = 0;
 let total = 0; // Total amount including tax
+let promo = null; // { code, percent, label } once a promo code is applied
 
 const $ = (id) => document.getElementById(id);
+const party = () => ({ adults: Number($("adultsinput").value) || 1, children: Number($("childreninput").value) || 0 });
+// Same rounding as the server: the promo comes off the room price, never the $30 fee
+const ADVANCE_PERCENT = 10; // matches backend/config/rate-plans.js
+const ratePlan = () => document.querySelector('input[name="rate"]:checked')?.value || "flexible";
+// Same order and rounding as the server: the rate discount comes off first,
+// then any promo off what's left; the $30 fee is never discounted
+function priceFor(subtotal, plan = ratePlan()) {
+	const rateDiscount = plan === "advance" ? Math.round((subtotal * ADVANCE_PERCENT) / 100) : 0;
+	const afterRate = subtotal - rateDiscount;
+	const discount = promo ? Math.round((afterRate * promo.percent) / 100) : 0;
+	return { rateDiscount, discount, room: afterRate - discount };
+}
 
 document.addEventListener("DOMContentLoaded", async function () {
 	// Booking needs an account - come back here after signing in
@@ -58,13 +71,31 @@ document.addEventListener("DOMContentLoaded", async function () {
 	$("checkout").min = UI.dates.addDays(today, 1);
 	if (UI.dates.valid(params.get("checkIn")) && params.get("checkIn") >= today) $("checkin").value = params.get("checkIn");
 	if (UI.dates.valid(params.get("checkOut"))) $("checkout").value = params.get("checkOut");
-	const guests = Number(params.get("guests"));
-	if (guests >= 1 && guests <= room.maxGuests) $("guestinput").value = String(guests);
+	setParty(UI.party.fromParams(params, { adults: Math.min(2, room.maxGuests), children: 0 }));
 	calculateNights();
 
 	$("checkin").addEventListener("change", onCheckinChange);
 	$("checkout").addEventListener("change", calculateNights);
-	$("guestinput").addEventListener("change", updateSummaryPricing);
+	$("adultsinput").addEventListener("change", () => setParty(party()));
+	$("childreninput").addEventListener("change", updateSummaryPricing);
+
+	// Promo code: apply/remove, and pick up one carried from the search
+	$("promo-apply").addEventListener("click", () => (promo ? removePromo() : applyPromo($("promoinput").value)));
+	$("promoinput").addEventListener("keydown", (e) => {
+		if (e.key === "Enter") {
+			e.preventDefault();
+			applyPromo($("promoinput").value);
+		}
+	});
+	if (/^[A-Za-z0-9]{1,20}$/.test(params.get("promo") || "")) {
+		$("promoinput").value = params.get("promo").toUpperCase();
+		applyPromo(params.get("promo"));
+	}
+
+	// Rate plan: carried in the URL as ?rate=advance
+	if (params.get("rate") === "advance") document.querySelector('input[name="rate"][value="advance"]').checked = true;
+	document.querySelectorAll('input[name="rate"]').forEach((r) => r.addEventListener("change", updateSummaryPricing));
+	updateSummaryPricing();
 	$("step-dates").addEventListener("submit", (e) => {
 		e.preventDefault();
 		goToStep(2);
@@ -98,9 +129,53 @@ function populateSummary() {
 	$("summary-room-name").textContent = `Room ${room.id}`;
 
 	$("max-guests-label").textContent = room.maxGuests;
-	$("guestinput").innerHTML = Array.from({ length: room.maxGuests }, (_, i) =>
-		`<option value="${i + 1}">${i + 1} ${i ? "guests" : "guest"}</option>`).join("");
-	$("guestinput").value = String(Math.min(2, room.maxGuests));
+	updateSummaryPricing();
+}
+
+// Adults 1..capacity; children only up to the space left (everyone counts)
+function setParty(p) {
+	const max = room.maxGuests;
+	const adults = Math.min(Math.max(p.adults, 1), max);
+	$("adultsinput").innerHTML = Array.from({ length: max }, (_, i) => `<option value="${i + 1}">${i + 1}</option>`).join("");
+	$("adultsinput").value = String(adults);
+	const space = max - adults;
+	$("childreninput").innerHTML = Array.from({ length: space + 1 }, (_, i) => `<option value="${i}">${i}</option>`).join("");
+	$("childreninput").value = String(Math.min(p.children, space));
+	$("childreninput").disabled = space === 0;
+	updateSummaryPricing();
+}
+
+async function applyPromo(code) {
+	const msg = $("promo-msg");
+	const clean = String(code || "").trim();
+	if (!clean) {
+		msg.textContent = "Enter a promo code first.";
+		return;
+	}
+	try {
+		const res = await fetch(`/promos/${encodeURIComponent(clean)}`);
+		const data = await res.json();
+		if (!res.ok) throw new Error(data.error || "That code isn't valid or has expired");
+		promo = data;
+		$("promoinput").value = data.code;
+		$("promoinput").readOnly = true;
+		$("promo-apply").textContent = "Remove";
+		msg.style.color = "var(--lux-success)";
+		msg.textContent = `${data.code} applied - ${data.percent}% off the room price${data.label ? ` (${data.label})` : ""}.`;
+	} catch (err) {
+		promo = null;
+		msg.style.color = "var(--lux-danger)";
+		msg.textContent = err.message === "Failed to fetch" ? "We couldn't check that code. Please try again." : err.message;
+	}
+	updateSummaryPricing();
+}
+
+function removePromo() {
+	promo = null;
+	$("promoinput").readOnly = false;
+	$("promoinput").value = "";
+	$("promo-apply").textContent = "Apply";
+	$("promo-msg").textContent = "";
 	updateSummaryPricing();
 }
 
@@ -109,14 +184,27 @@ function updateSummaryPricing() {
 	const checkout = $("checkout").value;
 	$("s-checkin").textContent = checkin ? UI.dates.pretty(checkin, true) : "-";
 	$("s-checkout").textContent = checkout ? UI.dates.pretty(checkout, true) : "-";
-	$("s-guests").textContent = $("guestinput").value || "-";
+	$("s-guests").textContent = UI.party.label(party());
+	$("s-policy").textContent =
+		ratePlan() === "advance" ? "Non-refundable - changes only through reception" : "Free cancellation until 23:59 the day before arrival";
 
 	if (nights > 0) {
 		const subtotal = room.price * nights;
-		total = subtotal + TAX;
+		const { rateDiscount, discount, room: roomTotal } = priceFor(subtotal);
+		total = roomTotal + TAX;
+		// Prices on the two rate cards (room only, before any promo)
+		$("rate-flexible-price").textContent = UI.money(subtotal);
+		$("rate-advance-price").textContent = UI.money(subtotal - priceFor(subtotal, "advance").rateDiscount);
+		$("rate-advance-save").textContent = `Save ${UI.money(priceFor(subtotal, "advance").rateDiscount)}`;
+		$("rate-advance-save").hidden = false;
+		$("s-rate-row").hidden = !rateDiscount;
+		$("s-rate").textContent = `−${UI.money(rateDiscount)}`;
 		$("s-nights").textContent = nights;
 		$("s-price-line").textContent = `${UI.money(room.price)} × ${nights} ${nights === 1 ? "night" : "nights"}`;
 		$("s-subtotal").textContent = UI.money(subtotal);
+		$("s-promo-row").hidden = !discount;
+		$("s-promo-label").textContent = promo ? `Promo ${promo.code}` : "Promo";
+		$("s-promo").textContent = `−${UI.money(discount)}`;
 		$("s-total").textContent = UI.money(total);
 		$("pay-btn-total").textContent = UI.money(total);
 	} else {
@@ -124,6 +212,11 @@ function updateSummaryPricing() {
 		$("s-nights").textContent = "-";
 		$("s-price-line").textContent = `${UI.money(room.price)} a night`;
 		$("s-subtotal").textContent = "-";
+		$("s-promo-row").hidden = true;
+		$("s-rate-row").hidden = true;
+		$("rate-flexible-price").textContent = "";
+		$("rate-advance-price").textContent = "";
+		$("rate-advance-save").hidden = true;
 		$("s-total").textContent = "-";
 		$("pay-btn-total").textContent = "";
 	}
@@ -277,11 +370,19 @@ async function submitPayment() {
 			return showPayError(payData.error || "The payment didn't go through. Check the card details.");
 		}
 
-		const guests = Number($("guestinput").value) || 1;
+		const { adults, children } = party();
 		const bookRes = await fetch("/bookings", {
 			method: "POST",
 			headers: { "Content-Type": "application/json", Authorization: "Bearer " + token },
-			body: JSON.stringify({ roomId: room.id, checkIn: $("checkin").value, checkOut: $("checkout").value, guests }),
+			body: JSON.stringify({
+				roomId: room.id,
+				checkIn: $("checkin").value,
+				checkOut: $("checkout").value,
+				adults,
+				children,
+				ratePlan: ratePlan(),
+				...(promo ? { promoCode: promo.code } : {}),
+			}),
 		});
 		const booking = await bookRes.json();
 		if (bookRes.status === 401) {
@@ -294,7 +395,7 @@ async function submitPayment() {
 			return showPayError(booking.error || "We couldn't complete the booking. Please try again.");
 		}
 
-		showConfirmation(booking, guests);
+		showConfirmation(booking);
 	} catch {
 		resetButton();
 		showPayError("Connection problem - nothing was booked. Please try again.");
@@ -307,8 +408,13 @@ function showPayError(msg) {
 }
 
 //  Confirmation
-function showConfirmation(booking, guests) {
+function showConfirmation(booking) {
 	const paid = booking.total + TAX;
+	const guests = UI.party.label({ adults: booking.adults || 1, children: booking.children || 0 });
+	const promoNote = booking.promoCode ? ` (${UI.escape(booking.promoCode)} saved ${UI.money(booking.discount)})` : "";
+	const planNote = booking.ratePlan === "advance"
+		? `Advance purchase - non-refundable (saved ${UI.money(booking.rateDiscount)})`
+		: "Flexible - free cancellation until 23:59 the day before";
 	const section = $("confirmation");
 	section.innerHTML = `
 		<div class="confirm-badge">${UI.icon("check")}</div>
@@ -325,7 +431,8 @@ function showConfirmation(booking, guests) {
 			<div><p class="meta-label mb-1">Guests</p><p class="meta-value" style="font-size:15px">${guests}</p></div>
 			<div><p class="meta-label mb-1">Arrive</p><p class="meta-value" style="font-size:15px">${UI.dates.pretty(booking.checkIn, true)} · from 3pm</p></div>
 			<div><p class="meta-label mb-1">Depart</p><p class="meta-value" style="font-size:15px">${UI.dates.pretty(booking.checkOut, true)} · by 11am</p></div>
-			<div><p class="meta-label mb-1">Paid</p><p class="meta-value" style="font-size:15px">${UI.money(paid)} for ${booking.nights} ${booking.nights === 1 ? "night" : "nights"}, incl. $30 taxes</p></div>
+			<div><p class="meta-label mb-1">Paid</p><p class="meta-value" style="font-size:15px">${UI.money(paid)} for ${booking.nights} ${booking.nights === 1 ? "night" : "nights"}, incl. $30 taxes${promoNote}</p></div>
+			<div><p class="meta-label mb-1">Rate</p><p class="meta-value" style="font-size:15px">${planNote}</p></div>
 			<div><p class="meta-label mb-1">Find us</p><p class="meta-value" style="font-size:15px">42 Harbour Avenue · ${HOTEL.phone}</p></div>
 		</div>
 

@@ -122,7 +122,12 @@
 							<h1 id="room-name" class="font-serif" style="font-size: clamp(44px, 6vw, 64px); color: var(--lux-brown-800); line-height: 1.05">&nbsp;</h1>
 							<p id="room-type" class="mt-1" style="color: var(--lux-text-muted)"></p>
 							<div id="room-meta" class="room-card-meta mt-5" style="font-size: 14px"></div>
-							<p id="room-description" class="mt-6" style="font-size: 15px; color: var(--lux-brown-600); line-height: 1.8; max-width: 62ch"></p>
+							<p id="room-story" class="mt-6" style="font-size: 16px; color: var(--lux-brown-700); line-height: 1.8; max-width: 62ch"></p>
+							<p id="room-description" class="mt-3" style="font-size: 15px; color: var(--lux-brown-600); line-height: 1.7; max-width: 62ch; font-style: italic"></p>
+							<ul id="room-highlights" class="room-highlights mt-5"></ul>
+						</section>
+
+						<section id="room-access" class="mt-14" hidden>
 						</section>
 
 						<section class="mt-14" aria-labelledby="cal-title">
@@ -168,6 +173,7 @@
 							<p id="panel-price" class="font-serif" style="font-size: 40px; color: var(--lux-brown-800); line-height: 1">&nbsp;</p>
 							<p class="text-sm" style="color: var(--lux-text-soft)">per night</p>
 						</div>
+						<p id="panel-advance" class="text-sm mt-1" style="color: var(--lux-text-soft)"></p>
 						<p id="panel-rating" class="text-sm mt-2 mb-6" style="color: var(--lux-text-muted)"></p>
 
 						<form id="book-form" novalidate>
@@ -180,9 +186,13 @@
 									<label for="checkOut">Check out</label>
 									<input type="date" id="checkOut" />
 								</div>
-								<div class="field full">
-									<label for="guests">Guests</label>
-									<select id="guests"></select>
+								<div class="field" style="border-left: none; border-top: 1px solid var(--lux-brown-200)">
+									<label for="adults">Adults</label>
+									<select id="adults"></select>
+								</div>
+								<div class="field" style="border-top: 1px solid var(--lux-brown-200)">
+									<label for="children">Children <span style="text-transform:none;letter-spacing:0">(under 12)</span></label>
+									<select id="children"></select>
 								</div>
 							</div>
 
@@ -203,7 +213,7 @@
 
 						<div class="mt-6 pt-5 text-sm" style="border-top: 1px solid var(--lux-brown-100); color: var(--lux-text-muted); line-height: 1.8">
 							<p class="flex items-center gap-2"><span data-icon="clock"></span> Check-in from 3pm, check-out by 11am</p>
-							<p class="flex items-center gap-2"><span data-icon="check"></span> Free cancellation until the day before</p>
+							<p class="flex items-center gap-2"><span data-icon="check"></span> <span>Free cancellation until 23:59 the day before arrival · <a href="/pages/terms.html#cancellation">Terms</a></span></p>
 						</div>
 					</aside>
 				</div>

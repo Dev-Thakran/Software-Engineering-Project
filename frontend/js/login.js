@@ -10,6 +10,13 @@ function destinationFor(role) {
 
 document.addEventListener("DOMContentLoaded", function () {
 	const redirect = UI.safeRedirect(new URLSearchParams(location.search).get("redirect"));
+	// Arriving from the password reset page
+	if (new URLSearchParams(location.search).get("reset") === "1") {
+		const note = document.getElementById("redirect-note");
+		note.textContent = "Your password has been updated - sign in with your new password.";
+		note.style.color = "var(--lux-success)";
+		note.hidden = false;
+	}
 	if (redirect) {
 		document.getElementById("redirect-note").hidden = false;
 		// Keep the return trip if they create an account instead

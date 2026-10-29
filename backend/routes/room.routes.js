@@ -7,6 +7,11 @@ const { authenticate, requireRole } = require("../middleware/auth.middleware");
 const router = express.Router();
 
 // Public sub-resources - MUST be before /:id to avoid route conflicts
+
+// The rate plans guests can choose between (Flexible / Advance purchase)
+router.get("/rate-plans", (req, res) => {
+	res.json(Object.values(require("../config/rate-plans").RATE_PLANS));
+});
 router.get("/:id/amenities", (req, res) => {
 	res.json(referenceRepo.getAmenities(req.params.id));
 });

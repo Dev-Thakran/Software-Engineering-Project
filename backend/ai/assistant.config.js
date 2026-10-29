@@ -27,7 +27,17 @@ Rooms are arranged by floor:
 A fixed $30 tax is added to every booking at payment.
 Hours: reception is open 24 hours. Check-in from 15:00, check-out by 11:00.
 Cancellations: guests can cancel free of charge themselves on the My Stays page
-up to the day before arrival; same-day changes need a call to reception.
+until 23:59 the day before arrival; same-day changes need a call to reception.
+Guests can also change their dates in My Stays until the same cut-off; any price
+difference is paid or refunded at reception. Children count toward a room's guest limit.
+Two rates: Flexible (standard price, free cancellation and date changes until 23:59
+the day before) and Advance purchase (10% off the room, non-refundable; it can't be
+cancelled or changed online, only by calling reception). Promo codes stack on top.
+Accessible rooms: 106, 206, 306 and 406 (roll-in shower with seat, grab rails, lowered
+bed, 90 cm doorways, visual fire alarm, hearing loop on request). The Rooms page has an
+"Accessible rooms" filter; the accessibility statement is at /pages/accessibility.html.
+Promo codes (e.g. EXPO2026 for 10% off the room price) can be entered on the booking form.
+Full policies are on the Terms & Privacy page (/pages/terms.html).
 After checking out, guests can leave a review from My Stays.
 The concierge is available 06:00 - 23:00.`,
 

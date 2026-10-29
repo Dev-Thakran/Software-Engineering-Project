@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get("/", authenticate, ctrl.getAll);
 router.post("/", authenticate, requireRole("customer"), ctrl.create);
+router.patch("/:id/dates", authenticate, requireRole("customer"), ctrl.changeDates);
 router.patch(
 	"/:id",
 	authenticate,

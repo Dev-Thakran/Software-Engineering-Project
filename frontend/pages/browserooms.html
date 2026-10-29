@@ -93,14 +93,11 @@
 						<input type="date" id="checkOut" name="checkOut" />
 					</div>
 					<div class="field">
-						<label for="guests">Guests</label>
-						<select id="guests" name="guests">
-							<option value="0" selected>Any</option>
-							<option value="1">1 guest</option>
-							<option value="2">2 guests</option>
-							<option value="3">3 guests</option>
-							<option value="4">4 guests</option>
-						</select>
+						<span class="party-label" id="party-label">Guests</span>
+						<div class="party-row" role="group" aria-labelledby="party-label">
+							<label>Adults<select id="adults" name="adults"></select></label>
+							<label>Children<select id="children" name="children"></select></label>
+						</div>
 					</div>
 					<button type="submit" class="btn-primary">
 						<span data-icon="search"></span>
@@ -121,6 +118,7 @@
 							<button type="button" class="chip" data-floor="2" aria-pressed="false">2 · Classic</button>
 							<button type="button" class="chip" data-floor="3" aria-pressed="false">3 · Executive</button>
 							<button type="button" class="chip" data-floor="4" aria-pressed="false">4 · Penthouse</button>
+							<button type="button" class="chip chip-access" id="accessible-chip" aria-pressed="false"><span data-icon="access"></span> Accessible rooms</button>
 						</div>
 					</div>
 

@@ -1,0 +1,52 @@
+{
+  "accessibleFeatures": [
+    "Roll-in shower with fold-down seat",
+    "Grab rails by the toilet and shower",
+    "Lowered bed, light switches and wardrobe rail",
+    "90 cm wide doorways and step-free access by lift",
+    "Visual and vibrating fire alarm",
+    "Hearing loop available on request"
+  ],
+  "floors": {
+    "1": {
+      "name": "Garden",
+      "type": "Standard Single",
+      "sizeSqm": 28,
+      "bed": "Queen bed",
+      "view": "Courtyard garden view",
+      "story": "Tucked around our walled courtyard, the Garden rooms are the quietest in the house. Morning light comes through the garden doors, and the city feels a world away - yet Britomart station is a five-minute walk.",
+      "highlights": ["Garden doors to the courtyard", "Rainfall shower", "Coffee maker", "Writing desk", "Fast WiFi"],
+      "photos": ["/images/tiers/floor-3/b.jpg", "/images/tiers/floor-4/b.jpg", "/images/tiers/floor-2/c.jpg", "/images/tiers/floor-1/a.jpg"]
+    },
+    "2": {
+      "name": "Classic",
+      "type": "Deluxe Double",
+      "sizeSqm": 38,
+      "bed": "Queen bed",
+      "view": "City view",
+      "story": "Our Classic doubles look out over the rooftops of Auckland Central through tall windows. Warm lamps, a reading chair and a generous queen bed make them an easy base for exploring the city.",
+      "highlights": ["Tall city-view windows", "Reading chair", "Mini bar", "Rainfall shower", "Coffee maker"],
+      "photos": ["/images/tiers/floor-4/a.jpg", "/images/tiers/floor-2/b.jpg", "/images/tiers/floor-5/a.jpg"]
+    },
+    "3": {
+      "name": "Executive",
+      "type": "Executive Double",
+      "sizeSqm": 48,
+      "bed": "King bed",
+      "view": "Harbour glimpses",
+      "story": "Higher up and more spacious, the Executive rooms add a king bed and a separate lounge corner with glimpses of the Waitematā Harbour. Rich timber and deep colours make them our favourite for longer stays.",
+      "highlights": ["Separate lounge corner", "Nespresso machine", "Bathtub", "Mini bar", "Robes & slippers"],
+      "photos": ["/images/tiers/floor-3/a.jpg", "/images/tiers/floor-1/c.jpg", "/images/tiers/floor-5/b.jpg", "/images/tiers/floor-4/c.jpg"]
+    },
+    "4": {
+      "name": "Penthouse",
+      "type": "Penthouse Suite",
+      "sizeSqm": 80,
+      "bed": "King bed",
+      "view": "Full harbour and city panorama",
+      "story": "The whole top floor belongs to six suites, each with a living room, a private terrace and a panorama of the harbour and city. A butler looks after you from arrival, and the suites sleep up to four.",
+      "highlights": ["Private terrace", "Separate living room", "Butler service", "Bathtub & rainfall shower", "Nespresso & mini bar"],
+      "photos": ["/images/tiers/floor-1/b.jpg", "/images/tiers/floor-7/c.jpg", "/images/tiers/floor-2/a.jpg", "/images/tiers/floor-6/c.jpg"]
+    }
+  }
+}

@@ -204,7 +204,7 @@ function handleLogout() {
 
 // AI assistant widget on every page except sign-in and registration
 window.addEventListener("load", function () {
-	if (/\/(login|register)\.html$/i.test(window.location.pathname)) return;
+	if (/\/(login|register|forgot|reset)\.html$/i.test(window.location.pathname)) return;
 	const script = document.createElement("script");
 	script.src = "/js/chat.js";
 	document.body.appendChild(script);

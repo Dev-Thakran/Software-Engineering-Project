@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
 const RULES = {
 	fullName: (v) => (v.trim().length >= 2 ? "" : "Enter your full name."),
 	email: (v) => (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()) ? "" : "Enter a valid email, like you@example.com."),
-	password: (v) => (v.length >= 8 ? "" : "Use at least 8 characters."),
+	password: (v) => (v.length < 8 ? "Use at least 8 characters." : !v.trim() ? "A password can't be only spaces." : ""),
 	confirmPassword: (v) => (v && v === document.getElementById("password").value ? "" : "The passwords don't match."),
 };
 
@@ -65,6 +65,12 @@ async function handleRegister() {
 	const firstBad = ids[ok.indexOf(false)];
 	if (firstBad) return document.getElementById(firstBad).focus();
 
+	// The Terms & Privacy Policy must be accepted (the server checks this too)
+	const terms = document.getElementById("acceptTerms");
+	document.getElementById("acceptTerms-error").textContent = terms.checked ? "" : "Please agree to the Terms & Privacy Policy to create an account.";
+	terms.setAttribute("aria-invalid", String(!terms.checked));
+	if (!terms.checked) return terms.focus();
+
 	const name = document.getElementById("fullName").value.trim();
 	const email = document.getElementById("email").value.trim();
 	const password = document.getElementById("password").value;
@@ -78,7 +84,7 @@ async function handleRegister() {
 		const res = await fetch("/auth/register", {
 			method: "POST",
 			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ name, email, password }),
+			body: JSON.stringify({ name, email, password, acceptTerms: true }),
 		});
 		const data = await res.json();
 		if (!res.ok) {

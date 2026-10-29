@@ -525,7 +525,7 @@ nav a.active, nav a[aria-current="page"] {
     padding: 14px 18px;
     border-right: 1px solid var(--lux-brown-100);
 }
-.stay-search label {
+.stay-search label, .stay-search .party-label {
     font-family: 'Outfit', system-ui, sans-serif;
     font-size: 11px;
     font-weight: 600;
@@ -682,3 +682,42 @@ nav a.active, nav a[aria-current="page"] {
 }
 .dash-nav a:hover { color: #2C241B; }
 .dash-nav a[aria-current="page"] { color: #2C241B; border-bottom-color: #2C241B; text-decoration: none; }
+
+/* ---------- Party picker: adults + children in one search cell ---------- */
+.party-row { display: flex; gap: 10px; }
+.party-row label { display: flex; flex-direction: column; flex: 1; min-width: 0; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--lux-text-muted); }
+.party-row select { margin-top: 2px; }
+.promo-toggle { background: none; border: none; padding: 0; color: inherit; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; font: inherit; }
+.promo-inline { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; }
+.promo-inline input { width: 160px; padding: 8px 10px; border: 1px solid rgba(255,255,255,0.6); background: rgba(255,255,255,0.95); color: #2c241b; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; }
+.promo-tag { display: inline-flex; align-items: center; gap: 6px; padding: 3px 9px; background: #eaf3ec; color: #2f5e3b; font-size: 12px; font-weight: 600; letter-spacing: 0.06em; }
+
+/* ---------- Accessible rooms ---------- */
+.room-card-tag.access { left: auto; right: 0; top: auto; bottom: 0; background: #1f3a56; color: #fff; display: inline-flex; align-items: center; gap: 5px; }
+.room-card-tag.access .icon { width: 13px; height: 13px; }
+.chip-access { display: inline-flex; align-items: center; gap: 6px; }
+.chip-access .icon { width: 15px; height: 15px; }
+
+/* ---------- Rate plan choice (booking form) ---------- */
+.rate-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .rate-options { grid-template-columns: 1fr; } }
+.rate-card { position: relative; display: block; border: 1px solid var(--lux-brown-200); background: #fff; padding: 14px 16px 14px 44px; cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; }
+.rate-card input { position: absolute; left: 16px; top: 18px; width: 18px; height: 18px; accent-color: var(--lux-brown-700); }
+.rate-card:has(input:checked) { border-color: var(--lux-brown-700); box-shadow: inset 0 0 0 1px var(--lux-brown-700); }
+.rate-card:has(input:focus-visible) { outline: 2px solid var(--lux-focus); outline-offset: 2px; }
+.rate-card b { display: block; font-size: 15px; color: var(--lux-brown-800); }
+.rate-card .rate-price { font-family: 'Cormorant Garamond', serif; font-size: 22px; color: var(--lux-brown-800); }
+.rate-card small { display: block; font-size: 12px; color: var(--lux-text-muted); line-height: 1.5; margin-top: 4px; }
+.rate-save { display: inline-block; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: #2f5e3b; background: #eaf3ec; padding: 2px 7px; margin-left: 6px; }
+.status-badge.nonref { background: #f4ece0; color: #7a4f12; }
+
+/* ---------- Room page content ---------- */
+.room-highlights { display: flex; flex-wrap: wrap; gap: 8px; }
+.room-highlights li { font-size: 13px; padding: 6px 12px; border: 1px solid var(--lux-brown-200); background: #fff; color: var(--lux-brown-700); }
+.access-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 32px; }
+.access-list li { display: flex; align-items: center; gap: 10px; padding: 12px 0; border-bottom: 1px solid var(--lux-brown-100); font-size: 14px; color: var(--lux-brown-700); }
+.access-note { display: flex; align-items: center; gap: 10px; padding: 14px 16px; background: #fff; border: 1px solid var(--lux-brown-100); font-size: 14px; color: var(--lux-brown-700); }
+.access-note a { text-decoration: underline; text-underline-offset: 3px; }
+.room-cell .access-mark { position: absolute; top: 6px; right: 6px; width: 16px; height: 16px; color: #1f3a56; }
+.room-cell .access-mark .icon { width: 16px; height: 16px; }
+.room-cell { position: relative; }

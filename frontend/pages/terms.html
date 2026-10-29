@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Terms &amp; Privacy – La Extravaganza</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="../css/main.css" />
+	<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+	<meta name="description" content="Booking terms, cancellation and date-change rules, and how La Extravaganza handles your personal information." />
+	<script src="../js/ui.js"></script>
+	<script src="../js/header.js"></script>
+	<script src="../js/footer.js"></script>
+	<style>
+		.terms-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 56px; align-items: start; }
+		.terms-nav { position: sticky; top: 100px; display: flex; flex-direction: column; gap: 4px; border-left: 1px solid var(--lux-brown-100); padding-left: 16px; }
+		.terms-nav a { font-size: 14px; color: var(--lux-text-muted); text-decoration: none; padding: 6px 0; }
+		.terms-nav a:hover { color: var(--lux-brown-800); text-decoration: underline; text-underline-offset: 4px; }
+		.terms-body section { padding: 8px 0 32px; border-bottom: 1px solid var(--lux-brown-100); margin-bottom: 32px; scroll-margin-top: 100px; }
+		.terms-body section:last-child { border-bottom: none; }
+		.terms-body h2 { font-family: "Cormorant Garamond", Georgia, serif; font-size: 32px; color: var(--lux-brown-800); margin-bottom: 14px; line-height: 1.15; }
+		.terms-body p, .terms-body li { font-size: 15px; line-height: 1.8; color: var(--lux-brown-600); max-width: 68ch; }
+		.terms-body ul { list-style: disc; padding-left: 20px; margin: 8px 0 12px; }
+		.terms-body li { margin-bottom: 6px; }
+		.terms-body strong { color: var(--lux-brown-800); font-weight: 600; }
+		.terms-body a { color: var(--lux-brown-700); text-decoration: underline; text-underline-offset: 3px; }
+		.notice { background: #fff; border: 1px solid var(--lux-brown-100); border-left: 3px solid var(--lux-brown-700); padding: 16px 20px; font-size: 14px; color: var(--lux-brown-700); line-height: 1.7; }
+		@media (max-width: 860px) {
+			.terms-layout { grid-template-columns: 1fr; gap: 24px; }
+			.terms-nav { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px 16px; border-left: none; padding-left: 0; }
+		}
+	</style>
+</head>
+<body style="background: var(--lux-cream)">
+	<header class="sticky top-0 z-20" id="header"></header>
+
+	<main class="max-w-6xl mx-auto px-4 md:px-12 pt-14 pb-24">
+		<p class="kicker mb-3">The fine print, made plain</p>
+		<h1 class="font-serif" style="font-size: clamp(38px, 5vw, 60px); color: var(--lux-brown-800); line-height: 1.08">Terms &amp; Privacy</h1>
+		<p class="mt-4 mb-6" style="color: var(--lux-text-muted); max-width: 62ch; line-height: 1.7">
+			How booking, cancelling and changing a stay works, and what we do with your details. Last updated 28 October 2026.
+		</p>
+		<p class="notice mb-12">
+			<strong>Please note:</strong> La Extravaganza is a student software project built for the School of Digital
+			Technologies Tech Expo. It is not a real hotel - no real payments are taken and no stays are provided. These terms
+			describe how the demo works.
+		</p>
+
+		<div class="terms-layout">
+			<nav class="terms-nav" aria-label="On this page">
+				<a href="#booking">Booking &amp; payment</a>
+				<a href="#rates">Rates</a>
+				<a href="#cancellation">Cancellation</a>
+				<a href="#changes">Changing your dates</a>
+				<a href="#stay">Your stay</a>
+				<a href="#promo">Promo codes</a>
+				<a href="#privacy">Privacy</a>
+				<a href="#contact">Contact us</a>
+			</nav>
+
+			<div class="terms-body">
+				<section id="booking">
+					<h2>Booking &amp; payment</h2>
+					<ul>
+						<li>Room prices are shown per night in New Zealand dollars.</li>
+						<li>A flat <strong>$30 taxes &amp; fees</strong> is added once per booking. The full total is always shown before you pay.</li>
+						<li>Your booking is confirmed once payment goes through, and you'll see your booking reference straight away. It's also saved in <a href="/pages/mybooking.html">My Stays</a>.</li>
+						<li>You need an account to book, and you must be the person named on the booking or booking on their behalf.</li>
+					</ul>
+				</section>
+
+				<section id="rates">
+					<h2>Rates</h2>
+					<p>Every room can be booked at one of two rates. You choose on the booking form.</p>
+					<ul>
+						<li><strong>Flexible:</strong> the standard nightly price. Free cancellation and date changes until 23:59 the day before you arrive.</li>
+						<li><strong>Advance purchase:</strong> 10% off the room price, paid in full when you book. It is <strong>non-refundable</strong> and can't be cancelled or changed online. If something comes up, call reception on <strong>+64 9 123 4567</strong> and we'll do what we can.</li>
+						<li>A promo code can be used with either rate. On Advance purchase it comes off the already-reduced price.</li>
+					</ul>
+				</section>
+
+				<section id="cancellation">
+					<h2>Cancellation</h2>
+					<ul>
+						<li><strong>Free cancellation until 23:59 (New Zealand time) the day before you arrive.</strong> Cancel any time before then from My Stays. This applies to the Flexible rate; <a href="#rates">Advance purchase</a> bookings are non-refundable.</li>
+						<li>On the day of arrival, cancellations and changes need the front desk: call us on <strong>+64 9 123 4567</strong>.</li>
+						<li>If you don't arrive and haven't cancelled (a no-show), the stay is charged in full.</li>
+					</ul>
+				</section>
+
+				<section id="changes">
+					<h2>Changing your dates</h2>
+					<ul>
+						<li>You can move an upcoming stay to new dates from My Stays, up to the same cut-off as cancelling: <strong>23:59 the day before arrival</strong>. Advance purchase bookings can only be changed by reception.</li>
+						<li>The room must be free for every night of the new dates. Your stay is re-priced at the room's current nightly rate, and any promo code you used still applies.</li>
+						<li>If the new stay costs more, the difference is <strong>paid at check-in</strong>. If it costs less, the difference is <strong>refunded at check-in</strong>.</li>
+						<li>To change rooms, cancel and book again, or ask reception.</li>
+					</ul>
+				</section>
+
+				<section id="stay">
+					<h2>Your stay</h2>
+					<ul>
+						<li><strong>Check-in from 15:00, check-out by 11:00.</strong> Reception is open 24 hours.</li>
+						<li>Each room has a guest limit: Garden rooms sleep 1, Classic and Executive rooms sleep 2, and Penthouse suites sleep 4. <strong>Children count toward the limit.</strong></li>
+						<li>Rooms 106, 206, 306 and 406 are fully accessible. See our <a href="/pages/accessibility.html">accessibility statement</a>.</li>
+						<li>Children under 12 must stay with an adult. Every booking needs at least one adult.</li>
+						<li>Please treat the room with care; damage beyond normal use may be charged.</li>
+					</ul>
+				</section>
+
+				<section id="promo">
+					<h2>Promo codes</h2>
+					<ul>
+						<li>One promo code per booking. Codes are checked when you book and can't be added afterwards.</li>
+						<li>The discount comes off the room price only, not the $30 taxes &amp; fees.</li>
+						<li>Codes have start and end dates and may be withdrawn at any time. Expired codes can't be used.</li>
+					</ul>
+				</section>
+
+				<section id="privacy">
+					<h2>Privacy</h2>
+					<p><strong>What we collect and why</strong></p>
+					<ul>
+						<li><strong>Your account:</strong> your name and email, so you can sign in and we can identify your bookings. Your password is stored only as a one-way scrambled "hash" - we can never see it.</li>
+						<li><strong>Your bookings:</strong> room, dates, guests, price and status, so we can run your stay.</li>
+						<li><strong>Reviews:</strong> if you review a stay, your rating and comments are shown publicly with your name.</li>
+						<li><strong>When you agreed to these terms</strong>, recorded when you create an account.</li>
+					</ul>
+					<p><strong>Who can see it</strong></p>
+					<ul>
+						<li>Our front-desk staff and manager can see bookings and guest names and emails to run the hotel.</li>
+						<li>We don't sell or share your details for marketing.</li>
+					</ul>
+					<p><strong>Your browser</strong></p>
+					<ul>
+						<li>When you sign in, a login token is kept in your browser's local storage so you stay signed in. It expires after 8 hours, and signing out removes it. We don't use advertising or tracking cookies.</li>
+					</ul>
+					<p><strong>Outside services</strong></p>
+					<ul>
+						<li>Pages load fonts from Google Fonts, styling from the Tailwind CDN, and the contact-page map from OpenStreetMap. These services can see your IP address when they load.</li>
+						<li>Messages you send to <strong>Aria</strong>, our AI assistant, are sent to an AI provider (Groq, Google Gemini or Anthropic Claude) to write a reply. Aria's conversation is kept in memory only and is cleared when the server restarts.</li>
+						<li>Contact-form messages are delivered to us by email through Web3Forms.</li>
+					</ul>
+					<p><strong>Your choices</strong></p>
+					<ul>
+						<li>You can ask us what we hold about you, ask us to correct it, or ask us to delete your account, by emailing <strong>reservations@laextravaganza.co.nz</strong>.</li>
+					</ul>
+				</section>
+
+				<section id="contact">
+					<h2>Contact us</h2>
+					<p>
+						La Extravaganza, 42 Harbour Avenue, Auckland Central 1010, New Zealand<br />
+						Phone <strong>+64 9 123 4567</strong> · Email <strong>reservations@laextravaganza.co.nz</strong><br />
+						Or send a message from our <a href="/pages/contact.html">contact page</a>.
+					</p>
+				</section>
+			</div>
+		</div>
+	</main>
+
+	<footer id="footer"></footer>
+</body>
+</html>

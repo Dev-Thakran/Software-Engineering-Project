@@ -124,10 +124,39 @@
 									<input type="date" id="checkout" class="field-input" required aria-describedby="dates-error" />
 								</div>
 							</div>
+							<div class="grid grid-cols-2 gap-7 mb-2">
+								<div class="field">
+									<label for="adultsinput">Adults</label>
+									<select id="adultsinput" class="field-input"></select>
+								</div>
+								<div class="field">
+									<label for="childreninput">Children (under 12)</label>
+									<select id="childreninput" class="field-input"></select>
+								</div>
+							</div>
+							<p class="field-hint mb-7">This room sleeps up to <span id="max-guests-label">2</span> - children count too.</p>
+							<fieldset class="mb-7">
+								<legend class="field-label-like mb-3" style="font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: var(--lux-text-soft)">Choose your rate</legend>
+								<div class="rate-options">
+									<label class="rate-card">
+										<input type="radio" name="rate" value="flexible" checked />
+										<b>Flexible <span class="rate-price" id="rate-flexible-price"></span></b>
+										<small>Free cancellation and date changes until 23:59 the day before arrival.</small>
+									</label>
+									<label class="rate-card">
+										<input type="radio" name="rate" value="advance" />
+										<b>Advance purchase <span class="rate-price" id="rate-advance-price"></span><span class="rate-save" id="rate-advance-save" hidden></span></b>
+										<small>10% off the room price. Paid now, non-refundable and can't be changed online. <a href="/pages/terms.html#rates" target="_blank" rel="noopener" style="text-decoration:underline">Terms</a></small>
+									</label>
+								</div>
+							</fieldset>
 							<div class="field mb-2">
-								<label for="guestinput">Guests</label>
-								<select id="guestinput" class="field-input"></select>
-								<p class="field-hint">This room sleeps up to <span id="max-guests-label">2</span>.</p>
+								<label for="promoinput">Promo code <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
+								<div class="flex gap-3 items-end">
+									<input type="text" id="promoinput" class="field-input" maxlength="20" autocomplete="off" placeholder="e.g. EXPO2026" style="text-transform:uppercase" aria-describedby="promo-msg" />
+									<button type="button" class="btn-secondary" id="promo-apply" style="padding: 10px 18px">Apply</button>
+								</div>
+								<p class="field-hint" id="promo-msg" aria-live="polite"></p>
 							</div>
 							<p class="field-error mt-3" id="dates-error" role="alert"></p>
 							<button type="submit" class="btn-primary w-full mt-7" id="continuepaybtn">Continue to payment</button>
@@ -185,6 +214,7 @@
 							</div>
 
 							<p class="form-error" id="pay-error" role="alert" hidden></p>
+							<p class="text-xs mt-4" style="color: var(--lux-text-muted)">By paying you agree to our <a href="/pages/terms.html" target="_blank" rel="noopener" style="color: var(--lux-brown-700); text-decoration: underline">Terms &amp; Privacy Policy</a>, including the cancellation rules.</p>
 
 							<div class="flex flex-col-reverse sm:flex-row gap-3 mt-8">
 								<button type="button" class="btn-secondary" id="back-to-dates">Back</button>
@@ -209,6 +239,8 @@
 							</div>
 							<div style="border-top: 1px solid var(--lux-brown-100)" class="pt-3 mt-3">
 								<div class="summary-row"><span id="s-price-line">Room</span><span id="s-subtotal">-</span></div>
+								<div class="summary-row" id="s-rate-row" hidden><span>Advance purchase</span><span id="s-rate" style="color: var(--lux-success)">-</span></div>
+								<div class="summary-row" id="s-promo-row" hidden><span id="s-promo-label">Promo</span><span id="s-promo" style="color: var(--lux-success)">-</span></div>
 								<div class="summary-row"><span>Taxes &amp; fees</span><span>$30</span></div>
 							</div>
 							<div class="flex justify-between items-baseline pt-3 mt-3" style="border-top: 1px solid var(--lux-brown-100)">
@@ -216,7 +248,7 @@
 								<span class="font-serif" id="s-total" style="font-size: 32px; color: var(--lux-brown-800)">-</span>
 							</div>
 							<p class="text-xs mt-4 flex items-center gap-2" style="color: var(--lux-text-muted)">
-								<span data-icon="check"></span> Free cancellation until the day before arrival
+								<span data-icon="check"></span> <span id="s-policy">Free cancellation until 23:59 the day before arrival</span>
 							</p>
 						</div>
 					</aside>

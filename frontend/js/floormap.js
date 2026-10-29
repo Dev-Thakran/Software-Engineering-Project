@@ -28,10 +28,17 @@ document.addEventListener("DOMContentLoaded", () => {
 		datesChanged();
 	});
 	$("map-checkout").addEventListener("change", datesChanged);
-	$("map-guests").addEventListener("change", () => {
-		state.guests = Number($("map-guests").value);
-		render();
-	});
+	// Adults + children; everyone counts toward a room's limit
+	state.party = UI.party.fromParams(new URLSearchParams(location.search));
+	state.guests = UI.party.total(state.party);
+	UI.party.fillSelects($("map-adults"), $("map-children"), state.party);
+	[$("map-adults"), $("map-children")].forEach((el) =>
+		el.addEventListener("change", () => {
+			state.party = { adults: Number($("map-adults").value), children: Number($("map-children").value) };
+			state.guests = UI.party.total(state.party);
+			render();
+		}),
+	);
 	$("map-dates").addEventListener("submit", (e) => e.preventDefault());
 	// Leaving the map goes back to showing the chosen room
 	$("floor-map").addEventListener("mouseleave", () => preview(state.selected));
@@ -80,7 +87,7 @@ function render() {
 	const nights = UI.dates.nights(state.checkIn, state.checkOut);
 	const fits = (r) => r.maxGuests >= state.guests;
 	const free = rooms.filter((r) => r.freeForStay && fits(r)).length;
-	$("map-summary").innerHTML = `<strong>${free} of ${rooms.length}</strong> rooms free for ${state.guests} ${state.guests === 1 ? "guest" : "guests"} · ${UI.dates.pretty(state.checkIn)} – ${UI.dates.pretty(state.checkOut)} (${nights} ${nights === 1 ? "night" : "nights"})`;
+	$("map-summary").innerHTML = `<strong>${free} of ${rooms.length}</strong> rooms free for ${UI.party.label(state.party)} · ${UI.dates.pretty(state.checkIn)} – ${UI.dates.pretty(state.checkOut)} (${nights} ${nights === 1 ? "night" : "nights"})`;
 
 	const floors = [...new Set(rooms.map((r) => r.floor))].sort((a, b) => b - a);
 	$("floor-map").innerHTML = floors
@@ -92,10 +99,10 @@ function render() {
 			const cells = onFloor
 				.map((r) => {
 					const status = r.freeForStay ? "free" : "taken";
-					const label = `Room ${r.id}, ${r.type}, ${r.freeForStay ? "free" : "booked"} for your dates${fits(r) ? "" : ", too small for your party"}, ${UI.money(r.price)} a night`;
+					const label = `Room ${r.id}, ${r.type}, ${r.freeForStay ? "free" : "booked"} for your dates${fits(r) ? "" : ", too small for your party"}${r.accessible ? ", accessible room" : ""}, ${UI.money(r.price)} a night`;
 					return `<button type="button" class="room-cell ${status} ${fits(r) ? "" : "small"}" data-room="${UI.escape(r.id)}"
 						aria-pressed="${state.selected === r.id}" aria-label="${UI.escape(label)}" tabindex="-1">
-						${UI.escape(r.id)}<small>${r.freeForStay ? UI.money(r.price) : "Booked"}</small>
+						${r.accessible ? `<span class="access-mark" aria-hidden="true">${UI.icon("access")}</span>` : ""}${UI.escape(r.id)}<small>${r.freeForStay ? UI.money(r.price) : "Booked"}</small>
 					</button>`;
 				})
 				.join("");
@@ -157,17 +164,20 @@ function preview(roomId) {
 		return;
 	}
 	const img = room.image ? room.image.replace("../frontend/", "/") : "";
-	const params = new URLSearchParams({ room: room.id, checkIn: state.checkIn, checkOut: state.checkOut, guests: Math.min(state.guests, room.maxGuests) });
+	const params = new URLSearchParams({ room: room.id, checkIn: state.checkIn, checkOut: state.checkOut });
+	if (room.maxGuests >= state.guests) UI.party.toParams(params, state.party);
 	const fits = room.maxGuests >= state.guests;
 	const status = !room.freeForStay
 		? `<p class="text-sm mb-4" style="color:var(--lux-danger)">Booked for these dates - try other dates or a room nearby.</p>`
 		: !fits
-			? `<p class="text-sm mb-4" style="color:var(--lux-danger)">Sleeps up to ${room.maxGuests} - too small for ${state.guests} guests.</p>`
+			? `<p class="text-sm mb-4" style="color:var(--lux-danger)">Sleeps up to ${room.maxGuests} - too small for ${UI.party.label(state.party)}.</p>`
 			: `<p class="text-sm mb-4" style="color:var(--lux-success)">Free for your dates · ${UI.money(room.stayTotal)} for ${room.nights} ${room.nights === 1 ? "night" : "nights"}</p>`;
 	box.innerHTML = `
 		${img ? `<div class="preview-photo"><img src="${UI.escape(img)}" alt="" /></div>` : ""}
 		<p class="font-serif text-3xl mb-1" style="color:#2C241B">Room ${UI.escape(room.id)}</p>
 		<p class="meta-label mb-3">Floor ${room.floor} · ${UI.escape(room.type)} · up to ${room.maxGuests}</p>
+		${room.accessible ? `<p class="text-sm mb-3 flex items-center gap-2" style="color:#1f3a56">${UI.icon("access")} Accessible room - roll-in shower, grab rails, step-free</p>` : ""}
+		${room.tier?.view ? `<p class="text-sm mb-3" style="color:var(--lux-text-muted)">${UI.escape(room.tier.view)} · ${room.tier.sizeSqm} m²</p>` : ""}
 		<p class="mb-3"><span class="font-serif text-3xl" style="color:#2C241B">${UI.money(room.price)}</span> <span class="meta-label">per night</span></p>
 		${status}
 		<a href="/pages/room.html?${params}" class="btn-primary block text-center">${room.freeForStay && fits ? "View & reserve" : "View room"}</a>`;

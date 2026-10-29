@@ -175,7 +175,7 @@ test("customer booking card sends them to the payment form", async () => {
 
 	const done = assistant.confirmAction(customer, actions[0].id);
 	expect(done.redirect).toBe(
-		`/pages/bookingform.html?room=101&checkIn=${inDays(5)}&checkOut=${inDays(7)}&guests=1`,
+		`/pages/bookingform.html?room=101&checkIn=${inDays(5)}&checkOut=${inDays(7)}&adults=1`,
 	);
 	// The booking itself is only created after payment on the form
 	expect(readData("bookings.json")).toHaveLength(1);

@@ -278,7 +278,7 @@ function confirmAction(user, actionId) {
 			room: p.roomId,
 			checkIn: p.checkIn,
 			checkOut: p.checkOut,
-			guests: p.guests,
+			adults: p.guests,
 		});
 		result = {
 			message: "Taking you to the booking form to pay…",

@@ -40,6 +40,10 @@ function setUpHeroSearch() {
 	checkIn.min = today;
 	checkOut.min = UI.dates.addDays(today, 1);
 
+	const adults = document.getElementById("hero-adults");
+	const children = document.getElementById("hero-children");
+	UI.party.fillSelects(adults, children, { adults: 2, children: 0 });
+
 	checkIn.addEventListener("change", () => {
 		if (!checkIn.value) return;
 		const earliest = UI.dates.addDays(checkIn.value, 1);
@@ -47,22 +51,49 @@ function setUpHeroSearch() {
 		if (!checkOut.value || checkOut.value < earliest) checkOut.value = earliest;
 	});
 
-	form.addEventListener("submit", (e) => {
+	// "Have a promo code?" reveals a small field; the code travels with the search
+	const toggle = document.getElementById("promo-toggle");
+	const box = document.getElementById("promo-box");
+	const promoInput = document.getElementById("hero-promo");
+	toggle.addEventListener("click", () => {
+		box.hidden = !box.hidden;
+		toggle.setAttribute("aria-expanded", String(!box.hidden));
+		if (!box.hidden) promoInput.focus();
+	});
+
+	form.addEventListener("submit", async (e) => {
 		e.preventDefault();
+		const party = { adults: Number(adults.value), children: Number(children.value) };
 		let problem = "";
-		if (!checkIn.value || !checkOut.value) problem = "Choose your check-in and check-out dates.";
-		else if (checkIn.value < today) problem = "Check-in can't be in the past.";
-		else if (checkOut.value <= checkIn.value) problem = "Check-out needs to be after check-in.";
+		let badField = checkIn;
+		if (!checkIn.value || !checkOut.value) {
+			problem = "Choose your check-in and check-out dates.";
+			badField = checkIn.value ? checkOut : checkIn;
+		} else if (checkIn.value < today) problem = "Check-in can't be in the past.";
+		else if (checkOut.value <= checkIn.value) {
+			problem = "Check-out needs to be after check-in.";
+			badField = checkOut;
+		} else if (UI.party.total(party) > 4) {
+			problem = "Our largest suites sleep 4 - children count too.";
+			badField = children;
+		}
 		error.textContent = problem;
 		error.hidden = !problem;
-		if (problem) return (checkIn.value ? checkOut : checkIn).focus();
+		[checkIn, checkOut, children].forEach((el) => el.setAttribute("aria-invalid", String(el === badField && !!problem)));
+		if (problem) return badField.focus();
 
-		const params = new URLSearchParams({
-			checkIn: checkIn.value,
-			checkOut: checkOut.value,
-			guests: document.getElementById("hero-guests").value,
-		});
-		location.href = `./browserooms.html?${params}`;
+		const params = new URLSearchParams({ checkIn: checkIn.value, checkOut: checkOut.value });
+		UI.party.toParams(params, party);
+		const code = promoInput.value.trim();
+		if (code) {
+			const res = await fetch(`/promos/${encodeURIComponent(code)}`).catch(() => null);
+			if (!res || !res.ok) {
+				document.getElementById("promo-note").textContent = "That code isn't valid or has expired.";
+				return promoInput.focus();
+			}
+			params.set("promo", (await res.json()).code);
+		}
+		location.href = `/pages/browserooms.html?${params}`;
 	});
 }
 

@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Forgot Password – La Extravaganza</title>
+	<script src="https://cdn.tailwindcss.com"></script>
+	<link rel="stylesheet" href="../css/main.css" />
+	<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+	<meta name="description" content="Reset your La Extravaganza password." />
+	<script src="../js/ui.js"></script>
+	<script src="../js/header.js"></script>
+	<script src="../js/footer.js"></script>
+	<script src="../js/forgot.js" defer></script>
+</head>
+<body>
+	<header class="sticky top-0 z-20" id="header"></header>
+
+	<main class="px-4 py-16">
+		<div class="card" style="max-width: 460px; margin: 0 auto; padding: 44px clamp(24px, 6vw, 48px)">
+			<p class="kicker mb-2">Account help</p>
+			<h1 class="font-serif text-4xl mb-2" style="color: #2c241b">Forgot your password?</h1>
+			<p class="text-sm mb-8" style="color: var(--lux-text-muted)">Enter the email you signed up with and we'll send you a link to choose a new password.</p>
+
+			<form id="forgot-form" novalidate>
+				<div class="error-msg" id="errorMsg" role="alert"></div>
+				<div class="mb-8">
+					<label class="input-label" for="email">Email</label>
+					<input type="email" id="email" class="input-line" autocomplete="email" placeholder="you@example.com" />
+				</div>
+				<button type="submit" class="btn-primary w-full mb-5" id="forgot-btn">Send reset link</button>
+			</form>
+
+			<div id="sent" hidden tabindex="-1">
+				<p class="mb-4" style="color: var(--lux-brown-700); line-height: 1.7" id="sent-message"></p>
+				<div id="demo-link" hidden style="border: 1px dashed var(--lux-brown-200); background: var(--lux-cream); padding: 16px; margin-bottom: 16px">
+					<p class="kicker mb-2" style="font-size: 11px">Demo mode</p>
+					<p class="text-sm mb-3" style="color: var(--lux-text-muted)">In a real hotel this link would be emailed to you. It works once and expires in 30 minutes.</p>
+					<a id="reset-link" class="btn-primary w-full text-center" href="#">Choose a new password</a>
+				</div>
+			</div>
+
+			<p class="text-sm text-center" style="color: #7a654b">
+				Remembered it?
+				<a href="/pages/Login.html" style="color: #4a3b32; text-decoration: underline; text-underline-offset: 2px">Back to sign in</a>
+			</p>
+		</div>
+	</main>
+
+	<footer id="footer"></footer>
+</body>
+</html>

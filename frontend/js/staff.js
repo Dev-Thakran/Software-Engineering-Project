@@ -263,7 +263,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 <div>
                     <p class="meta-label">Stay</p>
                     <p class="meta-value">${prettyDate(b.checkIn)} – ${prettyDate(b.checkOut)} · ${b.nights} ${b.nights === 1 ? "night" : "nights"}</p>
-                    <p class="meta-value" style="color:var(--lux-success)">Paid ${UI.money(b.total)}</p>
+                    <p class="meta-value" style="color:var(--lux-success)">Paid ${UI.money(b.total + 30)} incl. $30 fees${b.ratePlan === "advance" ? " · Advance purchase" : ""}${b.promoCode ? ` · ${escapeHtml(b.promoCode)} −${UI.money(b.discount)}` : ""}</p>
+                    ${b.adults ? `<p class="meta-value" style="color:var(--lux-text-muted)">${UI.party.label({ adults: b.adults, children: b.children || 0 })}</p>` : ""}
                 </div>
                 <div class="md:text-right">
                     <button onclick="checkIn('${escapeHtml(b.id)}')" class="btn-primary" style="padding:12px 22px;">

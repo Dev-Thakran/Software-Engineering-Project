@@ -1,11 +1,3 @@
-// Extra details per room type - bed size and room size
-const ROOM_META = {
-	"Standard Single": { bed: "Queen bed", sqm: 28 },
-	"Deluxe Double": { bed: "Queen bed", sqm: 38 },
-	"Executive Double": { bed: "King bed", sqm: 48 },
-	"Penthouse Suite": { bed: "King bed", sqm: 80 },
-};
-
 // Floor tier names matching the design system
 const FLOOR_NAMES = {
 	1: "Garden",
@@ -21,10 +13,14 @@ const state = {
 	sort: "default",
 	checkIn: "",
 	checkOut: "",
-	guests: 0, // 0 = any party size
+	party: { adults: 0, children: 0 }, // adults 0 = any party size
+	accessible: false, // only rooms with accessible bathrooms and fittings
+	promo: "", // a promo code carried from the home page to the booking form
 };
 
 const $ = (id) => document.getElementById(id);
+// Everyone counts toward a room's limit; "Any" adults means no filter
+const partySize = () => (state.party.adults ? UI.party.total(state.party) : 0);
 
 //  INIT
 document.addEventListener("DOMContentLoaded", () => {
@@ -38,16 +34,21 @@ document.addEventListener("DOMContentLoaded", () => {
 function readAddressBar() {
 	const params = new URLSearchParams(location.search);
 	const { dates } = UI;
-	if (dates.valid(params.get("checkIn")) && dates.valid(params.get("checkOut"))) {
-		state.checkIn = params.get("checkIn");
-		state.checkOut = params.get("checkOut");
+	const from = params.get("checkIn");
+	const to = params.get("checkOut");
+	// Past, reversed or impossible dates in a link are ignored rather than searched
+	if (dates.valid(from) && dates.valid(to) && !stayError(from, to)) {
+		state.checkIn = from;
+		state.checkOut = to;
 	}
-	if (/^[1-4]$/.test(params.get("guests") || "")) state.guests = Number(params.get("guests"));
+	state.party = UI.party.fromParams(params, { adults: 0, children: 0 });
 	if (/^[1-4]$/.test(params.get("floor") || "")) state.floor = params.get("floor");
+	state.accessible = params.get("accessible") === "1";
+	if (/^[A-Za-z0-9]{1,20}$/.test(params.get("promo") || "")) state.promo = params.get("promo").toUpperCase();
 
 	$("checkIn").value = state.checkIn;
 	$("checkOut").value = state.checkOut;
-	$("guests").value = String(state.guests);
+	UI.party.fillSelects($("adults"), $("children"), state.party, { anyAdults: true });
 }
 
 function writeAddressBar() {
@@ -56,8 +57,10 @@ function writeAddressBar() {
 		params.set("checkIn", state.checkIn);
 		params.set("checkOut", state.checkOut);
 	}
-	if (state.guests) params.set("guests", state.guests);
+	if (state.party.adults) UI.party.toParams(params, state.party);
 	if (state.floor !== "all") params.set("floor", state.floor);
+	if (state.accessible) params.set("accessible", "1");
+	if (state.promo) params.set("promo", state.promo);
 	const query = params.toString();
 	history.replaceState(null, "", location.pathname + (query ? "?" + query : ""));
 }
@@ -78,11 +81,21 @@ function setUpSearch() {
 		if (!checkOut.value || checkOut.value < earliest) checkOut.value = earliest;
 	});
 
-	$("guests").addEventListener("change", () => {
-		state.guests = Number($("guests").value);
-		writeAddressBar();
-		render();
-	});
+	const readParty = () => {
+		state.party = { adults: Number($("adults").value), children: Number($("children").value) };
+		// Children need an adult with them
+		if (!state.party.adults && state.party.children) {
+			state.party.adults = 1;
+			$("adults").value = "1";
+		}
+	};
+	[$("adults"), $("children")].forEach((el) =>
+		el.addEventListener("change", () => {
+			readParty();
+			writeAddressBar();
+			render();
+		}),
+	);
 
 	$("stay-form").addEventListener("submit", (e) => {
 		e.preventDefault();
@@ -91,7 +104,6 @@ function setUpSearch() {
 		if (error) return;
 		state.checkIn = checkIn.value;
 		state.checkOut = checkOut.value;
-		state.guests = Number($("guests").value);
 		writeAddressBar();
 		loadRooms();
 	});
@@ -115,6 +127,12 @@ function showStayError(message) {
 
 //  FILTERS
 function setUpFilters() {
+	$("accessible-chip").addEventListener("click", () => {
+		state.accessible = !state.accessible;
+		writeAddressBar();
+		render();
+	});
+
 	$("floor-chips").addEventListener("click", (e) => {
 		const chip = e.target.closest("[data-floor]");
 		if (!chip) return;
@@ -136,6 +154,7 @@ function setUpFilters() {
 
 	$("clear-filters").addEventListener("click", () => {
 		state.floor = "all";
+		state.accessible = false;
 		state.sort = "default";
 		$("sortFilter").value = "default";
 		resetPrice();
@@ -200,9 +219,10 @@ async function loadRooms() {
 
 //  FILTER + SORT
 function visibleRooms() {
-	let list = state.rooms.filter((r) => r.maxGuests >= state.guests);
+	let list = state.rooms.filter((r) => r.maxGuests >= partySize());
 	if (state.checkIn) list = list.filter((r) => r.freeForStay);
 	if (state.floor !== "all") list = list.filter((r) => r.floor == state.floor);
+	if (state.accessible) list = list.filter((r) => r.accessible);
 	list = list.filter((r) => r.price <= state.maxPrice);
 
 	if (state.sort === "price-asc") list.sort((a, b) => a.price - b.price);
@@ -220,7 +240,9 @@ function render() {
 	document.querySelectorAll("#floor-chips [data-floor]").forEach((chip) => {
 		chip.setAttribute("aria-pressed", String(chip.dataset.floor === state.floor));
 	});
+	$("accessible-chip").setAttribute("aria-pressed", String(state.accessible));
 	const filtered =
+		state.accessible ||
 		state.floor !== "all" ||
 		state.sort !== "default" ||
 		state.maxPrice < Number($("priceFilter").max);
@@ -238,16 +260,21 @@ function render() {
 
 function summaryText(count) {
 	const rooms = `${count} ${count === 1 ? "room" : "rooms"}`;
-	const guests = state.guests ? ` for ${state.guests} ${state.guests === 1 ? "guest" : "guests"}` : "";
-	if (!state.checkIn) return `<strong>${rooms}</strong>${guests}. Add your dates to see what's free.`;
+	const guests = state.party.adults ? ` for ${UI.party.label(state.party)}` : "";
+	const promo = state.promo ? ` <span class="promo-tag">${UI.escape(state.promo)} applied at checkout</span>` : "";
+	if (!state.checkIn) return `<strong>${rooms}</strong>${guests}. Add your dates to see what's free.${promo}`;
 	const nights = UI.dates.nights(state.checkIn, state.checkOut);
-	return `<strong>${rooms} free</strong>${guests}, ${UI.dates.pretty(state.checkIn)} to ${UI.dates.pretty(state.checkOut)} · ${nights} ${nights === 1 ? "night" : "nights"}`;
+	return `<strong>${rooms} free</strong>${guests}, ${UI.dates.pretty(state.checkIn)} to ${UI.dates.pretty(state.checkOut)} · ${nights} ${nights === 1 ? "night" : "nights"}${promo}`;
 }
 
 function emptyState(filtered) {
-	const advice = state.checkIn
-		? "Everything that suits is taken for those dates. Try moving your stay by a day or two."
-		: "Nothing matches these filters.";
+	// Say so when it's the party size, not availability, that rules rooms out
+	const fitsSomewhere = state.rooms.some((r) => r.maxGuests >= partySize() && (state.floor === "all" || r.floor == state.floor));
+	const advice = !fitsSomewhere
+		? `No rooms ${state.floor === "all" ? "" : "on this floor "}sleep ${UI.party.label(state.party)} - children count toward a room's limit. Our Penthouse suites sleep 4.`
+		: state.checkIn
+			? "Everything that suits is taken for those dates. Try moving your stay by a day or two."
+			: "Nothing matches these filters.";
 	return `
 		<div class="empty-state sm:col-span-2 lg:col-span-3">
 			<h3 class="font-serif">No rooms to show</h3>
@@ -258,7 +285,7 @@ function emptyState(filtered) {
 
 function cardHtml(room) {
 	const floorName = FLOOR_NAMES[room.floor] || "Floor " + room.floor;
-	const meta = ROOM_META[room.type] || { bed: "Queen bed", sqm: 36 };
+	const tier = room.tier || {};
 	const img = room.image ? room.image.replace("../frontend/", "/") : "";
 
 	// Carry the search through so the room page opens with the dates filled in
@@ -267,7 +294,8 @@ function cardHtml(room) {
 		params.set("checkIn", state.checkIn);
 		params.set("checkOut", state.checkOut);
 	}
-	if (state.guests) params.set("guests", state.guests);
+	if (state.party.adults) UI.party.toParams(params, state.party);
+	if (state.promo) params.set("promo", state.promo);
 
 	const price = state.checkIn
 		? `<p class="price-big">${UI.money(room.stayTotal)}</p>
@@ -280,6 +308,7 @@ function cardHtml(room) {
 			<div class="room-card-photo">
 				${img ? `<img src="${UI.escape(img)}" alt="" loading="lazy" onerror="this.remove()" />` : ""}
 				<span class="room-card-tag left">Floor ${room.floor}</span>
+				${room.accessible ? `<span class="room-card-tag access">${UI.icon("access")} Accessible</span>` : ""}
 				${state.checkIn ? `<span class="room-card-tag right">Free for your dates</span>` : ""}
 			</div>
 			<div class="room-card-body">
@@ -287,11 +316,11 @@ function cardHtml(room) {
 				<h2 class="font-serif mt-1" style="font-size:26px; color:#2C241B; line-height:1.15">
 					Room ${UI.escape(room.id)}
 				</h2>
-				<p class="mb-3" style="font-size:13px; color:var(--lux-text-muted)">${UI.escape(room.type)}</p>
+				<p class="mb-3" style="font-size:13px; color:var(--lux-text-muted)">${UI.escape(room.type)}${tier.view ? ` · ${UI.escape(tier.view)}` : ""}</p>
 				<div class="room-card-meta mb-4">
-					<span>${UI.icon("bed")}${meta.bed}</span>
+					${tier.bed ? `<span>${UI.icon("bed")}${UI.escape(tier.bed)}</span>` : ""}
 					<span>${UI.icon("guests")}Up to ${room.maxGuests}</span>
-					<span>${UI.icon("area")}${meta.sqm} m²</span>
+					${tier.sizeSqm ? `<span>${UI.icon("area")}${tier.sizeSqm} m²</span>` : ""}
 				</div>
 				<div class="room-card-foot">
 					<div>${price}</div>

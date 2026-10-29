@@ -68,23 +68,30 @@
 								<input type="date" id="hero-checkout" name="checkOut" />
 							</div>
 							<div class="field">
-								<label for="hero-guests">Guests</label>
-								<select id="hero-guests" name="guests">
-									<option value="1">1 guest</option>
-									<option value="2" selected>2 guests</option>
-									<option value="3">3 guests</option>
-									<option value="4">4 guests</option>
-								</select>
+								<span class="party-label" id="hero-party-label">Guests</span>
+								<div class="party-row" role="group" aria-labelledby="hero-party-label">
+									<label>Adults<select id="hero-adults" name="adults"></select></label>
+									<label>Children<select id="hero-children" name="children"></select></label>
+								</div>
 							</div>
 							<button type="submit" class="btn-primary"><span data-icon="search"></span> Search</button>
 							<p id="hero-error" class="field-error" role="alert" hidden></p>
 						</form>
-						<p class="mt-4 text-sm text-white/80">
-							Just looking?
-							<a href="./browserooms.html" class="underline underline-offset-4 hover:text-white">See all rooms</a>
-							or
-							<a href="./floormap.html" class="underline underline-offset-4 hover:text-white">explore the floor map</a>.
-						</p>
+						<div class="mt-4 text-sm text-white/80">
+							<p>
+								Just looking?
+								<a href="/pages/browserooms.html" class="underline underline-offset-4 hover:text-white">See all rooms</a>
+								or
+								<a href="/pages/floormap.html" class="underline underline-offset-4 hover:text-white">explore the floor map</a>.
+								·
+								<button type="button" class="promo-toggle hover:text-white" id="promo-toggle" aria-expanded="false" aria-controls="promo-box">Have a promo code?</button>
+							</p>
+							<div class="promo-inline" id="promo-box" hidden>
+								<label for="hero-promo" class="sr-only">Promo code</label>
+								<input id="hero-promo" type="text" maxlength="20" placeholder="e.g. EXPO2026" autocomplete="off" />
+								<span id="promo-note" aria-live="polite"></span>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -132,7 +139,7 @@
 				<div class="max-w-7xl mx-auto px-5 py-6 grid grid-cols-2 md:grid-cols-4 gap-4 text-sm text-[#4A3B32]">
 					<p class="flex items-center gap-2"><span data-icon="clock"></span> Check-in from 3pm</p>
 					<p class="flex items-center gap-2"><span data-icon="door"></span> Check-out by 11am</p>
-					<p class="flex items-center gap-2"><span data-icon="check"></span> Free cancellation to the day before</p>
+					<p class="flex items-center gap-2"><span data-icon="check"></span> Free cancellation until 23:59 the day before</p>
 					<p class="flex items-center gap-2"><span data-icon="pin"></span> Auckland Central</p>
 				</div>
 			</section>

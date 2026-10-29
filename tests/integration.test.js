@@ -48,6 +48,7 @@ test("register then login returns a valid JWT token", async () => {
 		name: "Test User",
 		email,
 		password,
+		acceptTerms: true,
 	});
 	expect(regRes.status).toBe(201);
 

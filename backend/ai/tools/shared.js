@@ -8,7 +8,7 @@ const TAX = 30; // matches the booking form
 
 // The room fields worth showing the model
 function describeRoom(room) {
-	const { status } = rooms.withStatus(room);
+	const { status, tier } = rooms.withStatus(room);
 	return {
 		roomId: room.id,
 		floor: room.floor,
@@ -16,6 +16,10 @@ function describeRoom(room) {
 		type: room.type,
 		pricePerNight: room.price,
 		maxGuests: availability.MAX_GUESTS[room.type] || 2,
+		sizeSqm: tier?.sizeSqm,
+		bed: tier?.bed,
+		view: tier?.view,
+		accessible: Boolean(room.accessible),
 		occupiedToday: status === "occupied",
 	};
 }
@@ -34,10 +38,13 @@ function checkStay(checkIn, checkOut) {
 
 function roomDetails(roomId) {
 	const room = getRoomOrThrow(roomId);
+	const withTier = rooms.getRoom(room.id);
 	const reviews = referenceRepo.getReviews().filter((r) => r.roomId === room.id);
 	return {
 		...describeRoom(room),
 		description: room.description,
+		story: withTier?.tier?.story,
+		accessibleFeatures: withTier?.accessibleFeatures,
 		amenities: referenceRepo.getAmenities(room.id),
 		reviewCount: reviews.length,
 		averageRating: reviews.length

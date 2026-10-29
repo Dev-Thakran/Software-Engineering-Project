@@ -11,6 +11,7 @@ const checkinRoutes = require("./routes/checkin.routes");
 const managerRoutes = require("./routes/manager.routes");
 const aiRoutes = require("./routes/ai.routes");
 const reviewRoutes = require("./routes/review.routes");
+const promoRoutes = require("./routes/promo.routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -28,6 +29,7 @@ app.use("/checkins", checkinRoutes);
 app.use("/manager", managerRoutes);
 app.use("/ai", aiRoutes);
 app.use("/reviews", reviewRoutes); // public list, customers post their own
+app.use("/promos", promoRoutes); // public promo-code check
 
 // - Static files — serves frontend HTML/CSS/JS --------
 app.use(express.static(path.join(__dirname, "../frontend")));

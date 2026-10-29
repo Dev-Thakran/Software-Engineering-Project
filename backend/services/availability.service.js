@@ -46,12 +46,14 @@ function validateStay(checkIn, checkOut) {
 	return null;
 }
 
-function isRoomFree(roomId, checkIn, checkOut) {
+// excludeBookingId lets a booking move its own dates without clashing with itself
+function isRoomFree(roomId, checkIn, checkOut, excludeBookingId) {
 	return !bookingRepo
 		.getAll()
 		.some(
 			(b) =>
 				b.roomId === roomId &&
+				b.id !== excludeBookingId &&
 				ACTIVE_STATUSES.includes(b.status) &&
 				overlaps(checkIn, checkOut, b.checkIn, b.checkOut),
 		);

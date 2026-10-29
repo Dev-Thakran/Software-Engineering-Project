@@ -107,7 +107,9 @@ function countdown(b) {
 	return `<strong>${days}</strong> days to go`;
 }
 
-const canCancel = (b) => b.status === "booked" && b.checkIn > dates.today();
+const isAdvance = (b) => b.ratePlan === "advance";
+// Advance purchase is non-refundable: only reception can change or cancel it
+const canCancel = (b) => b.status === "booked" && b.checkIn > dates.today() && !isAdvance(b);
 const canReview = (b) => b.status === "completed" && !b.reviewed;
 
 function photo(b) {
@@ -123,7 +125,9 @@ function actionsHtml(b) {
 	if (canReview(b)) actions.push(`<button type="button" class="text-action" onclick="openReview('${b.id}')">${UI.icon("star")} Review your stay</button>`);
 	if (b.reviewed) actions.push(`<span class="text-action" style="cursor:default; color:var(--lux-success)">${UI.icon("check")} Reviewed - thank you</span>`);
 	if (!isUpcoming(b)) actions.push(`<a class="text-action" href="./room.html?room=${encodeURIComponent(b.roomId)}">${UI.icon("arrow")} Book again</a>`);
+	if (canCancel(b)) actions.push(`<button type="button" class="text-action" onclick="changeDates('${b.id}')">${UI.icon("calendar")} Change dates</button>`);
 	if (canCancel(b)) actions.push(`<button type="button" class="text-action danger" onclick="cancelBooking('${b.id}')">${UI.icon("close")} Cancel</button>`);
+	if (isAdvance(b) && b.status === "booked") actions.push(`<a class="text-action" href="tel:+6491234567">${UI.icon("phone")} Need to change? Call reception</a>`);
 	return actions.join("");
 }
 
@@ -140,14 +144,15 @@ function nextStayHtml(b) {
 			<div class="p-6 md:p-8 flex flex-col">
 				<div class="flex items-start justify-between gap-3 mb-1">
 					<p class="kicker" style="font-size:11px">${b.status === "staying" ? "Your current stay" : "Your next stay"}</p>
-					<span class="status-badge ${s.cls}">${s.label}</span>
+					<span class="flex gap-2 flex-wrap justify-end">${isAdvance(b) ? '<span class="status-badge nonref">Non-refundable</span>' : ""}<span class="status-badge ${s.cls}">${s.label}</span></span>
 				</div>
 				<h2 class="font-serif mb-1" style="font-size:44px; color:var(--lux-brown-800); line-height:1.05">Room ${UI.escape(b.roomId)}</h2>
 				<p class="mb-5" style="color:var(--lux-text-muted)">Floor ${b.floor} · ${FLOOR_NAMES[b.floor] || ""} · ${UI.escape(b.roomType)}</p>
 				<div class="booking-row"><span>Arrive</span><span>${dates.pretty(b.checkIn, true)} · from 3pm</span></div>
 				<div class="booking-row"><span>Depart</span><span>${dates.pretty(b.checkOut, true)} · by 11am</span></div>
 				<div class="booking-row"><span>Reference</span><span>${UI.escape(b.id)}</span></div>
-				<div class="booking-row"><span>Room total</span><span>${UI.money(b.total)} · ${b.nights} ${b.nights === 1 ? "night" : "nights"}</span></div>
+				${partyText(b) ? `<div class="booking-row"><span>Guests</span><span>${partyText(b)}</span></div>` : ""}
+				<div class="booking-row"><span>Room total</span><span>${UI.money(b.total)} · ${b.nights} ${b.nights === 1 ? "night" : "nights"}${promoText(b)}</span></div>
 				<p class="text-sm mt-4 flex items-center gap-2" style="color:var(--lux-text-muted)">${UI.icon("pin")} 42 Harbour Avenue, Auckland · reception open 24 hours · +64 9 123 4567</p>
 				<div class="card-actions">${actionsHtml(b)}</div>
 			</div>
@@ -171,11 +176,11 @@ function cardHtml(b) {
 			<div class="booking-card-body">
 				<div class="flex items-start justify-between gap-3 mb-1">
 					<p class="kicker" style="font-size:11px">Floor ${b.floor} · ${FLOOR_NAMES[b.floor] || ""}</p>
-					<span class="status-badge ${s.cls}">${s.label}</span>
+					<span class="flex gap-2 flex-wrap justify-end">${isAdvance(b) ? '<span class="status-badge nonref">Non-refundable</span>' : ""}<span class="status-badge ${s.cls}">${s.label}</span></span>
 				</div>
 				<h3 class="font-serif mb-4" style="font-size:32px; color:var(--lux-brown-800); line-height:1.1">Room ${UI.escape(b.roomId)}</h3>
 				<div class="booking-row"><span>Dates</span><span>${dates.pretty(b.checkIn)} – ${dates.pretty(b.checkOut, true)}</span></div>
-				<div class="booking-row"><span>Room total</span><span>${UI.money(b.total)}</span></div>
+				<div class="booking-row"><span>Room total</span><span>${UI.money(b.total)}${promoText(b)}</span></div>
 				<div class="booking-row"><span>Reference</span><span style="font-size:12px">${UI.escape(b.id)}</span></div>
 				<div class="card-actions">${actionsHtml(b)}</div>
 			</div>
@@ -186,6 +191,77 @@ function cardHtml(b) {
 function addToCalendar(id) {
 	const b = bookings.find((x) => x.id === id);
 	if (b) UI.downloadStay(b);
+}
+
+// "2 adults, 1 child" (older bookings only have a guest count, or nothing)
+function partyText(b) {
+	if (b.adults) return UI.party.label({ adults: b.adults, children: b.children || 0 });
+	return b.guests ? `${b.guests} ${b.guests === 1 ? "guest" : "guests"}` : "";
+}
+
+function promoText(b) {
+	return b.promoCode ? ` <span class="promo-tag">${UI.escape(b.promoCode)} −${UI.money(b.discount)}</span>` : "";
+}
+
+// Move an upcoming stay to new dates. The price is worked out again at the
+// room's current rate (keeping any promo); the difference is settled at reception.
+async function changeDates(id) {
+	const b = bookings.find((x) => x.id === id);
+	if (!b) return;
+	const room = roomsById[b.roomId];
+	const tomorrow = dates.addDays(dates.today(), 1);
+	const result = await UI.dialog({
+		title: `Change your dates for Room ${b.roomId}`,
+		body: `
+			<p class="text-sm mb-4" style="color:var(--lux-text-muted)">Now: ${dates.pretty(b.checkIn, true)} – ${dates.pretty(b.checkOut, true)} · ${UI.money(b.total)}</p>
+			<div class="grid grid-cols-2 gap-4 mb-3">
+				<label class="meta-label">New check in<input type="date" id="cd-in" min="${tomorrow}" value="${b.checkIn}" style="display:block;width:100%;margin-top:6px;border:1px solid var(--lux-brown-200);padding:9px 10px;font-size:15px;background:#fff" /></label>
+				<label class="meta-label">New check out<input type="date" id="cd-out" min="${dates.addDays(tomorrow, 1)}" value="${b.checkOut}" style="display:block;width:100%;margin-top:6px;border:1px solid var(--lux-brown-200);padding:9px 10px;font-size:15px;background:#fff" /></label>
+			</div>
+			<p id="cd-preview" class="text-sm" style="color:var(--lux-brown-600)" aria-live="polite"></p>
+			<p class="text-xs mt-3" style="color:var(--lux-text-muted)">Any price difference is paid or refunded at reception. <a href="/pages/terms.html#changes" target="_blank" rel="noopener" style="text-decoration:underline">Terms</a></p>`,
+		confirmLabel: "Change dates",
+		cancelLabel: "Keep my dates",
+		onConfirm: async (card) => {
+			const checkIn = card.querySelector("#cd-in").value;
+			const checkOut = card.querySelector("#cd-out").value;
+			const res = await fetch(`/bookings/${encodeURIComponent(id)}/dates`, {
+				method: "PATCH",
+				headers: { "Content-Type": "application/json", Authorization: "Bearer " + localStorage.getItem("token") },
+				body: JSON.stringify({ checkIn, checkOut }),
+			});
+			const data = await res.json();
+			if (!res.ok) throw new Error(data.error || "We couldn't change your dates.");
+			return data;
+		},
+		onOpen: (card) => {
+			const inEl = card.querySelector("#cd-in");
+			const outEl = card.querySelector("#cd-out");
+			const preview = () => {
+				const nights = inEl.value && outEl.value ? dates.nights(inEl.value, outEl.value) : 0;
+				const el = card.querySelector("#cd-preview");
+				if (nights < 1 || !room) return (el.textContent = nights < 1 && inEl.value && outEl.value ? "Check-out needs to be after check-in." : "");
+				const full = nights * room.price;
+				const total = full - (b.promoPercent ? Math.round((full * b.promoPercent) / 100) : 0);
+				const diff = total - b.total;
+				el.innerHTML = `New stay: ${nights} ${nights === 1 ? "night" : "nights"} · <strong>${UI.money(total)}</strong> - ${
+					diff > 0 ? `${UI.money(diff)} more, payable at check-in` : diff < 0 ? `${UI.money(-diff)} refunded at check-in` : "same price"
+				}`;
+			};
+			inEl.addEventListener("change", () => {
+				if (inEl.value && (!outEl.value || outEl.value <= inEl.value)) outEl.value = dates.addDays(inEl.value, 1);
+				outEl.min = dates.addDays(inEl.value || tomorrow, 1);
+				preview();
+			});
+			outEl.addEventListener("change", preview);
+			preview();
+		},
+	});
+	if (!result) return;
+	Object.assign(b, result.booking);
+	render();
+	const d = result.difference;
+	UI.toast(`Dates changed${d > 0 ? ` · ${UI.money(d)} more, payable at check-in` : d < 0 ? ` · ${UI.money(-d)} refunded at check-in` : ""}`);
 }
 
 async function cancelBooking(id) {

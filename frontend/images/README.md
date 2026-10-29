@@ -24,13 +24,18 @@ This folder contains every image used across the LuxStay hotel booking website (
 
 ## How rooms are mapped
 
-Each of the 48 rooms (8 floors × 6 rooms) is assigned an image by this formula in `src/lib/data.js`:
+Room photos live in `tiers/floor-N/` and are grouped by **tier** (not by folder number) in `backend/data/tiers.json`. Each floor's tier gets its own set of photos, with no photo shared between tiers:
 
-```js
-image: ROOM_IMAGES[(floor + roomIndex) % ROOM_IMAGES.length];
-```
+| Floor | Tier | Photos (first one leads the room page gallery) |
+| ----- | ---- | ---------------------------------------------- |
+| 1 | Garden | `tiers/floor-3/b.jpg`, `tiers/floor-4/b.jpg`, `tiers/floor-2/c.jpg`, `tiers/floor-1/a.jpg` |
+| 2 | Classic | `tiers/floor-4/a.jpg`, `tiers/floor-2/b.jpg`, `tiers/floor-5/a.jpg` |
+| 3 | Executive | `tiers/floor-3/a.jpg`, `tiers/floor-1/c.jpg`, `tiers/floor-5/b.jpg`, `tiers/floor-4/c.jpg` |
+| 4 | Penthouse | `tiers/floor-1/b.jpg`, `tiers/floor-7/c.jpg`, `tiers/floor-2/a.jpg`, `tiers/floor-6/c.jpg` |
 
-This cycles through the 8 room images (`room-bed-*.jpg`) so every floor gets a varied mix.
+Each room in `backend/data/rooms.json` uses one photo from its own tier's set as its card image. The API adds the tier (with its photos) to every room it returns, so the Rooms page, room page, floor map and Aria all show the same pictures.
+
+The `room-bed-*.jpg` files above are no longer used for rooms.
 
 ## Image specifications
 
