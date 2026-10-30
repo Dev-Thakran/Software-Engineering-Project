@@ -265,9 +265,12 @@ document.addEventListener("DOMContentLoaded", function () {
                     <p class="meta-value">${prettyDate(b.checkIn)} – ${prettyDate(b.checkOut)} · ${b.nights} ${b.nights === 1 ? "night" : "nights"}</p>
                     <p class="meta-value" style="color:var(--lux-success)">Paid ${UI.money(b.total + 30)} incl. $30 fees${b.ratePlan === "advance" ? " · Advance purchase" : ""}${b.promoCode ? ` · ${escapeHtml(b.promoCode)} −${UI.money(b.discount)}` : ""}</p>
                     ${b.adults ? `<p class="meta-value" style="color:var(--lux-text-muted)">${UI.party.label({ adults: b.adults, children: b.children || 0 })}</p>` : ""}
+                    ${b.arrivalTime ? `<p class="meta-value">Arriving ${escapeHtml(b.arrivalTime)}</p>` : ""}
+                    ${b.requests ? `<p class="guest-request"><span class="meta-label">Request</span> ${escapeHtml(b.requests)}</p>` : ""}
                 </div>
                 <div class="md:text-right">
-                    <button onclick="checkIn('${escapeHtml(b.id)}')" class="btn-primary" style="padding:12px 22px;">
+                    ${b.roomNotReady ? `<p class="room-warning" id="ready-${escapeHtml(b.id)}">${escapeHtml(b.roomNotReady)}</p>` : ""}
+                    <button onclick="checkIn('${escapeHtml(b.id)}')" class="${b.roomNotReady ? "btn-secondary" : "btn-primary"}" style="padding:12px 22px;"${b.roomNotReady ? ` aria-describedby="ready-${escapeHtml(b.id)}"` : ""}>
                         Check in
                     </button>
                 </div>
@@ -297,19 +300,25 @@ document.addEventListener("DOMContentLoaded", function () {
 	function renderResidence() {
 		const list = document.getElementById("residence-list");
 		const today = hotelToday();
-		const leaving = (c) => c.checkOutDate <= today;
+		// Departing today vs overdue (should have left on an earlier day)
+		const leaving = (c) => c.checkOutDate === today;
+		const overdue = (c) => c.checkOutDate < today;
 		const departures = residents.filter(leaving);
+		const late = residents.filter(overdue);
 		document.getElementById("departures-count").textContent = departures.length;
+		document.getElementById("overdue-count").textContent = late.length;
 		document.querySelectorAll("#residence-filter [data-filter]").forEach((chip) =>
 			chip.setAttribute("aria-pressed", String(chip.dataset.filter === residenceFilter)),
 		);
 
-		const shown = (residenceFilter === "leaving" ? departures : residents)
+		const shown = (residenceFilter === "leaving" ? departures : residenceFilter === "overdue" ? late : residents)
 			.slice()
 			.sort((a, b) => a.checkOutDate.localeCompare(b.checkOutDate));
 
 		if (!shown.length) {
-			list.innerHTML = emptyRow(residenceFilter === "leaving" ? "Nobody is due to check out today." : "No guests are staying right now.");
+			list.innerHTML = emptyRow(
+				residenceFilter === "leaving" ? "Nobody is due to check out today." : residenceFilter === "overdue" ? "No overdue guests." : "No guests are staying right now.",
+			);
 			return;
 		}
 
@@ -321,6 +330,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     <p class="meta-label">Room ${escapeHtml(c.roomId)} · ${escapeHtml(c.roomType)}</p>
                     <p class="font-serif text-xl" style="color:var(--lux-brown-800);">${escapeHtml(c.guestName)}</p>
                     ${leaving(c) ? `<span class="badge" style="background:#2c241b;color:#faf7f2;margin-top:6px">Departing today</span>` : ""}
+                    ${overdue(c) ? `<span class="badge" style="background:#8b3a2e;color:#fff;margin-top:6px">Overdue · was due ${prettyDate(c.checkOutDate)}</span>` : ""}
                 </div>
                 <div class="grid grid-cols-3 gap-4">
                     <div>
@@ -337,7 +347,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                 </div>
                 <div class="md:text-right">
-                    <button onclick="checkOut('${escapeHtml(c.id)}')" class="${leaving(c) ? "btn-primary" : "btn-secondary"}" style="padding:12px 22px;">
+                    <button onclick="checkOut('${escapeHtml(c.id)}')" class="${leaving(c) || overdue(c) ? "btn-primary" : "btn-secondary"}" style="padding:12px 22px;">
                         Check out
                     </button>
                 </div>
@@ -357,6 +367,55 @@ document.addEventListener("DOMContentLoaded", function () {
 		loadQueue();
 		loadCheckIns();
 		loadResidence();
+		loadHousekeeping();
+	}
+
+	// Housekeeping - rooms waiting to be cleaned after a check-out
+	async function loadHousekeeping() {
+		if (!token) return;
+		const list = document.getElementById("housekeeping-list");
+		try {
+			const res = await fetch("/checkins/housekeeping", { headers: { Authorization: "Bearer " + token } });
+			if (!res.ok) throw new Error();
+			const rooms = await res.json();
+			const since = (iso) => new Date(iso).toLocaleTimeString("en-NZ", { timeZone: "Pacific/Auckland", hour: "numeric", minute: "2-digit" });
+			document.getElementById("housekeeping-count").textContent = rooms.length;
+			list.innerHTML = rooms.length
+				? rooms
+						.map(
+							(r) => `
+            <div class="housekeeping-row">
+                <div>
+                    <p class="meta-label">Floor ${r.floor} · ${escapeHtml(r.type)}</p>
+                    <p class="font-serif text-xl" style="color:var(--lux-brown-800);">Room ${escapeHtml(r.id)}</p>
+                    ${r.since ? `<p class="meta-value" style="color:var(--lux-text-muted)">Needs cleaning since ${since(r.since)}</p>` : ""}
+                </div>
+                <button type="button" class="btn-secondary" style="padding:10px 18px" onclick="markClean('${escapeHtml(r.id)}')">Mark clean</button>
+            </div>`,
+						)
+						.join("")
+				: emptyRow("Every room is clean and ready.");
+		} catch {
+			list.innerHTML = emptyRow("Couldn't load housekeeping.");
+		}
+	}
+
+	async function markClean(roomId) {
+		if (blockedByShift()) return;
+		const ok = await UI.dialog({
+			title: `Mark Room ${roomId} clean?`,
+			body: `<p style="color:var(--lux-brown-600);line-height:1.7">The room will be ready for its next guest to check in.</p>`,
+			confirmLabel: "Mark clean",
+			onConfirm: async () => {
+				const problem = await postAction(`/checkins/housekeeping/${encodeURIComponent(roomId)}`);
+				if (problem === null) return "shift";
+				if (problem) throw new Error(problem);
+			},
+		});
+		if (ok === true) {
+			UI.toast(`Room ${roomId} is clean and ready`);
+			refreshAll();
+		}
 	}
 
 	// Sends a check-in or check-out; returns the error message, or "" when it worked
@@ -418,17 +477,20 @@ document.addEventListener("DOMContentLoaded", function () {
 	// Make functions global for onclick handlers
 	window.checkIn = checkIn;
 	window.checkOut = checkOut;
+	window.markClean = markClean;
 
 	// Load everything
 	loadShift();
 	loadCheckIns();
 	loadQueue();
 	loadResidence();
+	loadHousekeeping();
 
 	// Refresh the lists when a check-in or check-out is confirmed in the chat
 	window.addEventListener("ai:data-changed", () => {
 		loadCheckIns();
 		loadQueue();
 		loadResidence();
+		loadHousekeeping();
 	});
 });

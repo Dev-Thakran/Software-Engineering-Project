@@ -95,6 +95,12 @@ document.addEventListener("DOMContentLoaded", async function () {
 	// Rate plan: carried in the URL as ?rate=advance
 	if (params.get("rate") === "advance") document.querySelector('input[name="rate"][value="advance"]').checked = true;
 	document.querySelectorAll('input[name="rate"]').forEach((r) => r.addEventListener("change", updateSummaryPricing));
+
+	// Special requests: show how much room is left
+	$("requestsinput").addEventListener("input", (e) => {
+		const left = 300 - e.target.value.length;
+		$("requests-count").textContent = e.target.value ? `${left} characters left` : "We'll pass this to reception. 300 characters max.";
+	});
 	updateSummaryPricing();
 	$("step-dates").addEventListener("submit", (e) => {
 		e.preventDefault();
@@ -122,7 +128,9 @@ document.addEventListener("DOMContentLoaded", async function () {
 //  Summary panel
 function populateSummary() {
 	const img = $("summary-img");
-	img.src = room.image ? room.image.trim().replace("../frontend/", "/") : "";
+	// The summary card is narrow, so the room's 640px photo is plenty
+	const url = UI.photoUrl(room.image);
+	img.src = url.includes("/images/tiers/") ? url.replace(/\.webp$/, "-640.webp") : url;
 	img.hidden = !room.image;
 	img.alt = `Room ${room.id}`;
 	$("summary-tier").textContent = `Floor ${room.floor} · ${FLOOR_NAMES[room.floor] || ""}`;
@@ -207,6 +215,9 @@ function updateSummaryPricing() {
 		$("s-promo").textContent = `−${UI.money(discount)}`;
 		$("s-total").textContent = UI.money(total);
 		$("pay-btn-total").textContent = UI.money(total);
+		$("mobile-total").hidden = false;
+		$("mobile-total-note").textContent = `Total · ${nights} ${nights === 1 ? "night" : "nights"}, incl. taxes`;
+		$("mobile-total-amount").textContent = UI.money(total);
 	} else {
 		total = 0;
 		$("s-nights").textContent = "-";
@@ -214,6 +225,7 @@ function updateSummaryPricing() {
 		$("s-subtotal").textContent = "-";
 		$("s-promo-row").hidden = true;
 		$("s-rate-row").hidden = true;
+		$("mobile-total").hidden = true;
 		$("rate-flexible-price").textContent = "";
 		$("rate-advance-price").textContent = "";
 		$("rate-advance-save").hidden = true;
@@ -381,6 +393,8 @@ async function submitPayment() {
 				adults,
 				children,
 				ratePlan: ratePlan(),
+				arrivalTime: $("arrivalinput").value,
+				requests: $("requestsinput").value.trim(),
 				...(promo ? { promoCode: promo.code } : {}),
 			}),
 		});
@@ -433,6 +447,8 @@ function showConfirmation(booking) {
 			<div><p class="meta-label mb-1">Depart</p><p class="meta-value" style="font-size:15px">${UI.dates.pretty(booking.checkOut, true)} · by 11am</p></div>
 			<div><p class="meta-label mb-1">Paid</p><p class="meta-value" style="font-size:15px">${UI.money(paid)} for ${booking.nights} ${booking.nights === 1 ? "night" : "nights"}, incl. $30 taxes${promoNote}</p></div>
 			<div><p class="meta-label mb-1">Rate</p><p class="meta-value" style="font-size:15px">${planNote}</p></div>
+			${booking.arrivalTime ? `<div><p class="meta-label mb-1">Arriving</p><p class="meta-value" style="font-size:15px">${UI.escape(booking.arrivalTime)}</p></div>` : ""}
+			${booking.requests ? `<div><p class="meta-label mb-1">Your requests</p><p class="meta-value" style="font-size:15px">${UI.escape(booking.requests)}</p></div>` : ""}
 			<div><p class="meta-label mb-1">Find us</p><p class="meta-value" style="font-size:15px">42 Harbour Avenue · ${HOTEL.phone}</p></div>
 		</div>
 

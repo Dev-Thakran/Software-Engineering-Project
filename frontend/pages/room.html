@@ -4,7 +4,6 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Room – La Extravaganza</title>
-		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="../css/main.css" />
 		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
 		<meta name="description" content="Room details, photos, amenities, guest reviews and availability at La Extravaganza." />
@@ -26,7 +25,7 @@
 			/* Gallery */
 			.gallery-main { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #efe8df; }
 			.gallery-main img { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.35s; }
-			.gallery-thumbs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
+			.gallery-thumbs { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
 			.gallery-thumb {
 				aspect-ratio: 4 / 3;
 				padding: 0;
@@ -98,6 +97,8 @@
 			.review-item { padding: 22px 0; border-bottom: 1px solid var(--lux-brown-100); }
 			.review-item:last-child { border-bottom: none; }
 		</style>
+		<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+		<link rel="stylesheet" href="/css/tailwind.css" />
 	</head>
 	<body>
 		<header class="sticky top-0 z-20" id="header"></header>
@@ -225,6 +226,15 @@
 				</section>
 			</div>
 		</main>
+
+		<!-- Phones and tablets: the price and a booking button stay in reach while scrolling -->
+		<div id="book-bar" class="book-bar" hidden>
+			<div class="book-bar-text">
+				<p id="bar-price"></p>
+				<p id="bar-note"></p>
+			</div>
+			<button type="button" id="bar-btn" class="btn-primary">Check dates</button>
+		</div>
 
 		<footer id="footer"></footer>
 	</body>

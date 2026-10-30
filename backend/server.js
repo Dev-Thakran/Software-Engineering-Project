@@ -1,6 +1,7 @@
 // Entry point for the Express server
 const express = require("express");
 const path = require("path");
+const compression = require("compression");
 
 const authRoutes = require("./routes/auth.routes");
 const roomRoutes = require("./routes/room.routes");
@@ -15,6 +16,16 @@ const promoRoutes = require("./routes/promo.routes");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Gzip responses (pages, CSS, JS and JSON shrink to about a quarter).
+// The manager's live-update stream is left alone, or updates would be held back.
+app.use(
+	compression({
+		filter: (req, res) =>
+			!String(res.getHeader("Content-Type") || req.headers.accept || "").includes("text/event-stream") &&
+			compression.filter(req, res),
+	}),
+);
 
 // Parse incoming JSON request bodies
 app.use(express.json());
@@ -32,7 +43,17 @@ app.use("/reviews", reviewRoutes); // public list, customers post their own
 app.use("/promos", promoRoutes); // public promo-code check
 
 // - Static files — serves frontend HTML/CSS/JS --------
-app.use(express.static(path.join(__dirname, "../frontend")));
+// Photos and fonts rarely change, so browsers keep them for a week. Pages,
+// CSS and JS are re-checked every time (a quick 304 when unchanged), so
+// edits show up straight away.
+const LONG_CACHE = /\.(webp|jpe?g|png|svg|ico|woff2?)$/i;
+app.use(
+	express.static(path.join(__dirname, "../frontend"), {
+		setHeaders(res, file) {
+			res.setHeader("Cache-Control", LONG_CACHE.test(file) ? "public, max-age=604800" : "no-cache");
+		},
+	}),
+);
 // Chart.js for the manager dashboard, served locally so it loads fast and offline
 app.use("/vendor/chart.js", express.static(path.join(__dirname, "../node_modules/chart.js/dist")));
 

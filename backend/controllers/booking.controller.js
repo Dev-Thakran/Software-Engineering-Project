@@ -45,6 +45,17 @@ function getAll(req, res) {
 	res.json(bookings);
 }
 
+// Optional details for reception: when the guest expects to arrive, and any
+// special requests (kept short, and stored without angle brackets)
+const ARRIVAL_TIMES = ["15:00–17:00", "17:00–19:00", "19:00–21:00", "After 21:00", "Not sure"];
+function readExtras(body) {
+	const arrivalTime = body.arrivalTime || "";
+	if (arrivalTime && !ARRIVAL_TIMES.includes(arrivalTime)) return { error: "Choose an arrival time from the list" };
+	if (body.requests != null && typeof body.requests !== "string") return { error: "Special requests must be text" };
+	const requests = String(body.requests || "").replace(/[<>]/g, "").trim().slice(0, 300);
+	return { arrivalTime, requests };
+}
+
 function create(req, res) {
 	const { roomId, checkIn, checkOut } = req.body;
 	if (!roomId || !checkIn || !checkOut)
@@ -68,6 +79,8 @@ function create(req, res) {
 	}
 	const plan = getPlan(req.body.ratePlan || undefined);
 	if (!plan) return res.status(400).json({ error: "Choose the Flexible or Advance purchase rate" });
+	const extras = readExtras(req.body);
+	if (extras.error) return res.status(400).json({ error: extras.error });
 	const nights = availability.nightsBetween(checkIn, checkOut);
 	const price = priceStay(room, nights, { ratePercent: plan.discountPercent, promoPercent: promo?.percent });
 	const booking = {
@@ -89,6 +102,8 @@ function create(req, res) {
 		...(promo ? { promoCode: promo.code, promoPercent: promo.percent, discount: price.discount } : {}),
 		...(price.total !== price.fullPrice ? { fullPrice: price.fullPrice } : {}),
 		total: price.total,
+		...(extras.arrivalTime ? { arrivalTime: extras.arrivalTime } : {}),
+		...(extras.requests ? { requests: extras.requests } : {}),
 		status: "booked",
 		createdAt: new Date().toISOString(),
 	};

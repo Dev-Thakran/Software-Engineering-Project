@@ -244,6 +244,8 @@
 /* Phones: the panel fills most of the screen */
 @media (max-width: 480px) {
 	.ai-launcher { right: 16px; bottom: 16px; width: 54px; height: 54px; }
+	/* Space at the end of the page so the last lines can scroll clear of the button */
+	#footer { padding-bottom: 72px; }
 	.ai-panel { right: 8px; left: 8px; bottom: 80px; width: auto; height: calc(100vh - 100px); }
 }
 

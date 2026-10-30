@@ -4,7 +4,6 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Floor Map – La Extravaganza</title>
-		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="../css/main.css" />
 		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
 		<meta name="description" content="See every floor of La Extravaganza at a glance and pick your room." />
@@ -74,6 +73,8 @@
 				.room-cell:nth-child(3n) { border-right: none; }
 			}
 		</style>
+		<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+		<link rel="stylesheet" href="/css/tailwind.css" />
 	</head>
 	<body>
 		<header class="sticky top-0 z-20" id="header"></header>

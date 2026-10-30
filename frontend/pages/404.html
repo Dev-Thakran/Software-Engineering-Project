@@ -4,7 +4,6 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Page not found – La Extravaganza</title>
-		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="/css/main.css" />
 		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
 		<meta name="description" content="This page doesn't exist at La Extravaganza." />
@@ -19,7 +18,7 @@
 				padding: 80px 24px;
 				background:
 					linear-gradient(rgba(250, 247, 242, 0.9), rgba(250, 247, 242, 0.96)),
-					url("/images/concierge-editorial.jpg") center / cover no-repeat;
+					url("/images/concierge-editorial.webp") center / cover no-repeat;
 			}
 			.lost-number {
 				font-size: clamp(96px, 18vw, 180px);
@@ -27,6 +26,8 @@
 				color: var(--lux-brown-200, #d4c4b0);
 			}
 		</style>
+		<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+		<link rel="stylesheet" href="/css/tailwind.css" />
 	</head>
 	<body>
 		<header class="sticky top-0 z-20" id="header"></header>

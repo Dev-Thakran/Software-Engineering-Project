@@ -4,7 +4,6 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Staff Dashboard</title>
-		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="../css/main.css" />
 
 		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
@@ -111,6 +110,8 @@
 				.shift-popup, .shift-popup-card, .shift-popup.closing { animation: none; }
 			}
 		</style>
+		<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+		<link rel="stylesheet" href="/css/tailwind.css" />
 	</head>
 	<body>
 		<!-- header.js loads header.html into this element -->
@@ -244,12 +245,22 @@
 				<div class="chip-row" id="residence-filter" role="group" aria-label="Show">
 					<button type="button" class="chip" data-filter="all" aria-pressed="true">Everyone</button>
 					<button type="button" class="chip" data-filter="leaving" aria-pressed="false">Departing today (<span id="departures-count">0</span>)</button>
+					<button type="button" class="chip" data-filter="overdue" aria-pressed="false">Overdue (<span id="overdue-count">0</span>)</button>
 				</div>
 			</div>
 			<!-- JS: staff.js replaces this div's innerHTML with a residence-row for each
              checked-in guest fetched from GET /checkins/residence
              each row includes a Check Out button that calls checkOut(checkinId) -->
-			<div id="residence-list" aria-live="polite"></div>
+			<div id="residence-list" class="mb-12" aria-live="polite"></div>
+
+			<!-- Housekeeping: rooms checked out and waiting to be cleaned -->
+			<div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+				<h2 class="font-serif text-2xl md:text-3xl" style="color: var(--lux-brown-800)">
+					Housekeeping <span class="text-base" style="color: var(--lux-text-muted)">(<span id="housekeeping-count">0</span> to clean)</span>
+				</h2>
+				<p class="text-sm" style="color: var(--lux-text-muted); max-width: 46ch">Rooms need cleaning after every check-out. Guests can't be checked in until the room is marked clean.</p>
+			</div>
+			<div id="housekeeping-list" class="housekeeping-list" aria-live="polite"></div>
 		</section>
 
 		<!-- footer.js loads footer.html into this element -->

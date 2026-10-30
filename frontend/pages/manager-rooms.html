@@ -4,7 +4,6 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Rooms & Prices – La Extravaganza</title>
-		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="../css/main.css" />
 		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
 		<meta name="description" content="Manager tool for changing room prices at La Extravaganza." />
@@ -62,6 +61,8 @@
 				.floor-head { padding: 18px; }
 			}
 		</style>
+		<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+		<link rel="stylesheet" href="/css/tailwind.css" />
 	</head>
 	<body style="background: var(--lux-cream)">
 		<header class="sticky top-0 z-20" id="header"></header>

@@ -6,6 +6,7 @@
 //    UI.skeleton(count, html)    loading placeholders
 //    UI.icon(name)               one consistent set of line icons
 //    UI.escape(text)             safe text for innerHTML
+//    UI.photo(src, { alt, sizes, eager })  <img> that loads lightly
 //  Elements with a data-reveal attribute fade in as they scroll into view.
 // ============================================================
 
@@ -287,5 +288,19 @@
 		},
 	};
 
-	window.UI = { toast, dialog, confirm, skeleton, icon, escape, watchReveals, fillIcons, dates, money, passwordToggles, safeRedirect, downloadStay, party };
+	// Site photo as an <img>: lazy unless it's the first thing on screen.
+	// Room photos (images/tiers/) also offer their 640px copy, so cards and
+	// thumbnails download a fraction of the full-size file.
+	function photoUrl(src) {
+		return String(src || "").trim().replace("../frontend/", "/");
+	}
+	function photo(src, { alt = "", sizes = "(max-width: 640px) 100vw, 420px", eager = false, attrs = "" } = {}) {
+		const url = photoUrl(src);
+		const small = /\/images\/tiers\/.+\.webp$/.test(url) ? url.replace(/\.webp$/, "-640.webp") : "";
+		const srcset = small ? ` srcset="${escape(small)} 640w, ${escape(url)} 1200w" sizes="${escape(sizes)}"` : "";
+		const loading = eager ? 'fetchpriority="high"' : 'loading="lazy"';
+		return `<img src="${escape(url)}"${srcset} alt="${escape(alt)}" ${loading} decoding="async"${attrs ? " " + attrs : ""} />`;
+	}
+
+	window.UI = { toast, dialog, confirm, skeleton, icon, escape, photo, photoUrl, watchReveals, fillIcons, dates, money, passwordToggles, safeRedirect, downloadStay, party };
 })();

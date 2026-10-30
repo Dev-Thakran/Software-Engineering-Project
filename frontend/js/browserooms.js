@@ -306,7 +306,7 @@ function cardHtml(room) {
 	return `
 		<a class="room-card" href="./room.html?${params}" aria-label="Room ${UI.escape(room.id)}, ${UI.escape(room.type)}, ${UI.money(room.price)} a night">
 			<div class="room-card-photo">
-				${img ? `<img src="${UI.escape(img)}" alt="" loading="lazy" onerror="this.remove()" />` : ""}
+				${img ? UI.photo(img, { attrs: 'onerror="this.remove()"' }) : ""}
 				<span class="room-card-tag left">Floor ${room.floor}</span>
 				${room.accessible ? `<span class="room-card-tag access">${UI.icon("access")} Accessible</span>` : ""}
 				${state.checkIn ? `<span class="room-card-tag right">Free for your dates</span>` : ""}

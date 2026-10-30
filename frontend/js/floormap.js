@@ -173,7 +173,7 @@ function preview(roomId) {
 			? `<p class="text-sm mb-4" style="color:var(--lux-danger)">Sleeps up to ${room.maxGuests} - too small for ${UI.party.label(state.party)}.</p>`
 			: `<p class="text-sm mb-4" style="color:var(--lux-success)">Free for your dates · ${UI.money(room.stayTotal)} for ${room.nights} ${room.nights === 1 ? "night" : "nights"}</p>`;
 	box.innerHTML = `
-		${img ? `<div class="preview-photo"><img src="${UI.escape(img)}" alt="" /></div>` : ""}
+		${img ? `<div class="preview-photo">${UI.photo(img, { sizes: "360px" })}</div>` : ""}
 		<p class="font-serif text-3xl mb-1" style="color:#2C241B">Room ${UI.escape(room.id)}</p>
 		<p class="meta-label mb-3">Floor ${room.floor} · ${UI.escape(room.type)} · up to ${room.maxGuests}</p>
 		${room.accessible ? `<p class="text-sm mb-3 flex items-center gap-2" style="color:#1f3a56">${UI.icon("access")} Accessible room - roll-in shower, grab rails, step-free</p>` : ""}

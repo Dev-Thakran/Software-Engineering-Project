@@ -138,7 +138,7 @@ function nextStayHtml(b) {
 	return `
 		<article class="stay-hero">
 			<div class="stay-hero-photo">
-				${img ? `<img src="${UI.escape(img)}" alt="" />` : ""}
+				${img ? UI.photo(img, { sizes: "(max-width: 768px) 100vw, 540px" }) : ""}
 				<p class="countdown">${countdown(b)}</p>
 			</div>
 			<div class="p-6 md:p-8 flex flex-col">
@@ -152,6 +152,8 @@ function nextStayHtml(b) {
 				<div class="booking-row"><span>Depart</span><span>${dates.pretty(b.checkOut, true)} · by 11am</span></div>
 				<div class="booking-row"><span>Reference</span><span>${UI.escape(b.id)}</span></div>
 				${partyText(b) ? `<div class="booking-row"><span>Guests</span><span>${partyText(b)}</span></div>` : ""}
+				${b.arrivalTime ? `<div class="booking-row"><span>Arriving</span><span>${UI.escape(b.arrivalTime)}</span></div>` : ""}
+				${b.requests ? `<div class="booking-row"><span>Requests</span><span>${UI.escape(b.requests)}</span></div>` : ""}
 				<div class="booking-row"><span>Room total</span><span>${UI.money(b.total)} · ${b.nights} ${b.nights === 1 ? "night" : "nights"}${promoText(b)}</span></div>
 				<p class="text-sm mt-4 flex items-center gap-2" style="color:var(--lux-text-muted)">${UI.icon("pin")} 42 Harbour Avenue, Auckland · reception open 24 hours · +64 9 123 4567</p>
 				<div class="card-actions">${actionsHtml(b)}</div>
@@ -181,6 +183,8 @@ function cardHtml(b) {
 				<h3 class="font-serif mb-4" style="font-size:32px; color:var(--lux-brown-800); line-height:1.1">Room ${UI.escape(b.roomId)}</h3>
 				<div class="booking-row"><span>Dates</span><span>${dates.pretty(b.checkIn)} – ${dates.pretty(b.checkOut, true)}</span></div>
 				<div class="booking-row"><span>Room total</span><span>${UI.money(b.total)}${promoText(b)}</span></div>
+				${b.arrivalTime ? `<div class="booking-row"><span>Arriving</span><span>${UI.escape(b.arrivalTime)}</span></div>` : ""}
+				${b.requests ? `<div class="booking-row"><span>Requests</span><span>${UI.escape(b.requests)}</span></div>` : ""}
 				<div class="booking-row"><span>Reference</span><span style="font-size:12px">${UI.escape(b.id)}</span></div>
 				<div class="card-actions">${actionsHtml(b)}</div>
 			</div>

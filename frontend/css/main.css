@@ -721,3 +721,26 @@ nav a.active, nav a[aria-current="page"] {
 .room-cell .access-mark { position: absolute; top: 6px; right: 6px; width: 16px; height: 16px; color: #1f3a56; }
 .room-cell .access-mark .icon { width: 16px; height: 16px; }
 .room-cell { position: relative; }
+
+/* ---------- Room page booking bar (phones and tablets) ---------- */
+.book-bar { display: none; }
+@media (max-width: 960px) {
+	.book-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px calc(12px + env(safe-area-inset-bottom, 0px)); background: #fff; border-top: 1px solid var(--lux-brown-100); box-shadow: 0 -8px 24px rgba(44, 36, 27, 0.08); transition: transform 0.25s ease; }
+	.book-bar[hidden] { display: none; }
+	.book-bar.away { transform: translateY(110%); }
+	.book-bar-text { min-width: 0; }
+	#bar-price { font-family: 'Cormorant Garamond', serif; font-size: 24px; line-height: 1.1; color: var(--lux-brown-800); }
+	#bar-price small { font-family: inherit; font-size: 14px; color: var(--lux-text-soft); }
+	#bar-note { font-size: 12px; color: var(--lux-text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+	.book-bar .btn-primary { flex-shrink: 0; padding: 12px 18px; }
+	/* Room under the bar (on the footer, so its dark background runs to the bottom) */
+	body.has-book-bar #footer { padding-bottom: 80px; }
+	body.has-book-bar .ai-launcher { bottom: 96px; }
+}
+
+/* ---------- Staff: requests, room readiness, housekeeping ---------- */
+.guest-request { margin-top: 6px; padding: 6px 10px; background: #fbf4e6; border-left: 3px solid #b8892f; font-size: 13px; color: var(--lux-brown-700); }
+.guest-request .meta-label { display: inline; margin-right: 6px; }
+.room-warning { font-size: 13px; color: #8b3a2e; margin: 0 0 8px auto; max-width: 34ch; text-align: left; }
+.housekeeping-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 12px; }
+.housekeeping-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; background: #fff; border: 1px solid var(--lux-brown-100); }

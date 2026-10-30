@@ -5,7 +5,7 @@
     "type": "Standard Single",
     "price": 99,
     "description": "Corner room on the courtyard, with two windows and the morning sun.",
-    "image": "../frontend/images/tiers/floor-3/b.jpg"
+    "image": "../frontend/images/tiers/floor-3/b.webp"
   },
   {
     "id": "102",
@@ -13,7 +13,7 @@
     "type": "Standard Single",
     "price": 99,
     "description": "Garden-door room opening straight onto the courtyard lawn.",
-    "image": "../frontend/images/tiers/floor-4/b.jpg"
+    "image": "../frontend/images/tiers/floor-4/b.webp"
   },
   {
     "id": "103",
@@ -21,7 +21,7 @@
     "type": "Standard Single",
     "price": 99,
     "description": "Quiet room beside the courtyard fountain, ideal for light sleepers.",
-    "image": "../frontend/images/tiers/floor-2/c.jpg"
+    "image": "../frontend/images/tiers/floor-2/c.webp"
   },
   {
     "id": "104",
@@ -29,7 +29,7 @@
     "type": "Standard Single",
     "price": 99,
     "description": "Bright room looking across the courtyard's olive trees.",
-    "image": "../frontend/images/tiers/floor-1/a.jpg"
+    "image": "../frontend/images/tiers/floor-1/a.webp"
   },
   {
     "id": "105",
@@ -37,7 +37,7 @@
     "type": "Standard Single",
     "price": 99,
     "description": "Courtyard room with a window seat and a reading lamp.",
-    "image": "../frontend/images/tiers/floor-3/b.jpg"
+    "image": "../frontend/images/tiers/floor-3/b.webp"
   },
   {
     "id": "106",
@@ -45,7 +45,7 @@
     "type": "Standard Single",
     "price": 99,
     "description": "Our accessible Garden room, with step-free garden doors and a roll-in shower.",
-    "image": "../frontend/images/tiers/floor-4/b.jpg",
+    "image": "../frontend/images/tiers/floor-4/b.webp",
     "accessible": true
   },
   {
@@ -54,7 +54,7 @@
     "type": "Deluxe Double",
     "price": 189,
     "description": "Corner double with windows on two sides over the city rooftops.",
-    "image": "../frontend/images/tiers/floor-4/a.jpg"
+    "image": "../frontend/images/tiers/floor-4/a.webp"
   },
   {
     "id": "202",
@@ -62,7 +62,7 @@
     "type": "Deluxe Double",
     "price": 189,
     "description": "City-view double with a reading chair by the tall windows.",
-    "image": "../frontend/images/tiers/floor-2/b.jpg"
+    "image": "../frontend/images/tiers/floor-2/b.webp"
   },
   {
     "id": "203",
@@ -70,7 +70,7 @@
     "type": "Deluxe Double",
     "price": 189,
     "description": "Double above the lane, with the best of the evening light.",
-    "image": "../frontend/images/tiers/floor-5/a.jpg"
+    "image": "../frontend/images/tiers/floor-5/a.webp"
   },
   {
     "id": "204",
@@ -78,7 +78,7 @@
     "type": "Deluxe Double",
     "price": 189,
     "description": "City-view double with a writing desk facing the skyline.",
-    "image": "../frontend/images/tiers/floor-4/a.jpg"
+    "image": "../frontend/images/tiers/floor-4/a.webp"
   },
   {
     "id": "205",
@@ -86,7 +86,7 @@
     "type": "Deluxe Double",
     "price": 189,
     "description": "Bright double looking toward the Sky Tower.",
-    "image": "../frontend/images/tiers/floor-2/b.jpg"
+    "image": "../frontend/images/tiers/floor-2/b.webp"
   },
   {
     "id": "206",
@@ -94,7 +94,7 @@
     "type": "Deluxe Double",
     "price": 189,
     "description": "Our accessible Classic double, with a roll-in shower and lowered fittings.",
-    "image": "../frontend/images/tiers/floor-5/a.jpg",
+    "image": "../frontend/images/tiers/floor-5/a.webp",
     "accessible": true
   },
   {
@@ -103,7 +103,7 @@
     "type": "Executive Double",
     "price": 220,
     "description": "Executive corner room with harbour glimpses from the lounge.",
-    "image": "../frontend/images/tiers/floor-3/a.jpg"
+    "image": "../frontend/images/tiers/floor-3/a.webp"
   },
   {
     "id": "302",
@@ -111,7 +111,7 @@
     "type": "Executive Double",
     "price": 220,
     "description": "Executive room with a deep bathtub and a quiet lounge corner.",
-    "image": "../frontend/images/tiers/floor-1/c.jpg"
+    "image": "../frontend/images/tiers/floor-1/c.webp"
   },
   {
     "id": "303",
@@ -119,7 +119,7 @@
     "type": "Executive Double",
     "price": 220,
     "description": "Executive room facing the harbour, rich timber throughout.",
-    "image": "../frontend/images/tiers/floor-5/b.jpg"
+    "image": "../frontend/images/tiers/floor-5/b.webp"
   },
   {
     "id": "304",
@@ -127,7 +127,7 @@
     "type": "Executive Double",
     "price": 220,
     "description": "Executive room with a bay-window lounge for reading or work.",
-    "image": "../frontend/images/tiers/floor-4/c.jpg"
+    "image": "../frontend/images/tiers/floor-4/c.webp"
   },
   {
     "id": "305",
@@ -135,7 +135,7 @@
     "type": "Executive Double",
     "price": 220,
     "description": "Executive room overlooking the ferry terminal.",
-    "image": "../frontend/images/tiers/floor-3/a.jpg"
+    "image": "../frontend/images/tiers/floor-3/a.webp"
   },
   {
     "id": "306",
@@ -143,7 +143,7 @@
     "type": "Executive Double",
     "price": 220,
     "description": "Our accessible Executive room, with a roll-in shower and step-free lounge.",
-    "image": "../frontend/images/tiers/floor-1/c.jpg",
+    "image": "../frontend/images/tiers/floor-1/c.webp",
     "accessible": true
   },
   {
@@ -152,7 +152,7 @@
     "type": "Penthouse Suite",
     "price": 380,
     "description": "Corner suite with a wraparound terrace over the harbour.",
-    "image": "../frontend/images/tiers/floor-1/b.jpg"
+    "image": "../frontend/images/tiers/floor-1/b.webp"
   },
   {
     "id": "402",
@@ -160,7 +160,7 @@
     "type": "Penthouse Suite",
     "price": 380,
     "description": "Penthouse suite with a living room that opens onto the terrace.",
-    "image": "../frontend/images/tiers/floor-7/c.jpg"
+    "image": "../frontend/images/tiers/floor-7/c.webp"
   },
   {
     "id": "403",
@@ -168,7 +168,7 @@
     "type": "Penthouse Suite",
     "price": 380,
     "description": "Penthouse suite facing the city lights, with a dining nook.",
-    "image": "../frontend/images/tiers/floor-2/a.jpg"
+    "image": "../frontend/images/tiers/floor-2/a.webp"
   },
   {
     "id": "404",
@@ -176,7 +176,7 @@
     "type": "Penthouse Suite",
     "price": 380,
     "description": "Penthouse suite with a sunset terrace and a four-seat lounge.",
-    "image": "../frontend/images/tiers/floor-6/c.jpg"
+    "image": "../frontend/images/tiers/floor-6/c.webp"
   },
   {
     "id": "405",
@@ -184,7 +184,7 @@
     "type": "Penthouse Suite",
     "price": 380,
     "description": "Penthouse suite with a library corner and harbour panorama.",
-    "image": "../frontend/images/tiers/floor-1/b.jpg"
+    "image": "../frontend/images/tiers/floor-1/b.webp"
   },
   {
     "id": "406",
@@ -192,7 +192,7 @@
     "type": "Penthouse Suite",
     "price": 380,
     "description": "Our accessible Penthouse suite, step-free to the terrace, sleeping four.",
-    "image": "../frontend/images/tiers/floor-7/c.jpg",
+    "image": "../frontend/images/tiers/floor-7/c.webp",
     "accessible": true
   }
 ]

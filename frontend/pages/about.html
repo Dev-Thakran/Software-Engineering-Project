@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Our Story – La Extravaganza</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="../css/main.css" />
 
     <link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
@@ -15,7 +14,7 @@
     <style>
       /* Hero */
       .hero-about {
-        background: url("../images/hero/about-hero.jpg") center/cover no-repeat;
+        background: url("../images/hero/about-hero.webp") center/cover no-repeat;
         position: relative;
         min-height: 480px;
         display: flex;
@@ -75,6 +74,8 @@
         } catch {}
       });
     </script>
+    <!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+    <link rel="stylesheet" href="/css/tailwind.css" />
   </head>
   <body style="background: #faf7f2">
     <header class="sticky top-0 z-20" id="header"></header>
@@ -188,19 +189,19 @@
       <h2 class="font-serif mb-10" style="font-size: clamp(30px, 4vw, 44px); color: #2c241b">One building, four ways to stay</h2>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5" id="about-floors">
         <a href="./browserooms.html?floor=1" class="room-card" data-reveal>
-          <div class="room-card-photo"><img src="/images/tiers/floor-1/a.jpg" alt="" loading="lazy" /></div>
+          <div class="room-card-photo"><img src="/images/tiers/floor-1/a.webp" alt="" loading="lazy" decoding="async" /></div>
           <div class="room-card-body"><p class="kicker" style="font-size: 11px">Floor 1</p><h3 class="font-serif text-2xl" style="color: #2c241b">Garden</h3><p class="text-sm mt-1 mb-4" style="color: var(--lux-text-muted)">Calm single rooms by the courtyard.</p><span class="room-card-cta mt-auto">See rooms <span data-icon="arrow"></span></span></div>
         </a>
         <a href="./browserooms.html?floor=2" class="room-card" data-reveal data-reveal-delay="100">
-          <div class="room-card-photo"><img src="/images/tiers/floor-2/a.jpg" alt="" loading="lazy" /></div>
+          <div class="room-card-photo"><img src="/images/tiers/floor-2/a.webp" alt="" loading="lazy" decoding="async" /></div>
           <div class="room-card-body"><p class="kicker" style="font-size: 11px">Floor 2</p><h3 class="font-serif text-2xl" style="color: #2c241b">Classic</h3><p class="text-sm mt-1 mb-4" style="color: var(--lux-text-muted)">Light-filled doubles over the city.</p><span class="room-card-cta mt-auto">See rooms <span data-icon="arrow"></span></span></div>
         </a>
         <a href="./browserooms.html?floor=3" class="room-card" data-reveal data-reveal-delay="200">
-          <div class="room-card-photo"><img src="/images/tiers/floor-3/a.jpg" alt="" loading="lazy" /></div>
+          <div class="room-card-photo"><img src="/images/tiers/floor-3/a.webp" alt="" loading="lazy" decoding="async" /></div>
           <div class="room-card-body"><p class="kicker" style="font-size: 11px">Floor 3</p><h3 class="font-serif text-2xl" style="color: #2c241b">Executive</h3><p class="text-sm mt-1 mb-4" style="color: var(--lux-text-muted)">King beds and a quiet corner to work.</p><span class="room-card-cta mt-auto">See rooms <span data-icon="arrow"></span></span></div>
         </a>
         <a href="./browserooms.html?floor=4" class="room-card" data-reveal data-reveal-delay="300">
-          <div class="room-card-photo"><img src="/images/tiers/floor-4/a.jpg" alt="" loading="lazy" /></div>
+          <div class="room-card-photo"><img src="/images/tiers/floor-4/a.webp" alt="" loading="lazy" decoding="async" /></div>
           <div class="room-card-body"><p class="kicker" style="font-size: 11px">Floor 4</p><h3 class="font-serif text-2xl" style="color: #2c241b">Penthouse</h3><p class="text-sm mt-1 mb-4" style="color: var(--lux-text-muted)">Suites with terraces and butler service.</p><span class="room-card-cta mt-auto">See rooms <span data-icon="arrow"></span></span></div>
         </a>
       </div>

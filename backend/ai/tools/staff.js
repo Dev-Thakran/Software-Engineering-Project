@@ -20,6 +20,9 @@ function describeBooking(b) {
 		checkOut: b.checkOut,
 		total: b.total,
 		status: b.status,
+		...(b.arrivalTime ? { arrivalTime: b.arrivalTime } : {}),
+		...(b.requests ? { requests: b.requests } : {}),
+		...(b.roomNotReady ? { roomNotReady: b.roomNotReady } : {}),
 	};
 }
 

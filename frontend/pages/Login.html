@@ -4,14 +4,13 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Sign In – La Extravaganza</title>
-		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="../css/main.css" />
 		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
 		<meta name="description" content="Sign in to manage your stays at La Extravaganza." />
 		<script src="../js/ui.js"></script>
 		<style>
 			.room-photo {
-				background: url("/images/login-interior.jpg") center/cover no-repeat;
+				background: url("/images/login-interior.webp") center/cover no-repeat;
 				position: relative;
 			}
 			.room-photo::after {
@@ -109,6 +108,8 @@
 		<script src="../js/header.js"></script>
 		<script src="../js/footer.js"></script>
 		<script src="../js/login.js"></script>
+		<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+		<link rel="stylesheet" href="/css/tailwind.css" />
 	</head>
 	<body>
 		<header class="sticky top-0 z-20" id="header"></header>

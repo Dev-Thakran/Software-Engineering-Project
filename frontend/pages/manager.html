@@ -4,7 +4,6 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Manager Dashboard</title>
-		<script src="https://cdn.tailwindcss.com"></script>
 		<!-- Chart.js library used by manager.js to render all four charts -->
 		<script src="/vendor/chart.js/chart.umd.js"></script>
 		<link rel="stylesheet" href="../css/main.css" />
@@ -121,6 +120,8 @@
 			.chart-data td:last-child, .chart-data th:last-child { text-align: right; }
 			.chart-data div { max-height: 260px; overflow: auto; }
 		</style>
+		<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+		<link rel="stylesheet" href="/css/tailwind.css" />
 	</head>
 	<body>
 		<!-- header.js loads header.html into this element -->

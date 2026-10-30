@@ -43,6 +43,17 @@ router.get(
 	handle(() => checkins.getInResidence()),
 );
 
+// Rooms waiting to be cleaned after a check-out
+router.get(
+	"/housekeeping",
+	handle(() => checkins.getHousekeeping()),
+);
+
+router.post(
+	"/housekeeping/:roomId",
+	handle((req) => checkins.markClean(req.params.roomId, req.user)),
+);
+
 router.post(
 	"/checkin/:bookingId",
 	handle((req) => checkins.checkIn(req.params.bookingId, req.user)),

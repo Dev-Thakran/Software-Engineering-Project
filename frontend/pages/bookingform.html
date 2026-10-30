@@ -4,7 +4,6 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Book – La Extravaganza</title>
-		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="../css/main.css" />
 		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
 		<meta name="description" content="Choose your dates and secure your stay at La Extravaganza." />
@@ -84,7 +83,13 @@
 			.summary { position: sticky; top: 96px; background: #fff; border: 1px solid var(--lux-brown-100); overflow: hidden; }
 			.summary-row { display: flex; justify-content: space-between; gap: 12px; font-size: 14px; color: var(--lux-brown-600); padding: 4px 0; }
 			.summary-row span:last-child { color: var(--lux-brown-800); text-align: right; }
-			@media (max-width: 860px) { .booking-grid { grid-template-columns: 1fr !important; } .summary { position: static; } }
+			/* On narrow screens the summary card drops below the form, so the total is repeated above the button */
+			.mobile-total { display: none; }
+			@media (max-width: 860px) {
+				.booking-grid { grid-template-columns: 1fr !important; } .summary { position: static; }
+				.mobile-total { display: flex; justify-content: space-between; align-items: baseline; margin-top: 24px; padding-top: 14px; border-top: 1px solid var(--lux-brown-100); font-size: 14px; color: var(--lux-text-muted); }
+				.mobile-total strong { font-family: 'Cormorant Garamond', serif; font-size: 26px; font-weight: 500; color: var(--lux-brown-800); }
+			}
 
 			/* Confirmation */
 			.confirm-badge { width: 64px; height: 64px; border-radius: 50%; display: grid; place-items: center; background: #eaf3ec; color: var(--lux-success); margin-bottom: 20px; }
@@ -92,6 +97,8 @@
 			.confirm-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 32px; }
 			@media (max-width: 560px) { .confirm-grid { grid-template-columns: 1fr; } }
 		</style>
+		<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+		<link rel="stylesheet" href="/css/tailwind.css" />
 	</head>
 	<body style="background: var(--lux-cream)">
 		<header class="sticky top-0 z-20" id="header"></header>
@@ -158,7 +165,27 @@
 								</div>
 								<p class="field-hint" id="promo-msg" aria-live="polite"></p>
 							</div>
+							<!-- Optional details for reception -->
+							<div class="grid grid-cols-1 sm:grid-cols-3 gap-7 mt-5">
+								<div class="field">
+									<label for="arrivalinput">Estimated arrival <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
+									<select id="arrivalinput" class="field-input">
+										<option value="">Choose a time</option>
+										<option>15:00–17:00</option>
+										<option>17:00–19:00</option>
+										<option>19:00–21:00</option>
+										<option>After 21:00</option>
+										<option>Not sure</option>
+									</select>
+								</div>
+								<div class="field sm:col-span-2">
+									<label for="requestsinput">Special requests <span style="text-transform:none;letter-spacing:0">(optional)</span></label>
+									<textarea id="requestsinput" class="field-input" rows="2" maxlength="300" placeholder="e.g. High floor, extra pillows" aria-describedby="requests-count" style="resize: vertical"></textarea>
+									<p class="field-hint" id="requests-count">We'll pass this to reception. 300 characters max.</p>
+								</div>
+							</div>
 							<p class="field-error mt-3" id="dates-error" role="alert"></p>
+							<p class="mobile-total" id="mobile-total" hidden><span id="mobile-total-note"></span><strong id="mobile-total-amount"></strong></p>
 							<button type="submit" class="btn-primary w-full mt-7" id="continuepaybtn">Continue to payment</button>
 						</form>
 

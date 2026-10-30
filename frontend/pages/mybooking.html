@@ -4,7 +4,6 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>My Stays – La Extravaganza</title>
-		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="../css/main.css" />
 		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
 		<meta name="description" content="Your upcoming and past stays at La Extravaganza." />
@@ -47,6 +46,8 @@
 			.ui-dialog textarea, .ui-dialog input[type="text"] { width: 100%; border: 1px solid var(--lux-brown-200); padding: 10px 12px; font-size: 15px; background: #fff; }
 			.ui-dialog textarea { min-height: 110px; resize: vertical; }
 		</style>
+		<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+		<link rel="stylesheet" href="/css/tailwind.css" />
 	</head>
 	<body style="background: var(--lux-cream)">
 		<header class="sticky top-0 z-20" id="header"></header>

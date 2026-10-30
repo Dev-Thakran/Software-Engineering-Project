@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		renderGallery(state.room);
 		renderReviews(reviews);
 		renderSimilar(state.room, rooms);
+		setUpBookBar();
 		setUpPanel(params);
 		setUpCalendar();
 		$("room-content").removeAttribute("aria-busy");
@@ -135,7 +136,7 @@ function renderGallery(room) {
 	$("gallery-thumbs").innerHTML = photos
 		.map((src, i) => `
 			<button type="button" class="gallery-thumb" aria-label="Show photo ${i + 1}" aria-current="${i === 0}">
-				<img src="${UI.escape(src)}" alt="" loading="lazy" onerror="this.closest('button').remove()" />
+				${UI.photo(src, { sizes: "120px", attrs: `onerror="this.closest('button').remove()"` })}
 			</button>`)
 		.join("");
 	$("gallery-thumbs").querySelectorAll("button").forEach((b, i) => b.addEventListener("click", () => show(i)));
@@ -190,7 +191,7 @@ function renderSimilar(room, rooms) {
 			return `
 				<a class="room-card" href="./room.html?${params}">
 					<div class="room-card-photo">
-						${img ? `<img src="${UI.escape(img)}" alt="" loading="lazy" />` : ""}
+						${img ? UI.photo(img) : ""}
 						<span class="room-card-tag left">Floor ${r.floor}</span>
 					</div>
 					<div class="room-card-body">
@@ -310,6 +311,45 @@ function updatePrice() {
 		showNote(problem, "bad");
 	}
 	$("reserve-btn").textContent = nights > 0 && !problem ? `Reserve · ${UI.money(nights * room.price + TAX)}` : "Reserve this room";
+	updateBookBar(nights > 0 && !problem ? nights : 0);
+}
+
+//  BOOKING BAR - on phones and tablets the panel sits far down the page, so a
+//  bar at the bottom keeps the price and a way to book in reach
+function setUpBookBar() {
+	const bar = $("book-bar");
+	bar.hidden = false;
+	document.body.classList.add("has-book-bar");
+	updateBookBar(0);
+	$("bar-btn").addEventListener("click", () => {
+		// With valid dates, book straight away (the form checks everything);
+		// otherwise take the guest to the dates
+		if (bar.dataset.ready) return $("book-form").requestSubmit();
+		document.querySelector(".book-panel").scrollIntoView({ behavior: "smooth", block: "center" });
+		$("checkIn").focus({ preventScroll: true });
+	});
+	// Step out of the way while the panel itself is on screen
+	if ("IntersectionObserver" in window) {
+		new IntersectionObserver(([entry]) => bar.classList.toggle("away", entry.isIntersecting), { threshold: 0.25 }).observe(
+			document.querySelector(".book-panel"),
+		);
+	}
+}
+
+function updateBookBar(nights) {
+	const { room } = state;
+	const bar = $("book-bar");
+	if (nights) {
+		$("bar-price").innerHTML = `${UI.money(nights * room.price + TAX)}`;
+		$("bar-note").textContent = `${nights} ${nights === 1 ? "night" : "nights"} · incl. $${TAX} taxes`;
+		$("bar-btn").textContent = "Reserve";
+		bar.dataset.ready = "1";
+	} else {
+		$("bar-price").innerHTML = `From ${UI.money(room.price)} <small>/ night</small>`;
+		$("bar-note").textContent = `${UI.money(Math.round(room.price * (1 - ADVANCE_PERCENT / 100)))} with Advance purchase`;
+		$("bar-btn").textContent = "Check dates";
+		delete bar.dataset.ready;
+	}
 }
 
 //  CALENDAR - two months at a time; tap arrival then departure

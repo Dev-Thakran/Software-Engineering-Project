@@ -4,7 +4,6 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>La Extravaganza</title>
-		<script src="https://cdn.tailwindcss.com"></script>
 		<script src="../js/ui.js"></script>
 		<script src="../js/header.js"></script>
 		<script src="../js/footer.js"></script>
@@ -23,6 +22,8 @@
 				);
 			}
 		</style>
+		<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+		<link rel="stylesheet" href="/css/tailwind.css" />
 	</head>
 
 	<body>
@@ -32,7 +33,7 @@
 			<!-- Hero -->
 			<div class="relative min-h-[88vh] overflow-hidden">
 				<img
-					src="../images/hero/home-hero.jpg"
+					src="../images/hero/home-hero.webp" fetchpriority="high" decoding="async"
 					alt="The La Extravaganza building at dusk"
 					class="absolute inset-0 w-full h-full object-cover" />
 				<div class="hero-overlay"></div>
@@ -166,7 +167,7 @@
 					<!-- Penthouse - large left -->
 					<a href="browserooms.html?floor=4" data-reveal class="relative lg:col-span-2 h-[300px] md:h-[425px] lg:h-[525px] overflow-hidden group">
 						<img
-							src="../images/featured-tier-1-bedroom.jpg"
+							src="../images/featured-tier-1-bedroom.webp" loading="lazy" decoding="async"
 							class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
 							alt="Penthouse suite bedroom" />
 						<div class="absolute inset-0 bg-black/25"></div>
@@ -188,7 +189,7 @@
 					<!-- Ambassador + Premier stacked right -->
 					<div class="flex flex-col gap-4 md:gap-6">
 						<a href="browserooms.html?floor=3" data-reveal data-reveal-delay="120" class="relative h-[200px] md:h-[250px] overflow-hidden group">
-								<img src="../images/featured-tier-2-twin-suite.jpg"
+								<img src="../images/featured-tier-2-twin-suite.webp" loading="lazy" decoding="async"
 								class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
 								alt="Executive room" />
 							<div class="absolute inset-0 bg-black/25"></div>
@@ -208,7 +209,7 @@
 						</a>
 
 						<a href="browserooms.html?floor=2" data-reveal data-reveal-delay="240" class="relative h-[200px] md:h-[250px] overflow-hidden group">
-								<img src="../images/featured-tier-3-luxury-bed.jpg"
+								<img src="../images/featured-tier-3-luxury-bed.webp" loading="lazy" decoding="async"
 								class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
 								alt="Classic double room" />
 							<div class="absolute inset-0 bg-black/25"></div>
@@ -231,7 +232,7 @@
 					<!-- Garden - full width bottom row -->
 					<a href="browserooms.html?floor=1" data-reveal class="relative lg:col-span-3 h-[220px] md:h-[280px] overflow-hidden group">
 						<img
-							src="../images/hero-exterior.jpg"
+							src="../images/hero-exterior.webp" loading="lazy" decoding="async"
 							class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
 							alt="Garden level of the hotel" />
 						<div class="absolute inset-0 bg-black/25"></div>
@@ -257,7 +258,7 @@
 				<div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2">
 					<div class="h-[400px] lg:h-auto min-h-[500px] overflow-hidden">
 						<img
-							src="../images/concierge-editorial.jpg"
+							src="../images/concierge-editorial.webp" loading="lazy" decoding="async"
 							class="w-full h-full object-cover"
 							alt="The concierge desk" />
 					</div>

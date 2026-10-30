@@ -1,19 +1,64 @@
 const bookingRepo = require("../repositories/booking.repository");
 const checkinRepo = require("../repositories/checkin.repository");
+const roomRepo = require("../repositories/room.repository");
 const { today } = require("./availability.service");
 const ServiceError = require("./service-error");
 const { assertCanHandleGuests } = require("./shift.service");
 const { hotelNow } = require("../config/hotel-time");
 
 // Guests due to be in the hotel today who haven't checked in yet. Includes
-// late arrivals whose stay started earlier but hasn't ended.
+// late arrivals whose stay started earlier but hasn't ended. Each one says
+// whether the room is ready, so staff see a problem before they try.
 function getQueue() {
 	const date = today();
+	const residents = getInResidence();
 	return bookingRepo
 		.getAll()
 		.filter(
 			(b) => b.status === "booked" && b.checkIn <= date && date < b.checkOut,
-		);
+		)
+		.map((b) => {
+			const notReady = roomNotReady(b.roomId, residents);
+			return { ...b, roomReady: !notReady, ...(notReady ? { roomNotReady: notReady } : {}) };
+		});
+}
+
+// Housekeeping: a room needs cleaning after every check-out, and nobody can
+// be checked in to it until staff mark it clean. Rooms start out clean.
+const needsCleaning = (room) => room?.housekeeping === "dirty";
+
+// Why a guest can't be checked in to this room yet, or "" when it's ready
+function roomNotReady(roomId, residents = getInResidence()) {
+	const current = residents.find((c) => c.roomId === roomId);
+	if (current) {
+		const day = new Date(current.checkOutDate + "T12:00:00Z").toLocaleDateString("en-NZ", { day: "numeric", month: "short", timeZone: "UTC" });
+		const due = current.checkOutDate < today() ? `was due out ${day}` : `due out ${day}`;
+		return `Room ${roomId} still has a guest staying (${current.guestName}, ${due}). Check them out first.`;
+	}
+	if (needsCleaning(roomRepo.findById(roomId)))
+		return `Room ${roomId} needs cleaning first. Mark it clean under Housekeeping.`;
+	return "";
+}
+
+// Rooms waiting for housekeeping, longest-waiting first
+function getHousekeeping() {
+	return roomRepo
+		.getAll()
+		.filter(needsCleaning)
+		.map((r) => ({ id: r.id, floor: r.floor, type: r.type, since: r.housekeepingSince || null }))
+		.sort((a, b) => String(a.since).localeCompare(String(b.since)));
+}
+
+function markClean(roomId, user) {
+	assertCanHandleGuests(user);
+	const room = roomRepo.findById(roomId);
+	if (!room) throw new ServiceError(404, "Room not found");
+	if (!needsCleaning(room)) throw new ServiceError(409, `Room ${roomId} is already clean`);
+	return roomRepo.update(roomId, {
+		housekeeping: "clean",
+		housekeepingSince: new Date().toISOString(),
+		cleanedBy: user.name,
+	});
 }
 
 // Guests currently staying in the hotel
@@ -43,6 +88,8 @@ function checkIn(bookingId, staff) {
 		throw new ServiceError(409, "This stay has already ended");
 	if (booking.checkIn > date)
 		throw new ServiceError(409, `This guest isn't due until ${booking.checkIn}`);
+	const notReady = roomNotReady(booking.roomId);
+	if (notReady) throw new ServiceError(409, notReady);
 
 	bookingRepo.update(booking.id, { status: "staying" });
 
@@ -72,9 +119,18 @@ function checkOut(checkinId, user) {
 	if (checkin.status !== "staying")
 		throw new ServiceError(409, "Guest is already checked out");
 
-	checkinRepo.update(checkin.id, { status: "completed" });
+	// Remember the room's housekeeping state so an undo can put it back
+	const room = roomRepo.findById(checkin.roomId);
+	checkinRepo.update(checkin.id, {
+		status: "completed",
+		checkOutTime: new Date().toISOString(),
+		checkedOutBy: user?.name || "",
+		roomWas: room?.housekeeping || "clean",
+	});
 	if (bookingRepo.findById(checkin.bookingId))
 		bookingRepo.update(checkin.bookingId, { status: "completed" });
+	if (room)
+		roomRepo.update(room.id, { housekeeping: "dirty", housekeepingSince: new Date().toISOString() });
 
 	return checkinRepo.findById(checkin.id);
 }
@@ -100,13 +156,19 @@ function undoCheckOut(checkinId, user) {
 		throw new ServiceError(409, "That check-out can't be undone any more");
 	if (getInResidence().some((c) => c.roomId === checkin.roomId))
 		throw new ServiceError(409, `Someone else is now staying in room ${checkin.roomId}`);
-	checkinRepo.update(checkin.id, { status: "staying" });
+	const { roomWas } = checkin;
+	checkinRepo.update(checkin.id, { status: "staying", checkOutTime: undefined, checkedOutBy: undefined, roomWas: undefined });
 	if (bookingRepo.findById(checkin.bookingId))
 		bookingRepo.update(checkin.bookingId, { status: "staying" });
+	if (roomRepo.findById(checkin.roomId))
+		roomRepo.update(checkin.roomId, { housekeeping: roomWas || "clean" });
 	return checkinRepo.findById(checkin.id);
 }
 
 module.exports = {
+	getHousekeeping,
+	markClean,
+	roomNotReady,
 	undoCheckIn,
 	undoCheckOut,
 	getQueue,

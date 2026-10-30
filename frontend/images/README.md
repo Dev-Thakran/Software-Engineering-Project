@@ -1,85 +1,51 @@
-# LuxStay - Image Asset Library
+# La Extravaganza - Images
 
-This folder contains every image used across the LuxStay hotel booking website (15 photos · ~3.3 MB total). All photos are sourced from **Unsplash** and **Pexels** and are free to use under their respective licences.
+Every photo the site uses, as **WebP**: 23 photos, about 2.8 MB in total, including the small card versions. The photos come from **Unsplash** and **Pexels** and are free to use under their licences.
 
-## Manifest
+## Files
 
-| Filename                         | Where it appears in the site                | Original source                               |
-| -------------------------------- | ------------------------------------------- | --------------------------------------------- |
-| `hero-exterior.jpg`              | Home page hero section (full-bleed)         | Unsplash · `photo-1566073771259-6a8506099945` |
-| `about-hero-mountain.jpg`        | About page hero                             | Unsplash · `photo-1445019980597-93fa8acb246c` |
-| `concierge-editorial.jpg`        | Home page editorial split section           | Unsplash · `photo-1578683010236-d716f9a3f461` |
-| `login-interior.jpg`             | Login page left-half image                  | Unsplash · `photo-1611892440504-42a792e24d32` |
-| `featured-tier-1-bedroom.jpg`    | Home - large featured tier card (Penthouse) | Unsplash · `photo-1611892440504-42a792e24d32` |
-| `featured-tier-2-twin-suite.jpg` | Home - featured tier card (Ambassador)      | Unsplash · `photo-1582719478250-c89cae4dc85b` |
-| `featured-tier-3-luxury-bed.jpg` | Home - featured tier card (Premier)         | Unsplash · `photo-1618773928121-c32242e63f39` |
-| `room-bed-classic.jpg`           | Room grid (every 8th room)                  | Unsplash · `photo-1566665797739-1674de7a421a` |
-| `room-bed-modern.jpg`            | Room grid                                   | Unsplash · `photo-1611892440504-42a792e24d32` |
-| `room-bed-warm.jpg`              | Room grid                                   | Unsplash · `photo-1618773928121-c32242e63f39` |
-| `room-bed-bright.jpg`            | Room grid                                   | Unsplash · `photo-1631049307264-da0ec9d70304` |
-| `room-bed-soft.jpg`              | Room grid                                   | Unsplash · `photo-1590490360182-c33d57733427` |
-| `room-bed-twin.jpg`              | Room grid                                   | Unsplash · `photo-1582719478250-c89cae4dc85b` |
-| `room-bed-pexels-gold.jpg`       | Room grid (gold-accent room)                | Pexels · `18285947`                           |
-| `room-bed-pexels-twin.jpg`       | Room grid (twin-bed room)                   | Pexels · `3688261`                            |
+| File                                | Where it appears                                   | Source                                        |
+| ----------------------------------- | -------------------------------------------------- | --------------------------------------------- |
+| `hero/home-hero.webp`               | Home page hero (loads first, not lazy)             | Unsplash / Pexels                             |
+| `hero/about-hero.webp`              | About page hero                                    | Unsplash / Pexels                             |
+| `hero-exterior.webp`                | Home page, the building                            | Unsplash · `photo-1566073771259-6a8506099945` |
+| `concierge-editorial.webp`          | Home page concierge section, 404 page background   | Unsplash · `photo-1578683010236-d716f9a3f461` |
+| `login-interior.webp`               | Login page side image                              | Unsplash · `photo-1611892440504-42a792e24d32` |
+| `featured-tier-1-bedroom.webp`      | Home page, large tier card                         | Unsplash · `photo-1611892440504-42a792e24d32` |
+| `featured-tier-2-twin-suite.webp`   | Home page, tier card                               | Unsplash · `photo-1582719478250-c89cae4dc85b` |
+| `featured-tier-3-luxury-bed.webp`   | Home page, tier card                               | Unsplash · `photo-1618773928121-c32242e63f39` |
+| `tiers/floor-N/x.webp`              | Room photos (see below)                            | Unsplash / Pexels                             |
+| `tiers/floor-N/x-640.webp`          | 640px copy of each room photo, for cards           | made by `npm run images`                      |
+| `favicon.svg`                       | Browser tab icon                                   | drawn for the site                            |
 
-## How rooms are mapped
+## Room photos by tier
 
-Room photos live in `tiers/floor-N/` and are grouped by **tier** (not by folder number) in `backend/data/tiers.json`. Each floor's tier gets its own set of photos, with no photo shared between tiers:
+Room photos live in `tiers/floor-N/` but are grouped by **tier** in `backend/data/tiers.json` (the folder number isn't the floor). No photo is shared between tiers:
 
-| Floor | Tier | Photos (first one leads the room page gallery) |
-| ----- | ---- | ---------------------------------------------- |
-| 1 | Garden | `tiers/floor-3/b.jpg`, `tiers/floor-4/b.jpg`, `tiers/floor-2/c.jpg`, `tiers/floor-1/a.jpg` |
-| 2 | Classic | `tiers/floor-4/a.jpg`, `tiers/floor-2/b.jpg`, `tiers/floor-5/a.jpg` |
-| 3 | Executive | `tiers/floor-3/a.jpg`, `tiers/floor-1/c.jpg`, `tiers/floor-5/b.jpg`, `tiers/floor-4/c.jpg` |
-| 4 | Penthouse | `tiers/floor-1/b.jpg`, `tiers/floor-7/c.jpg`, `tiers/floor-2/a.jpg`, `tiers/floor-6/c.jpg` |
+| Floor | Tier      | Photos (the first leads the room page gallery)                                                    |
+| ----- | --------- | ------------------------------------------------------------------------------------------------- |
+| 1     | Garden    | `tiers/floor-3/b.webp`, `tiers/floor-4/b.webp`, `tiers/floor-2/c.webp`, `tiers/floor-1/a.webp`     |
+| 2     | Classic   | `tiers/floor-4/a.webp`, `tiers/floor-2/b.webp`, `tiers/floor-5/a.webp`                             |
+| 3     | Executive | `tiers/floor-3/a.webp`, `tiers/floor-1/c.webp`, `tiers/floor-5/b.webp`, `tiers/floor-4/c.webp`     |
+| 4     | Penthouse | `tiers/floor-1/b.webp`, `tiers/floor-7/c.webp`, `tiers/floor-2/a.webp`, `tiers/floor-6/c.webp`     |
 
-Each room in `backend/data/rooms.json` uses one photo from its own tier's set as its card image. The API adds the tier (with its photos) to every room it returns, so the Rooms page, room page, floor map and Aria all show the same pictures.
+Each room in `backend/data/rooms.json` uses one photo from its own tier's set as its card image. The API adds the tier, with its photos, to every room it returns, so the Rooms page, room page, floor map and Aria all show the same pictures.
 
-The `room-bed-*.jpg` files above are no longer used for rooms.
+## How photos are loaded
 
-## Image specifications
+- `UI.photo(src)` in `frontend/js/ui.js` builds every room photo tag. It sets `loading="lazy"`, plus a `srcset`, so a card downloads the 640px copy (30-60 KB) instead of the full photo.
+- Images written directly in the HTML are lazy too, except the home page hero, which has `fetchpriority="high"`.
+- The server tells browsers to keep images for a week (`backend/server.js`).
 
-- **Format**: JPEG
-- **Width**: 1200–2000 px (delivered via Unsplash/Pexels resize parameters)
-- **Quality**: 80–85
-- **Aspect ratios used in UI**:
-  - Hero / About hero - full-bleed (~16:9 cropped)
-  - Tier cards on Home - fluid (min-height 280–340px)
-  - Room cards in grid - 4:3
-  - Room detail header - 4:3
-  - Concierge editorial - 4:5
+## Adding or changing a photo
+
+1. Put the new photo in this folder as a JPG.
+2. Run `npm run images -- --remove-originals`. This writes the `.webp` (at most 1600px wide, or 1200px for room photos), plus a `-640.webp` copy for room photos, then deletes the JPG.
+3. Reference the `.webp` file in the page or in `tiers.json` / `rooms.json`.
 
 ## Licensing
 
-- **Unsplash** images - Free under the [Unsplash License](https://unsplash.com/license). No attribution required, but encouraged.
-- **Pexels** images - Free under the [Pexels License](https://www.pexels.com/license/). No attribution required.
+- **Unsplash**: free under the [Unsplash License](https://unsplash.com/license). No attribution is required, but it's encouraged.
+- **Pexels**: free under the [Pexels License](https://www.pexels.com/license/). No attribution is required.
 
-Both licences permit commercial and non-commercial use.
-
-## Using these images in your project
-
-### Option A - keep the CDN URLs (current setup)
-
-The site currently references the images directly from Unsplash/Pexels CDNs in `src/lib/data.js` and the page components. This is the fastest path and gives automatic image optimisation.
-
-### Option B - self-host
-
-If you want to host these images yourself:
-
-1. Move this folder into `/app/frontend/public/images/`
-2. Update references in the code from full URLs to local paths:
-   ```js
-   // before
-   "https://images.unsplash.com/photo-1566073771259-...?auto=format&fit=crop&w=2000&q=80";
-   // after
-   "/images/hero-exterior.jpg";
-   ```
-3. Files to update:
-   - `src/lib/data.js` - `ROOM_IMAGES` array
-   - `src/pages/Home.jsx` - `HERO`, `IMG_A`, `IMG_B`, `IMG_C` constants
-   - `src/pages/Login.jsx` - image `src` attribute
-   - `src/pages/About.jsx` - image `src` attribute
-
----
-
-_Last updated: 2026 · LuxStay image library_
+Both licences allow commercial and non-commercial use.

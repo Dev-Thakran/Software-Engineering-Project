@@ -4,7 +4,6 @@
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Accessibility – La Extravaganza</title>
-	<script src="https://cdn.tailwindcss.com"></script>
 	<link rel="stylesheet" href="../css/main.css" />
 	<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
 	<meta name="description" content="Accessible rooms, getting around the building, and how this website works with assistive technology." />
@@ -30,6 +29,8 @@
 			.terms-nav { position: static; flex-direction: row; flex-wrap: wrap; gap: 6px 16px; border-left: none; padding-left: 0; }
 		}
 	</style>
+	<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+	<link rel="stylesheet" href="/css/tailwind.css" />
 </head>
 <body style="background: var(--lux-cream)">
 	<header class="sticky top-0 z-20" id="header"></header>
