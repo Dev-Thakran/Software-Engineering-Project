@@ -1,0 +1,61 @@
+# Publishes the frontend/ folder to GitHub Pages.
+# GitHub Pages only serves static files, so the Express backend does not run there:
+# pages, styling and images work, but login, booking, room data and the AI chat need the server.
+name: Deploy frontend to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (for Chart.js)
+        run: npm ci --omit=dev
+
+      - name: Assemble the site
+        run: |
+          mkdir -p _site/vendor
+          cp -r frontend/. _site/
+          cp -r node_modules/chart.js/dist _site/vendor/chart.js
+
+          # The site lives at /<repo-name>/, so prefix root-absolute links with it.
+          BASE="/${GITHUB_REPOSITORY#*/}"
+          find _site -type f \( -name '*.html' -o -name '*.js' -o -name '*.css' \) -print0 |
+            xargs -0 sed -i -E "s#([\"'\`(])/(css|images|pages|js|vendor)/#\1${BASE}/\2/#g"
+
+          # Home page at the site root, and the friendly 404 page for bad links.
+          printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0; url=%s/pages/index.html"><link rel="canonical" href="%s/pages/index.html">\n' "$BASE" "$BASE" > _site/index.html
+          cp _site/pages/404.html _site/404.html
+          touch _site/.nojekyll
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
