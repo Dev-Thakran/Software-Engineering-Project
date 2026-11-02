@@ -558,6 +558,11 @@
 		recognition = new SpeechRecognition();
 		recognition.lang = navigator.language || "en-NZ";
 		recognition.interimResults = true;
+		// Keep listening through short pauses between sentences; the message
+		// is sent once the speaker has been quiet for PAUSE_MS
+		recognition.continuous = true;
+		const PAUSE_MS = 2000;
+		let silenceTimer = null;
 
 		let heard = "";
 		recognition.addEventListener("result", (e) => {
@@ -566,8 +571,12 @@
 				.join("");
 			input.value = heard;
 			resizeInput();
+			// Each new word restarts the wait
+			clearTimeout(silenceTimer);
+			silenceTimer = setTimeout(stopListening, PAUSE_MS);
 		});
 		recognition.addEventListener("end", () => {
+			clearTimeout(silenceTimer);
 			listening = false;
 			micBtn.classList.remove("listening");
 			micBtn.setAttribute("aria-label", "Speak your message");
