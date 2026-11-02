@@ -4,11 +4,13 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Staff Dashboard</title>
-		<script src="https://cdn.tailwindcss.com"></script>
-		<link
-			rel="stylesheet"
-			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
 		<link rel="stylesheet" href="../css/main.css" />
+
+		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+
+		<meta name="description" content="Staff console for La Extravaganza front desk." />
+
+		<script src="../js/ui.js"></script>
 		<script src="../js/footer.js"></script>
 		<script src="../js/header.js"></script>
 		<script src="../js/staff.js"></script>
@@ -20,7 +22,7 @@
 				margin-bottom: -1px;
 				background: #fff;
 				display: grid;
-				grid-template-columns: 1fr 180px 200px auto;
+				grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr) minmax(0, 1fr) auto;
 				align-items: center;
 				gap: 16px;
 			}
@@ -48,13 +50,68 @@
 				.guest-row {
 					grid-template-columns: 1fr;
 					gap: 12px;
+					padding: 18px;
 				}
+				.guest-row button, .residence-row button { width: 100%; }
 				.residence-row {
 					grid-template-columns: 1fr;
 					gap: 12px;
 				}
 			}
+
+			/* Off-shift popup: centred, springs in */
+			.shift-popup {
+				position: fixed;
+				inset: 0;
+				z-index: 2000;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 16px;
+				background: rgba(44, 36, 27, 0.45);
+				animation: shift-fade 0.2s ease-out;
+			}
+			.shift-popup-card {
+				width: min(440px, 100%);
+				padding: 32px 32px 28px;
+				background: #fff;
+				border-top: 3px solid var(--lux-brown-700);
+				box-shadow: 0 24px 60px rgba(44, 36, 27, 0.3);
+				text-align: center;
+				animation: shift-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+			}
+			.shift-popup-card h2 {
+				font-size: 30px;
+				color: var(--lux-brown-800);
+				margin: 6px 0 12px;
+			}
+			.shift-popup-card p#shift-popup-text {
+				font-size: 15px;
+				line-height: 1.7;
+				color: var(--lux-brown-600);
+				margin-bottom: 24px;
+			}
+			.shift-popup-card .btn-primary {
+				min-width: 120px;
+			}
+			.shift-popup.closing {
+				animation: shift-fade 0.18s ease-in reverse forwards;
+			}
+			@keyframes shift-fade {
+				from { opacity: 0; }
+				to { opacity: 1; }
+			}
+			@keyframes shift-pop {
+				0% { opacity: 0; transform: scale(0.6); }
+				60% { opacity: 1; transform: scale(1.05); }
+				100% { transform: scale(1); }
+			}
+			@media (prefers-reduced-motion: reduce) {
+				.shift-popup, .shift-popup-card, .shift-popup.closing { animation: none; }
+			}
 		</style>
+		<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+		<link rel="stylesheet" href="/css/tailwind.css" />
 	</head>
 	<body>
 		<!-- header.js loads header.html into this element -->
@@ -72,12 +129,10 @@
 						Good
 						<!-- JS: staff.js sets this to "morning", "afternoon", or "evening"
                          based on the current hour using new Date().getHours() -->
-						<span id="greeting-time">morning</span>
-						,
+						<span id="greeting-time">morning</span>,
 						<!-- JS: staff.js sets this to the staff member's first name
                          read from localStorage.getItem("name") after login -->
-						<span id="staff-name"></span>
-						.
+						<span id="staff-name"></span>.
 					</h1>
 				</div>
 				<div class="md:text-right">
@@ -99,10 +154,10 @@
 				<!-- Shift card -->
 				<div class="stat-card">
 					<p class="kicker mb-2">
-						<i class="fa fa-clock-o"></i>
+						<span data-icon="clock"></span>
 						Shift
 					</p>
-					<p class="text-sm mb-3" style="color: var(--lux-brown-500)">
+					<p class="text-sm mb-3" style="color: #7a654b">
 						<!-- JS: staff.js sets this to the shift type e.g. "Morning"
                          fetched from GET /shifts/mine filtered by today's date -->
 						<span id="shift-type"></span>
@@ -119,19 +174,19 @@
 						style="color: var(--lux-brown-800); letter-spacing: 0.05em">
 						--:--:--
 					</p>
-					<p class="kicker mt-2">Remaining</p>
-					<!-- JS: staff.js sets this to "Shift ending soon" or "Shift complete"
-                     based on how much time is left on the shift -->
+					<!-- JS: staff.js sets the label ("Remaining", "Until your shift starts",
+                     "Shift finished") and a short note under it -->
+					<p class="kicker mt-2" id="shift-label">Remaining</p>
 					<p
 						id="shift-status"
 						class="text-xs mt-1"
-						style="color: var(--lux-brown-500)"></p>
+						style="color: #7a654b"></p>
 				</div>
 
 				<!-- Check-ins card -->
 				<div class="stat-card md:border-l-0">
 					<p class="kicker mb-2">
-						<i class="fa fa-users"></i>
+						<span data-icon="users"></span>
 						Check-ins Today
 					</p>
 					<!-- JS: staff.js sets this to the count of today's check-ins
@@ -142,13 +197,13 @@
 						style="color: var(--lux-brown-800)">
 						-
 					</p>
-					<p class="kicker">Completed by you</p>
+					<p class="kicker">Across the team</p>
 				</div>
 
 				<!-- Queue card -->
 				<div class="stat-card md:border-l-0">
 					<p class="kicker mb-2">
-						<i class="fa fa-list"></i>
+						<span data-icon="list"></span>
 						Queue
 					</p>
 					<!-- JS: staff.js sets this to the count of pending bookings
@@ -164,30 +219,48 @@
 			</div>
 
 			<!-- Guests awaiting check-in section -->
-			<h2
-				class="font-serif text-2xl md:text-3xl mb-6"
-				style="color: var(--lux-brown-800)">
-				Guests awaiting check-in
-			</h2>
+			<div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+				<h2 class="font-serif text-2xl md:text-3xl" style="color: var(--lux-brown-800)">
+					Guests awaiting check-in
+				</h2>
+				<div class="flex items-center gap-3" style="min-width: min(320px, 100%)">
+					<label for="queue-search" class="sr-only">Search arrivals</label>
+					<div class="flex items-center gap-2 flex-1 bg-white px-3" style="border: 1px solid var(--lux-brown-200); min-height: 44px">
+						<span data-icon="search" style="color: var(--lux-text-soft)"></span>
+						<input id="queue-search" type="search" placeholder="Name, room or reference" class="flex-1 bg-transparent py-2" style="font-size: 14px; border: none; outline: none" />
+					</div>
+					<span id="queue-search-count" class="text-xs" style="color: var(--lux-text-muted)" aria-live="polite"></span>
+				</div>
+			</div>
 			<!-- JS: staff.js replaces this div's innerHTML with a guest-row for each
              pending booking fetched from GET /checkins/queue
              each row includes a Check In button that calls checkIn(bookingId) -->
-			<div id="queue-list" class="mb-12">
-				<p class="text-sm" style="color: var(--lux-brown-500)">Loading...</p>
-			</div>
+			<div id="queue-list" class="mb-12" aria-live="polite"></div>
 
 			<!-- Currently in residence section -->
-			<h2
-				class="font-serif text-2xl md:text-3xl mb-6"
-				style="color: var(--lux-brown-800)">
-				Currently in residence
-			</h2>
+			<div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+				<h2 class="font-serif text-2xl md:text-3xl" style="color: var(--lux-brown-800)">
+					Currently in residence
+				</h2>
+				<div class="chip-row" id="residence-filter" role="group" aria-label="Show">
+					<button type="button" class="chip" data-filter="all" aria-pressed="true">Everyone</button>
+					<button type="button" class="chip" data-filter="leaving" aria-pressed="false">Departing today (<span id="departures-count">0</span>)</button>
+					<button type="button" class="chip" data-filter="overdue" aria-pressed="false">Overdue (<span id="overdue-count">0</span>)</button>
+				</div>
+			</div>
 			<!-- JS: staff.js replaces this div's innerHTML with a residence-row for each
              checked-in guest fetched from GET /checkins/residence
              each row includes a Check Out button that calls checkOut(checkinId) -->
-			<div id="residence-list">
-				<p class="text-sm" style="color: var(--lux-brown-500)">Loading...</p>
+			<div id="residence-list" class="mb-12" aria-live="polite"></div>
+
+			<!-- Housekeeping: rooms checked out and waiting to be cleaned -->
+			<div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+				<h2 class="font-serif text-2xl md:text-3xl" style="color: var(--lux-brown-800)">
+					Housekeeping <span class="text-base" style="color: var(--lux-text-muted)">(<span id="housekeeping-count">0</span> to clean)</span>
+				</h2>
+				<p class="text-sm" style="color: var(--lux-text-muted); max-width: 46ch">Rooms need cleaning after every check-out. Guests can't be checked in until the room is marked clean.</p>
 			</div>
+			<div id="housekeeping-list" class="housekeeping-list" aria-live="polite"></div>
 		</section>
 
 		<!-- footer.js loads footer.html into this element -->

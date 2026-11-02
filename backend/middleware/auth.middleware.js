@@ -1,5 +1,18 @@
+const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
-const SECRET = process.env.JWT_SECRET || "laextravaganza_secret_2024";
+
+// The secret must come from the environment (see .env.example). Outside
+// production a random one is generated so dev and tests still run, but
+// tokens then stop working whenever the server restarts.
+const SECRET = process.env.JWT_SECRET || fallbackSecret();
+
+function fallbackSecret() {
+	if (process.env.NODE_ENV === "production")
+		throw new Error("JWT_SECRET must be set in production");
+	if (process.env.NODE_ENV !== "test")
+		console.warn("JWT_SECRET not set - using a temporary random secret");
+	return crypto.randomBytes(32).toString("hex");
+}
 
 // Verifies the JWT token and attaches user info to req.user
 function authenticate(req, res, next) {

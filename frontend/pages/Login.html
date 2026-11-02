@@ -4,11 +4,13 @@
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<title>Sign In – La Extravaganza</title>
-		<script src="https://cdn.tailwindcss.com"></script>
 		<link rel="stylesheet" href="../css/main.css" />
+		<link rel="icon" href="/images/favicon.svg" type="image/svg+xml" />
+		<meta name="description" content="Sign in to manage your stays at La Extravaganza." />
+		<script src="../js/ui.js"></script>
 		<style>
 			.room-photo {
-				background: url("/images/login-interior.jpg") center/cover no-repeat;
+				background: url("/images/login-interior.webp") center/cover no-repeat;
 				position: relative;
 			}
 			.room-photo::after {
@@ -37,7 +39,7 @@
 				cursor: pointer;
 				border: 1px solid #e6dfd7;
 				background: #ffffff;
-				color: #8b7355;
+				color: #7a654b;
 				transition: all 0.2s;
 				text-align: center;
 				font-family: "Outfit", system-ui, sans-serif;
@@ -52,7 +54,7 @@
 			}
 			.cred-row {
 				display: grid;
-				grid-template-columns: 75px 1fr auto;
+				grid-template-columns: 112px 1fr auto;
 				align-items: center;
 				gap: 8px;
 				padding: 9px 12px;
@@ -63,6 +65,19 @@
 				margin-bottom: 6px;
 				font-family: "Outfit", system-ui, sans-serif;
 			}
+			.cred-row {
+				width: 100%;
+				text-align: left;
+				background: #fff;
+			}
+			.demo-accounts summary {
+				cursor: pointer;
+				padding: 10px 0;
+				list-style: none;
+			}
+			.demo-accounts summary::-webkit-details-marker { display: none; }
+			.demo-accounts summary::after { content: " +"; }
+			.demo-accounts[open] summary::after { content: " –"; }
 			.cred-row:hover {
 				background: #f2ebe1;
 			}
@@ -93,6 +108,8 @@
 		<script src="../js/header.js"></script>
 		<script src="../js/footer.js"></script>
 		<script src="../js/login.js"></script>
+		<!-- Built by npm run build:css; last in <head> to keep the same cascade as the old Tailwind CDN -->
+		<link rel="stylesheet" href="/css/tailwind.css" />
 	</head>
 	<body>
 		<header class="sticky top-0 z-20" id="header"></header>
@@ -118,90 +135,80 @@
 				</div>
 
 				<!-- RIGHT: FORM -->
-				<div class="flex-1 px-10 py-10" style="background: #faf7f2">
+				<div class="flex-1 px-6 sm:px-10 py-10" style="background: #faf7f2">
 					<p class="kicker mb-1">La Extravaganza</p>
-					<h1 class="font-serif text-5xl mb-8" style="color: #2c241b">
-						Sign in
-					</h1>
+					<h1 class="font-serif text-5xl mb-3" style="color: #2c241b">Sign in</h1>
+					<p id="redirect-note" class="text-sm mb-6" style="color: var(--lux-text-muted)" hidden>
+						Sign in to finish your booking - we'll take you straight back.
+					</p>
 
-					<p class="kicker mb-2">I am a</p>
-					<div class="flex mb-1">
-						<button class="role-btn active" onclick="setRole('customer', this)">
-							Customer
-						</button>
-						<button class="role-btn" onclick="setRole('staff', this)">
-							Staff
-						</button>
-						<button class="role-btn" onclick="setRole('manager', this)">
-							Manager
-						</button>
+					<p class="kicker mb-2" id="role-label">I am a</p>
+					<div class="flex mb-1" role="group" aria-labelledby="role-label">
+						<button type="button" class="role-btn active" aria-pressed="true" onclick="setRole('customer', this)">Guest</button>
+						<button type="button" class="role-btn" aria-pressed="false" onclick="setRole('staff', this)">Staff</button>
+						<button type="button" class="role-btn" aria-pressed="false" onclick="setRole('manager', this)">Manager</button>
 					</div>
-					<p class="text-xs mb-6" style="color: #8b7355" id="roleDesc">
+					<p class="text-xs mb-6" style="color: #7a654b" id="roleDesc">
 						<em>Book rooms, manage stays, leave reviews.</em>
 					</p>
 
-					<div class="error-msg" id="errorMsg"></div>
+					<form id="login-form" novalidate>
+						<div class="error-msg" id="errorMsg" role="alert"></div>
 
-					<div class="mb-6">
-						<label class="input-label">Email</label>
-						<input
-							type="email"
-							id="email"
-							class="input-line"
-							placeholder="you@example.com" />
-					</div>
+						<div class="mb-6">
+							<label class="input-label" for="email">Email</label>
+							<input type="email" id="email" class="input-line" placeholder="you@example.com" autocomplete="username" required />
+						</div>
 
-					<div class="mb-8">
-						<label class="input-label">Password</label>
-						<input
-							type="password"
-							id="password"
-							class="input-line"
-							placeholder="••••••••" />
-					</div>
+						<div class="mb-8">
+							<label class="input-label" for="password">Password</label>
+							<div class="password-wrap">
+								<input type="password" id="password" class="input-line" placeholder="Your password" autocomplete="current-password" required />
+							</div>
+							<p class="text-sm mt-3" style="text-align: right"><a href="/pages/forgot.html" style="color: #4a3b32; text-decoration: underline; text-underline-offset: 2px">Forgot password?</a></p>
+						</div>
 
-					<button class="btn-signin mb-8" onclick="handleLogin()">
-						Sign In
-					</button>
+						<button type="submit" class="btn-signin mb-8" id="signin-btn">Sign in</button>
+					</form>
 
-					<p class="kicker mb-3">Demo Credentials - Click to Autofill</p>
-					<div
-						class="cred-row"
-						onclick="autofill('jane@email.com', 'password', 'customer')">
-						<span style="color: #8b7355">Customer</span>
-						<span style="color: #6b5743">jane@email.com</span>
-						<span class="cred-password" style="color: #8b7355">password →</span>
-					</div>
-					<div
-						class="cred-row"
-						onclick="
-							autofill('staff@email.co.nz', 'password', 'staff')
-						">
-						<span style="color: #8b7355">Staff</span>
-						<span style="color: #6b5743">staff@email.co.nz</span>
-						<span class="cred-password" style="color: #8b7355">password →</span>
-					</div>
-					<div
-						class="cred-row"
-						onclick="
-							autofill('manager@email.co.nz', 'password', 'manager')
-						">
-						<span style="color: #8b7355">Manager</span>
-						<span style="color: #6b5743">manager@email.co.nz</span>
-						<span class="cred-password" style="color: #8b7355">password →</span>
-					</div>
+					<details class="demo-accounts">
+						<summary class="kicker">Demo accounts - tap one to fill in</summary>
+						<p class="text-xs mt-3 mb-3" style="color: var(--lux-text-muted)">Every demo account uses the password "password".</p>
+						<button type="button" class="cred-row" onclick="autofill('jane@email.com', 'password', 'customer')">
+							<span style="color: #7a654b">Guest · Jane</span>
+							<span style="color: #6b5743">jane@email.com</span>
+							<span class="cred-password" style="color: #7a654b">Fill →</span>
+						</button>
+						<button type="button" class="cred-row" onclick="autofill('lily.evans@example.com', 'password', 'customer')">
+							<span style="color: #7a654b">Guest · Lily</span>
+							<span style="color: #6b5743">lily.evans@example.com</span>
+							<span class="cred-password" style="color: #7a654b">Fill →</span>
+						</button>
+						<button type="button" class="cred-row" onclick="autofill('staff@email.co.nz', 'password', 'staff')">
+							<span style="color: #7a654b">Staff · Mike</span>
+							<span style="color: #6b5743">staff@email.co.nz</span>
+							<span class="cred-password" style="color: #7a654b">Fill →</span>
+						</button>
+						<button type="button" class="cred-row" onclick="autofill('aroha.ngata@example.com', 'password', 'staff')">
+							<span style="color: #7a654b">Staff · Aroha</span>
+							<span style="color: #6b5743">aroha.ngata@example.com</span>
+							<span class="cred-password" style="color: #7a654b">Fill →</span>
+						</button>
+						<button type="button" class="cred-row" onclick="autofill('liam.chen@example.com', 'password', 'staff')">
+							<span style="color: #7a654b">Staff · Liam</span>
+							<span style="color: #6b5743">liam.chen@example.com</span>
+							<span class="cred-password" style="color: #7a654b">Fill →</span>
+						</button>
+						<button type="button" class="cred-row" onclick="autofill('manager@email.co.nz', 'password', 'manager')">
+							<span style="color: #7a654b">Manager · Sarah</span>
+							<span style="color: #6b5743">manager@email.co.nz</span>
+							<span class="cred-password" style="color: #7a654b">Fill →</span>
+						</button>
+					</details>
 
-					<p class="text-xs text-center mt-7" style="color: #8b7355">
+					<p class="text-sm text-center mt-7" style="color: #7a654b">
 						New to La Extravaganza?
-						<a
-							href="./register.html"
-							style="
-								color: #4a3b32;
-								text-decoration: underline;
-								text-underline-offset: 2px;
-							">
-							Create an account
-						</a>
+						<a id="register-link" href="./register.html" style="color: #4a3b32; text-decoration: underline; text-underline-offset: 2px">Create an account</a>
 					</p>
 				</div>
 			</div>

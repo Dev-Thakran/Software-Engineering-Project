@@ -1,0 +1,26 @@
+[
+  {
+    "code": "EXPO2026",
+    "percent": 10,
+    "label": "Tech Expo 2026",
+    "active": true,
+    "validFrom": "2026-10-01",
+    "validTo": "2026-12-31"
+  },
+  {
+    "code": "WELCOME5",
+    "percent": 5,
+    "label": "Welcome offer",
+    "active": true,
+    "validFrom": "2026-01-01",
+    "validTo": "2027-12-31"
+  },
+  {
+    "code": "WINTER25",
+    "percent": 25,
+    "label": "Winter sale (ended)",
+    "active": true,
+    "validFrom": "2026-06-01",
+    "validTo": "2026-08-31"
+  }
+]
