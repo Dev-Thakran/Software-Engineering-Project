@@ -5691,9 +5691,12 @@
     "checkInTime": "2026-10-08T04:37:00.000Z",
     "checkOutDate": "2026-10-14",
     "total": 2280,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:24:36.167Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1791515040000",
@@ -5723,9 +5726,12 @@
     "checkInTime": "2026-10-09T04:03:00.000Z",
     "checkOutDate": "2026-10-14",
     "total": 945,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:25:00.601Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1791521640000",
@@ -5771,9 +5777,12 @@
     "checkInTime": "2026-10-09T06:21:00.000Z",
     "checkOutDate": "2026-10-14",
     "total": 495,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:25:02.914Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1791589080000",
@@ -5803,9 +5812,12 @@
     "checkInTime": "2026-10-09T23:42:00.000Z",
     "checkOutDate": "2026-10-14",
     "total": 1520,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Liam Chen",
-    "handledBy": "u005"
+    "handledBy": "u005",
+    "checkOutTime": "2026-11-03T00:25:05.061Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1791595320000",
@@ -5835,9 +5847,12 @@
     "checkInTime": "2026-10-10T02:51:00.000Z",
     "checkOutDate": "2026-10-14",
     "total": 396,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Liam Chen",
-    "handledBy": "u005"
+    "handledBy": "u005",
+    "checkOutTime": "2026-11-03T00:25:08.327Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1791607020000",
@@ -5883,9 +5898,12 @@
     "checkInTime": "2026-10-11T01:35:00.000Z",
     "checkOutDate": "2026-10-14",
     "total": 660,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Liam Chen",
-    "handledBy": "u005"
+    "handledBy": "u005",
+    "checkOutTime": "2026-11-03T00:25:10.799Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "dirty"
   },
   {
     "id": "ci1791687360000",
@@ -5899,9 +5917,12 @@
     "checkInTime": "2026-10-11T02:56:00.000Z",
     "checkOutDate": "2026-10-15",
     "total": 880,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Liam Chen",
-    "handledBy": "u005"
+    "handledBy": "u005",
+    "checkOutTime": "2026-11-03T00:24:53.099Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "dirty"
   },
   {
     "id": "ci1791690360000",
@@ -5931,9 +5952,12 @@
     "checkInTime": "2026-10-11T05:06:00.000Z",
     "checkOutDate": "2026-10-15",
     "total": 756,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Liam Chen",
-    "handledBy": "u005"
+    "handledBy": "u005",
+    "checkOutTime": "2026-11-03T00:24:50.561Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1791695820000",
@@ -5947,9 +5971,12 @@
     "checkInTime": "2026-10-11T05:17:00.000Z",
     "checkOutDate": "2026-10-14",
     "total": 297,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Liam Chen",
-    "handledBy": "u005"
+    "handledBy": "u005",
+    "checkOutTime": "2026-11-03T00:25:13.396Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "dirty"
   },
   {
     "id": "ci1791695940000",
@@ -5995,9 +6022,12 @@
     "checkInTime": "2026-10-11T22:18:00.000Z",
     "checkOutDate": "2026-10-16",
     "total": 1520,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Mike Tane",
-    "handledBy": "u002"
+    "handledBy": "u002",
+    "checkOutTime": "2026-11-03T00:24:45.284Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1791769860000",
@@ -6011,9 +6041,12 @@
     "checkInTime": "2026-10-12T01:51:00.000Z",
     "checkOutDate": "2026-10-14",
     "total": 378,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Mike Tane",
-    "handledBy": "u002"
+    "handledBy": "u002",
+    "checkOutTime": "2026-11-03T00:24:56.084Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1791771060000",
@@ -6027,9 +6060,12 @@
     "checkInTime": "2026-10-12T02:11:00.000Z",
     "checkOutDate": "2026-10-19",
     "total": 1540,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:23:41.207Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1791780240000",
@@ -6043,9 +6079,12 @@
     "checkInTime": "2026-10-12T04:44:00.000Z",
     "checkOutDate": "2026-10-15",
     "total": 1140,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:24:47.529Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "dirty"
   },
   {
     "id": "ci1791881027333",
@@ -6059,9 +6098,12 @@
     "checkInTime": "2026-10-13T08:43:47.333Z",
     "checkOutDate": "2026-10-16",
     "total": 297,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:24:22.100Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1792034646756",
@@ -6075,9 +6117,12 @@
     "checkInTime": "2026-10-15T03:24:06.756Z",
     "checkOutDate": "2026-10-18",
     "total": 945,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:23:43.662Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1792034681035",
@@ -6091,9 +6136,12 @@
     "checkInTime": "2026-10-15T03:24:41.035Z",
     "checkOutDate": "2026-10-17",
     "total": 297,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:23:54.861Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "dirty"
   },
   {
     "id": "ci1792034697065",
@@ -6107,9 +6155,12 @@
     "checkInTime": "2026-10-15T03:24:57.065Z",
     "checkOutDate": "2026-10-16",
     "total": 198,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:24:19.384Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1792034699419",
@@ -6123,9 +6174,12 @@
     "checkInTime": "2026-10-15T03:24:59.419Z",
     "checkOutDate": "2026-10-17",
     "total": 760,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:23:52.401Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1792034701851",
@@ -6139,9 +6193,12 @@
     "checkInTime": "2026-10-15T03:25:01.851Z",
     "checkOutDate": "2026-10-16",
     "total": 567,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:23:57.230Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1792034704410",
@@ -6155,9 +6212,12 @@
     "checkInTime": "2026-10-15T03:25:04.410Z",
     "checkOutDate": "2026-10-22",
     "total": 1323,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:23:31.067Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1792034706578",
@@ -6171,9 +6231,12 @@
     "checkInTime": "2026-10-15T03:25:06.578Z",
     "checkOutDate": "2026-10-21",
     "total": 1540,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:23:35.815Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1792034708964",
@@ -6187,9 +6250,12 @@
     "checkInTime": "2026-10-15T03:25:08.964Z",
     "checkOutDate": "2026-10-17",
     "total": 1540,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:23:49.881Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1792034713956",
@@ -6203,9 +6269,12 @@
     "checkInTime": "2026-10-15T03:25:13.956Z",
     "checkOutDate": "2026-10-17",
     "total": 760,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:23:46.412Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1792034716717",
@@ -6219,9 +6288,12 @@
     "checkInTime": "2026-10-15T03:25:16.717Z",
     "checkOutDate": "2026-10-19",
     "total": 880,
-    "status": "staying",
+    "status": "completed",
     "attendingStaff": "Aroha Ngata",
-    "handledBy": "u004"
+    "handledBy": "u004",
+    "checkOutTime": "2026-11-03T00:23:38.381Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
   },
   {
     "id": "ci1793139589940",
@@ -6235,6 +6307,25 @@
     "checkInTime": "2026-10-27T22:19:49.940Z",
     "checkOutDate": "2026-10-29",
     "total": 693,
+    "status": "completed",
+    "attendingStaff": "Mike Tane",
+    "handledBy": "u002",
+    "checkOutTime": "2026-11-03T00:23:33.230Z",
+    "checkedOutBy": "Mike Tane",
+    "roomWas": "clean"
+  },
+  {
+    "id": "ci1793665525211",
+    "bookingId": "b1791768585435",
+    "userId": "ug017",
+    "guestName": "Grace Kim",
+    "guestEmail": "grace.kim@example.com",
+    "roomId": "303",
+    "roomType": "Executive Double",
+    "floor": 3,
+    "checkInTime": "2026-11-03T00:25:25.211Z",
+    "checkOutDate": "2026-11-05",
+    "total": 1320,
     "status": "staying",
     "attendingStaff": "Mike Tane",
     "handledBy": "u002"
