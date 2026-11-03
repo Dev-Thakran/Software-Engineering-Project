@@ -5,7 +5,9 @@
     "type": "Standard Single",
     "price": 99,
     "description": "Corner room on the courtyard, with two windows and the morning sun.",
-    "image": "../frontend/images/tiers/floor-3/b.webp"
+    "image": "../frontend/images/tiers/floor-3/b.webp",
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:25:08.335Z"
   },
   {
     "id": "102",
@@ -13,7 +15,9 @@
     "type": "Standard Single",
     "price": 99,
     "description": "Garden-door room opening straight onto the courtyard lawn.",
-    "image": "../frontend/images/tiers/floor-4/b.webp"
+    "image": "../frontend/images/tiers/floor-4/b.webp",
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:25:13.403Z"
   },
   {
     "id": "103",
@@ -29,7 +33,10 @@
     "type": "Standard Single",
     "price": 99,
     "description": "Bright room looking across the courtyard's olive trees.",
-    "image": "../frontend/images/tiers/floor-1/a.webp"
+    "image": "../frontend/images/tiers/floor-1/a.webp",
+    "housekeeping": "clean",
+    "housekeepingSince": "2026-11-03T00:25:40.078Z",
+    "cleanedBy": "Mike Tane"
   },
   {
     "id": "105",
@@ -37,7 +44,9 @@
     "type": "Standard Single",
     "price": 99,
     "description": "Courtyard room with a window seat and a reading lamp.",
-    "image": "../frontend/images/tiers/floor-3/b.webp"
+    "image": "../frontend/images/tiers/floor-3/b.webp",
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:24:22.112Z"
   },
   {
     "id": "106",
@@ -46,7 +55,9 @@
     "price": 99,
     "description": "Our accessible Garden room, with step-free garden doors and a roll-in shower.",
     "image": "../frontend/images/tiers/floor-4/b.webp",
-    "accessible": true
+    "accessible": true,
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:25:02.921Z"
   },
   {
     "id": "201",
@@ -54,7 +65,10 @@
     "type": "Deluxe Double",
     "price": 189,
     "description": "Corner double with windows on two sides over the city rooftops.",
-    "image": "../frontend/images/tiers/floor-4/a.webp"
+    "image": "../frontend/images/tiers/floor-4/a.webp",
+    "housekeeping": "clean",
+    "housekeepingSince": "2026-11-03T00:25:32.796Z",
+    "cleanedBy": "Mike Tane"
   },
   {
     "id": "202",
@@ -62,7 +76,9 @@
     "type": "Deluxe Double",
     "price": 189,
     "description": "City-view double with a reading chair by the tall windows.",
-    "image": "../frontend/images/tiers/floor-2/b.webp"
+    "image": "../frontend/images/tiers/floor-2/b.webp",
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:24:56.096Z"
   },
   {
     "id": "203",
@@ -70,7 +86,10 @@
     "type": "Deluxe Double",
     "price": 189,
     "description": "Double above the lane, with the best of the evening light.",
-    "image": "../frontend/images/tiers/floor-5/a.webp"
+    "image": "../frontend/images/tiers/floor-5/a.webp",
+    "housekeeping": "clean",
+    "housekeepingSince": "2026-11-03T00:25:43.437Z",
+    "cleanedBy": "Mike Tane"
   },
   {
     "id": "204",
@@ -78,7 +97,10 @@
     "type": "Deluxe Double",
     "price": 189,
     "description": "City-view double with a writing desk facing the skyline.",
-    "image": "../frontend/images/tiers/floor-4/a.webp"
+    "image": "../frontend/images/tiers/floor-4/a.webp",
+    "housekeeping": "clean",
+    "housekeepingSince": "2026-11-03T00:25:16.011Z",
+    "cleanedBy": "Mike Tane"
   },
   {
     "id": "205",
@@ -86,7 +108,9 @@
     "type": "Deluxe Double",
     "price": 189,
     "description": "Bright double looking toward the Sky Tower.",
-    "image": "../frontend/images/tiers/floor-2/b.webp"
+    "image": "../frontend/images/tiers/floor-2/b.webp",
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:24:50.573Z"
   },
   {
     "id": "206",
@@ -95,7 +119,9 @@
     "price": 189,
     "description": "Our accessible Classic double, with a roll-in shower and lowered fittings.",
     "image": "../frontend/images/tiers/floor-5/a.webp",
-    "accessible": true
+    "accessible": true,
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:25:00.609Z"
   },
   {
     "id": "301",
@@ -103,7 +129,10 @@
     "type": "Executive Double",
     "price": 220,
     "description": "Executive corner room with harbour glimpses from the lounge.",
-    "image": "../frontend/images/tiers/floor-3/a.webp"
+    "image": "../frontend/images/tiers/floor-3/a.webp",
+    "housekeeping": "clean",
+    "housekeepingSince": "2026-11-03T00:25:37.661Z",
+    "cleanedBy": "Mike Tane"
   },
   {
     "id": "302",
@@ -127,7 +156,10 @@
     "type": "Executive Double",
     "price": 220,
     "description": "Executive room with a bay-window lounge for reading or work.",
-    "image": "../frontend/images/tiers/floor-4/c.webp"
+    "image": "../frontend/images/tiers/floor-4/c.webp",
+    "housekeeping": "clean",
+    "housekeepingSince": "2026-11-03T00:25:30.445Z",
+    "cleanedBy": "Mike Tane"
   },
   {
     "id": "305",
@@ -135,7 +167,9 @@
     "type": "Executive Double",
     "price": 220,
     "description": "Executive room overlooking the ferry terminal.",
-    "image": "../frontend/images/tiers/floor-3/a.webp"
+    "image": "../frontend/images/tiers/floor-3/a.webp",
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:24:53.107Z"
   },
   {
     "id": "306",
@@ -144,7 +178,9 @@
     "price": 220,
     "description": "Our accessible Executive room, with a roll-in shower and step-free lounge.",
     "image": "../frontend/images/tiers/floor-1/c.webp",
-    "accessible": true
+    "accessible": true,
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:25:10.807Z"
   },
   {
     "id": "401",
@@ -152,7 +188,10 @@
     "type": "Penthouse Suite",
     "price": 380,
     "description": "Corner suite with a wraparound terrace over the harbour.",
-    "image": "../frontend/images/tiers/floor-1/b.webp"
+    "image": "../frontend/images/tiers/floor-1/b.webp",
+    "housekeeping": "clean",
+    "housekeepingSince": "2026-11-03T00:25:35.581Z",
+    "cleanedBy": "Mike Tane"
   },
   {
     "id": "402",
@@ -160,7 +199,9 @@
     "type": "Penthouse Suite",
     "price": 380,
     "description": "Penthouse suite with a living room that opens onto the terrace.",
-    "image": "../frontend/images/tiers/floor-7/c.webp"
+    "image": "../frontend/images/tiers/floor-7/c.webp",
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:24:47.534Z"
   },
   {
     "id": "403",
@@ -176,7 +217,9 @@
     "type": "Penthouse Suite",
     "price": 380,
     "description": "Penthouse suite with a sunset terrace and a four-seat lounge.",
-    "image": "../frontend/images/tiers/floor-6/c.webp"
+    "image": "../frontend/images/tiers/floor-6/c.webp",
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:25:05.071Z"
   },
   {
     "id": "405",
@@ -184,7 +227,9 @@
     "type": "Penthouse Suite",
     "price": 380,
     "description": "Penthouse suite with a library corner and harbour panorama.",
-    "image": "../frontend/images/tiers/floor-1/b.webp"
+    "image": "../frontend/images/tiers/floor-1/b.webp",
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:24:45.292Z"
   },
   {
     "id": "406",
@@ -193,6 +238,8 @@
     "price": 380,
     "description": "Our accessible Penthouse suite, step-free to the terrace, sleeping four.",
     "image": "../frontend/images/tiers/floor-7/c.webp",
-    "accessible": true
+    "accessible": true,
+    "housekeeping": "dirty",
+    "housekeepingSince": "2026-11-03T00:24:36.174Z"
   }
 ]

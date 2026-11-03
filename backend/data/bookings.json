@@ -5051,7 +5051,7 @@
     "checkOut": "2026-10-16",
     "nights": 3,
     "total": 297,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-09-10T08:28:00.000Z"
   },
   {
@@ -5081,7 +5081,7 @@
     "checkOut": "2026-10-17",
     "nights": 3,
     "total": 297,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-09-11T04:13:00.000Z"
   },
   {
@@ -5981,7 +5981,7 @@
     "checkOut": "2026-10-15",
     "nights": 4,
     "total": 756,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-09-24T04:38:00.000Z"
   },
   {
@@ -6041,7 +6041,7 @@
     "checkOut": "2026-10-29",
     "nights": 7,
     "total": 693,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-09-24T20:13:00.000Z"
   },
   {
@@ -6146,7 +6146,7 @@
     "checkOut": "2026-10-19",
     "nights": 7,
     "total": 1540,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-09-27T06:08:00.000Z"
   },
   {
@@ -6236,7 +6236,7 @@
     "checkOut": "2026-10-14",
     "nights": 5,
     "total": 945,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-09-28T00:53:00.000Z"
   },
   {
@@ -6281,7 +6281,7 @@
     "checkOut": "2026-10-14",
     "nights": 3,
     "total": 297,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-09-28T08:18:00.000Z"
   },
   {
@@ -6506,7 +6506,7 @@
     "checkOut": "2026-10-15",
     "nights": 3,
     "total": 1140,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-01T19:34:00.000Z"
   },
   {
@@ -6581,7 +6581,7 @@
     "checkOut": "2026-10-16",
     "nights": 2,
     "total": 198,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-02T23:24:00.000Z"
   },
   {
@@ -6596,7 +6596,7 @@
     "checkOut": "2026-10-17",
     "nights": 2,
     "total": 760,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-03T00:47:00.000Z"
   },
   {
@@ -6611,7 +6611,7 @@
     "checkOut": "2026-10-16",
     "nights": 3,
     "total": 567,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-03T00:50:00.000Z"
   },
   {
@@ -6686,7 +6686,7 @@
     "checkOut": "2026-10-18",
     "nights": 5,
     "total": 945,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-03T06:51:00.000Z"
   },
   {
@@ -6761,7 +6761,7 @@
     "checkOut": "2026-10-14",
     "nights": 6,
     "total": 2280,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-04T00:16:00.000Z"
   },
   {
@@ -6821,7 +6821,7 @@
     "checkOut": "2026-10-22",
     "nights": 7,
     "total": 1323,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-05T07:32:00.000Z"
   },
   {
@@ -6851,7 +6851,7 @@
     "checkOut": "2026-10-14",
     "nights": 5,
     "total": 495,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-05T08:23:00.000Z"
   },
   {
@@ -6926,7 +6926,7 @@
     "checkOut": "2026-10-21",
     "nights": 7,
     "total": 1540,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-06T19:54:00.000Z"
   },
   {
@@ -6941,7 +6941,7 @@
     "checkOut": "2026-10-14",
     "nights": 4,
     "total": 1520,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-06T21:28:00.000Z"
   },
   {
@@ -7001,7 +7001,7 @@
     "checkOut": "2026-10-14",
     "nights": 2,
     "total": 378,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-07T05:43:00.000Z"
   },
   {
@@ -7016,7 +7016,7 @@
     "checkOut": "2026-10-14",
     "nights": 4,
     "total": 396,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-07T20:24:00.000Z"
   },
   {
@@ -7106,7 +7106,7 @@
     "checkOut": "2026-10-17",
     "nights": 7,
     "total": 1540,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-09T02:17:00.000Z"
   },
   {
@@ -7166,7 +7166,7 @@
     "checkOut": "2026-10-14",
     "nights": 3,
     "total": 660,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-10T02:03:00.000Z"
   },
   {
@@ -7181,7 +7181,7 @@
     "checkOut": "2026-10-15",
     "nights": 4,
     "total": 880,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-10T05:52:00.000Z"
   },
   {
@@ -7226,7 +7226,7 @@
     "checkOut": "2026-10-17",
     "nights": 2,
     "total": 760,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-11T04:21:00.000Z"
   },
   {
@@ -7241,7 +7241,7 @@
     "checkOut": "2026-10-16",
     "nights": 4,
     "total": 1520,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-11T05:20:00.000Z"
   },
   {
@@ -7571,7 +7571,7 @@
     "checkOut": "2026-11-05",
     "nights": 6,
     "total": 1320,
-    "status": "booked",
+    "status": "staying",
     "createdAt": "2026-10-12T01:29:45.435Z"
   },
   {
@@ -8171,7 +8171,7 @@
     "checkOut": "2026-10-19",
     "nights": 4,
     "total": 880,
-    "status": "staying",
+    "status": "completed",
     "createdAt": "2026-10-12T07:06:55.108Z"
   },
   {
